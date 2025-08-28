@@ -166,6 +166,19 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	case SCENE_ID::TITLE:
 		scene_ = new TitleScene();
 		break;
+	case SCENE_ID::GAME:
+		//scene_ = new GameScene();
+		break;
+	case SCENE_ID::TUTORIAL:
+		//scene_ = new TutorialScene();
+		break;
+	case SCENE_ID::RESULT:
+		//scene_ = new ResultScene();
+		break;
+	case SCENE_ID::GAMEOVER:
+		//scene_ = new GameOverScene();
+		break;
+
 	}
 
 	// äeÉVÅ[ÉìÇÃèâä˙âª
