@@ -20,15 +20,24 @@ void TitleScene::Init(void)
 
 void TitleScene::Update(void)
 {
+	InputManager& ins = InputManager::GetInstance();
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	{
+		SceneManager::GetInstance().ChangeScene(
+			SceneManager::SCENE_ID::GAME);
+	}
 }
 
 void TitleScene::Draw(void)
 {
-
 	DrawRotaGraph(
 		Application::SCREEN_SIZE_X / 2,
 		Application::SCREEN_SIZE_Y / 2,
 		1.0f, 0.0, imgTitle_, true);
+
+#ifdef _DEBUG
+	DrawString(0, 0, "TitleScene", 0xffffff);
+#endif // _DEBUG
 
 }
 

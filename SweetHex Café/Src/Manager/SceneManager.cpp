@@ -2,6 +2,8 @@
 #include <DxLib.h>
 #include "../Common/Fader.h"
 #include "../Scene/TitleScene.h"
+#include "../Scene/GameScene.h"
+#include "Camera.h"
 #include "SceneManager.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
@@ -30,6 +32,13 @@ void SceneManager::Init(void)
 	fader_ = new Fader();
 	fader_->Init();
 
+	// カメラ機能の初期化
+	camera_ = new Camera();
+	camera_->Init();
+
+	// 3D関連の初期化
+	Init3D();
+
 	isSceneChanging_ = false;
 
 	// デルタタイム
@@ -38,6 +47,27 @@ void SceneManager::Init(void)
 	// 初期シーンの設定
 	DoChangeScene(SCENE_ID::TITLE);
 
+}
+
+void SceneManager::Init3D(void)
+{
+	// 背景色設定
+	SetBackgroundColor(0, 139, 139);
+
+	// Zバッファを有効にする
+	SetUseZBuffer3D(true);
+
+	// Zバッファへの書き込みを有効にする
+	SetWriteZBuffer3D(true);
+
+	// バックカリングを有効にする
+	SetUseBackCulling(true);
+
+	// ライトの設定
+	SetUseLighting(true);
+
+	// ライトの設定
+	ChangeLightTypeDir({ 0.5f, -0.5f, 0.5f });
 }
 
 void SceneManager::Update(void)
@@ -53,6 +83,9 @@ void SceneManager::Update(void)
 	deltaTime_ = static_cast<float>(
 		std::chrono::duration_cast<std::chrono::nanoseconds>(nowTime - preTime_).count() / 1000000000.0);
 	preTime_ = nowTime;
+
+	// カメラの更新
+	camera_->Update();
 
 	// フェード機能の更新
 	fader_->Update();
@@ -79,8 +112,14 @@ void SceneManager::Draw(void)
 	// 画面を初期化
 	ClearDrawScreen();
 
+	// カメラ設定
+	camera_->SetBeforeDraw();
+
 	// 各シーンの描画処理
 	scene_->Draw();
+
+	// カメラ用デバッグ描画
+	camera_->DrawDebug();
 
 	// 暗転・明転
 	fader_->Draw();
@@ -96,6 +135,10 @@ void SceneManager::Destroy(void)
 
 	// フェード機能の解放
 	delete fader_;
+
+	// カメラ機能の解放
+	camera_->Release();
+	delete camera_;
 
 	// インスタンスのメモリ解放
 	delete instance_;
@@ -167,7 +210,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		scene_ = new TitleScene();
 		break;
 	case SCENE_ID::GAME:
-		//scene_ = new GameScene();
+		scene_ = new GameScene();
 		break;
 	case SCENE_ID::TUTORIAL:
 		//scene_ = new TutorialScene();

@@ -4,7 +4,7 @@
 #include <vector>
 #include <math.h>
 #include <DxLib.h>
-#include "AsoUtility.h"
+#include "Utility.h"
 
 int AsoUtility::Round(float v)
 {
