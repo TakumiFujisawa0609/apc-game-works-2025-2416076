@@ -3,6 +3,7 @@
 
 class SceneManager;
 class Grid;
+class BlockManager;
 
 class GameScene : public SceneBase
 {
@@ -23,4 +24,5 @@ public:
 private:
 
 	Grid* grid_;
+	BlockManager* blockManager_;
 };
