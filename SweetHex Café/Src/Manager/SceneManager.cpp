@@ -169,6 +169,11 @@ float SceneManager::GetDeltaTime(void) const
 	return deltaTime_;
 }
 
+Camera* SceneManager::GetCamera(void)
+{
+	return camera_;
+}
+
 SceneManager::SceneManager(void)
 {
 

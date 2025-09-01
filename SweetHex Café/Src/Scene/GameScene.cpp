@@ -5,6 +5,7 @@
 #include "../Manager/InputManager.h"
 #include "../Object/Grid.h"
 #include "../Object/Stage/BlockManager.h"
+#include "../Object/Player.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -22,18 +23,24 @@ void GameScene::Init(void)
 
 	blockManager_ = new BlockManager();
 	blockManager_->Init();
+
+	player_ = new Player();
+	player_->Init();
+
 }
 
 void GameScene::Update(void)
 {
 	blockManager_->Update();
 	grid_->Update();
+	player_->Update();
 }
 
 void GameScene::Draw(void)
 {
 	grid_->Draw();
 	blockManager_->Draw();
+	player_->Draw();
 
 #ifdef _DEBUG
 	DrawString(0, 0, "GameScene", 0xffffff);
@@ -48,4 +55,7 @@ void GameScene::Release(void)
 
 	blockManager_->Release();
 	delete blockManager_;
+
+	player_->Release();
+	delete player_;
 }

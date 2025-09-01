@@ -21,6 +21,11 @@ void Camera::Init(void)
 
 void Camera::Update(void)
 {
+	if (player_ != nullptr) {
+		VECTOR playerPos = player_->GetPos();
+		pos_.x = playerPos.x;
+		pos_.z = playerPos.z - 1000.0f;
+	}
 }
 
 void Camera::SetBeforeDraw(void)
@@ -45,4 +50,9 @@ void Camera::DrawDebug(void)
 
 void Camera::Release(void)
 {
+}
+
+void Camera::SetFollow(Player* player)
+{
+	player_ = player;
 }

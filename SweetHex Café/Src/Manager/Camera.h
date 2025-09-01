@@ -1,6 +1,8 @@
 #pragma once
 #include <DxLib.h>
 
+class Player;
+
 class Camera
 {
 public:
@@ -46,6 +48,8 @@ public:
 	// 解放
 	void Release(void);
 
+	void SetFollow(Player* player);
+
 private:
 
 	// カメラの位置
@@ -53,4 +57,6 @@ private:
 
 	// カメラ角度(rad)
 	VECTOR angles_;
+
+	Player* player_;
 };

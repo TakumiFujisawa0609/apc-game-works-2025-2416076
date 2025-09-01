@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Object\Stage\BlockManager.cpp" />
     <ClCompile Include="Src\Object\Stage\Block.cpp" />
+    <ClCompile Include="Src\Object\Common\AnimationController.cpp" />
     <ClCompile Include="Src\Object\Grid.cpp" />
     <ClCompile Include="Src\Manager\Camera.cpp" />
     <ClCompile Include="Src\Object\Player.cpp" />
@@ -39,6 +40,7 @@
   <ItemGroup>
     <ClInclude Include="Src\Object\Stage\BlockManager.h" />
     <ClInclude Include="Src\Object\Stage\Block.h" />
+    <ClInclude Include="Src\Object\Common\AnimationController.h" />
     <ClInclude Include="Src\Object\Grid.h" />
     <ClInclude Include="Src\Manager\Camera.h" />
     <ClInclude Include="Src\Object\Player.h" />

@@ -47,6 +47,8 @@ public:
 	// デルタタイムの取得
 	float GetDeltaTime(void) const;
 
+	Camera* GetCamera(void);
+
 private:
 
 	// 静的インスタンス
