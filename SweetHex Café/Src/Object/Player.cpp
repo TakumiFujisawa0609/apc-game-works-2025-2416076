@@ -77,15 +77,15 @@ void Player::ProcessMove(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	VECTOR moveDir = AsoUtility::VECTOR_ZERO;
+	VECTOR moveDir = Utility::VECTOR_ZERO;
 
 	// キーが押されたら、その方向に移動する
-	if (ins.IsNew(KEY_INPUT_W)) { moveDir = AsoUtility::DIR_F; }
-	if (ins.IsNew(KEY_INPUT_S)) { moveDir = AsoUtility::DIR_B; }
-	if (ins.IsNew(KEY_INPUT_A)) { moveDir = AsoUtility::DIR_L; }
-	if (ins.IsNew(KEY_INPUT_D)) { moveDir = AsoUtility::DIR_R; }
+	if (ins.IsNew(KEY_INPUT_W)) { moveDir = Utility::DIR_F; }
+	if (ins.IsNew(KEY_INPUT_S)) { moveDir = Utility::DIR_B; }
+	if (ins.IsNew(KEY_INPUT_A)) { moveDir = Utility::DIR_L; }
+	if (ins.IsNew(KEY_INPUT_D)) { moveDir = Utility::DIR_R; }
 
-	if (AsoUtility::EqualsVZero(moveDir))
+	if (Utility::EqualsVZero(moveDir))
 	{
 		animController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 	}
@@ -109,7 +109,7 @@ void Player::ProcessMove(void)
 		angles_.y = atan2(moveDir.x, moveDir.z);
 
 		// モデルの向きが正の負の方向を向いているので、補正する
-		angles_.y += AsoUtility::Deg2RadF(180.0f);
+		angles_.y += Utility::Deg2RadF(180.0f);
 
 		MV1SetRotationXYZ(modelId_, angles_);
 
