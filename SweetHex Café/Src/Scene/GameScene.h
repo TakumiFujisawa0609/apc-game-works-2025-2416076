@@ -3,10 +3,10 @@
 
 class SceneManager;
 class Grid;
+class Player;
 
 class GameScene : public SceneBase
 {
-
 public:
 
 	// コンストラクタ
@@ -23,4 +23,6 @@ public:
 private:
 
 	Grid* grid_;
+
+	Player* player_;
 };
