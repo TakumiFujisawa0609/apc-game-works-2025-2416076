@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include "InputManager.h"
-#include "../Utility/Utility.h"]
+#include "../Utility/Utility.h"
 #include "../Object/Player.h"
 
 Camera::Camera(void)

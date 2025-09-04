@@ -14,12 +14,19 @@ public:
 	enum class TYPE
 	{
 		NONE = -1,
-		FLOOR_TILED,
-		FLOOR_WOOD,
-		FLOOR_CONNECTION,
-		WALL_INNER,
-		WALL_STRANGHT,
-		WALL_WINDOW,
+		FLOOR_TILED = 0,		// タイルの床
+		FLOOR_WOOD = 1,			// 気の床
+		FLOOR_CONNECTION = 2,	// ミックスされた床
+		WALL_INNER = 3,			// 壁の角側
+		WALL_STRANGHT = 4,		// 壁
+		WALL_WINDOW = 5,		// 窓付き壁
+		COUNTER_INNER = 6,		// カウンター角
+		COUNTER_OUTER = 7,		// カウンター短
+		COUNTER_LARGE = 8,		// カウンター長
+		CASH_REGISTER = 9,		// レジ
+		COFFEE_MACHINE = 10,	// コーヒーマシン
+		STAND_MAXER = 11,		// スタンドマキサー
+		DISPLAY_CASE = 12,		// ディスプレイ
 	};
 
 public:
@@ -31,7 +38,7 @@ public:
 	~Block(void);
 
 	// ブロックを生成する
-	void Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ);
+	void Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ, float angle, int posY);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
@@ -52,4 +59,7 @@ private:
 
 	// 大きさ
 	VECTOR scales_;
+
+	// 角度
+	float angle_;
 };

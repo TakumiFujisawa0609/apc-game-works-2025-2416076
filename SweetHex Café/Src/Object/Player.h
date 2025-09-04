@@ -28,21 +28,20 @@ public:
 		WALK,
 		WALK_CARRY,
 		MAX,
-
 	};
 
 	// モデルの大きさ
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 	// 初期位置
 	static constexpr VECTOR DEFAULT_POS = { 300.0f, 10.0f, 300.0f };
-	// 標準の自己発光色
-	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.5f, 0.5f, 0.5f, 0.5f };
+
+	COLOR_F COLOR_EMI_DEFAULT = { 0.0f, 0.0f, 0.3f, 1.0f };
 
 	// 最大HP
 	static constexpr int MAX_HP = 5;
 
 	// 移動速度
-	static constexpr float MOVE_SPEED = 2.0f;
+	static constexpr float MOVE_SPEED = 3.0f;
 
 	Player(void);
 	~Player(void);

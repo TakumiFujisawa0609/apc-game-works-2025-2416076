@@ -1,5 +1,6 @@
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "../../Application.h"
 #include "../../Utility/Utility.h"
 #include "Block.h"
@@ -23,6 +24,13 @@ void BlockManager::Init(void)
 	baseBlockModelIds_[3] = MV1LoadModel((PATH + "wall_panelled_bakery_corner_inner.mv1").c_str());
 	baseBlockModelIds_[4] = MV1LoadModel((PATH + "wall_panelled_bakery_straight.mv1").c_str());
 	baseBlockModelIds_[5] = MV1LoadModel((PATH + "wall_panelled_bakery_window.mv1").c_str());
+	baseBlockModelIds_[6] = MV1LoadModel((PATH + "countertop_corner_inner.mv1").c_str());
+	baseBlockModelIds_[7] = MV1LoadModel((PATH + "countertop_counter_outer.mv1").c_str());
+	baseBlockModelIds_[8] = MV1LoadModel((PATH + "countertop_straight_A_large.mv1").c_str());
+	baseBlockModelIds_[9] = MV1LoadModel((PATH + "cash_register.mv1").c_str());
+	baseBlockModelIds_[10] = MV1LoadModel((PATH + "coffee_machine.mv1").c_str());
+	baseBlockModelIds_[11] = MV1LoadModel((PATH + "stand_mixer.mv1").c_str());
+	baseBlockModelIds_[12] = MV1LoadModel((PATH + "display_case_long.mv1").c_str());
 
 	LoadMapCsvData();
 }
@@ -105,22 +113,45 @@ void BlockManager::LoadMapCsvData(void)
 
 		// ファイルを１行ずつ読み込む
 		std::string line; // 1行の文字情報
-
-		std::vector<std::string> strSplit; // 1行を1文字の動的配列に分割
-
-		int chipNo = 0;
 		int z = 0;
 
-		while (getline(ifs, line))
+		while (std::getline(ifs, line) && z < NUM_BLOCK_Z)
 		{
-			// １行をカンマ区切りで分割
-			strSplit = Utility::Split(line, ',');
+			std::stringstream ss(line);
+			std::string cell;
+			int x = 0;
 
-			for (int x = 0; x < strSplit.size(); x++) {
+			while (std::getline(ss, cell, ',') && x < NUM_BLOCK_X)
+			{
+				int chipNo = 0;
+				float angle = 0.0f;
+				int posY = 0;
 
-
-				// stringからintに変換
-				chipNo = stoi(strSplit[x]);
+				// 最初の":"を検索
+				size_t pos1 = cell.find(':');
+				if(pos1 != std::string::npos) 
+				{
+					// 2つ目の":"を検索
+					size_t pos2 = cell.find(':', pos1 + 1);
+					if (pos2 != std::string::npos)
+					{
+						chipNo = std::stoi(cell.substr(0, pos1));
+						angle = std::stof(cell.substr(pos1 + 1, pos2 - (pos1 - 1)));
+						posY = std::stoi(cell.substr(pos2 + 1));
+					}
+					else
+					{
+						chipNo = std::stoi(cell.substr(0, pos1));
+						angle = std::stof(cell.substr(pos1 + 1));
+					}
+				} 
+				else 
+				{
+					// ":"がない場合はタイルIDのみとして扱う
+					chipNo = std::stoi(cell);
+					angle = 0.0f;	// 角度は0に設定
+					posY = 0;		// Y位置は0に設定
+				}
 
 				// int型をキャストして enum classに変換
 				Block::TYPE type = static_cast<Block::TYPE>(chipNo);
@@ -130,10 +161,12 @@ void BlockManager::LoadMapCsvData(void)
 
 				// ブロックを生成
 				Block* block = new Block();
-				block->Create(type, baseModelId, x, y, z);
+				block->Create(type, baseModelId, x, y, z, angle, posY);
 
-				// ２次元配列にブロッククラスのポインタを格納
+				// 3次元配列にブロッククラスのポインタを格納
 				blocks_[y][z][x] = block;
+
+				x++;
 			}
 			z++;
 		}

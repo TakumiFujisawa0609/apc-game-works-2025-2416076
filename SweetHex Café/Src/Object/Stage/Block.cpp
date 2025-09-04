@@ -9,7 +9,7 @@ Block::~Block(void)
 {
 }
 
-void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ)
+void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ, float angle, int posY)
 {
     // ブロックの種類
     type_ = type;
@@ -17,8 +17,10 @@ void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ)
     // モデルのハンドルID
     modelId_ = MV1DuplicateModel(baseModelId);
 
+    angle_ = angle;
+
     // 色の調整(自己発光)
-    MV1SetMaterialEmiColor(modelId_, 0, COLOR_EMI);
+    //MV1SetMaterialEmiColor(modelId_, 0, COLOR_EMI);
 
     // 1ブロックあたりの大きさ
     const float SIZE_BLOCK = BlockManager::SIZE_BLOCK;
@@ -32,13 +34,16 @@ void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ)
     float z = static_cast<float>(mapZ);
     VECTOR pos = VGet(
         x * SIZE_BLOCK + SIZE_HALF_BLOCK,
-        y * SIZE_BLOCK - SIZE_HALF_BLOCK,
+        y + posY,
         z * SIZE_BLOCK + SIZE_HALF_BLOCK
     );
 
     // 座標設定
     pos_ = pos;
     MV1SetPosition(modelId_, pos_);
+
+    // 回転設定
+    MV1SetRotationXYZ(modelId_, VGet(0.0f, DX_PI_F * (angle_ / 180.0f), 0.0f));
 
     // 大きさ設定
     scales_ = SCALES;

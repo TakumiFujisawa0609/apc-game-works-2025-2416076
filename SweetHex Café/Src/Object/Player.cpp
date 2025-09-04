@@ -95,7 +95,7 @@ void Player::ProcessMove(void)
 
 		float speed = MOVE_SPEED;
 
-		if (ins.IsNew(KEY_INPUT_LSHIFT)) { speed *= 3.0f; }
+		if (ins.IsNew(KEY_INPUT_LSHIFT)) { speed *= 2.0f; }
 
 		// 移動量を計算する(方向×スピード)
 		VECTOR movePow = VScale(moveDir, speed);
