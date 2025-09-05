@@ -86,6 +86,30 @@ bool InputController::IsDash(void)
 	return false;
 }
 
+bool InputController::IsAttack(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	if (ins.IsNew(KEY_INPUT_SPACE))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputController::IsUse(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	if (ins.IsNew(KEY_INPUT_F))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 InputController::InputController(void)
 {
 }

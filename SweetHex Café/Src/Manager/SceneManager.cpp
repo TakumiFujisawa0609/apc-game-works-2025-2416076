@@ -49,27 +49,6 @@ void SceneManager::Init(void)
 
 }
 
-void SceneManager::Init3D(void)
-{
-	// 背景色設定
-	SetBackgroundColor(0, 139, 139);
-
-	// Zバッファを有効にする
-	SetUseZBuffer3D(true);
-
-	// Zバッファへの書き込みを有効にする
-	SetWriteZBuffer3D(true);
-
-	// バックカリングを有効にする
-	SetUseBackCulling(true);
-
-	// ライトの設定
-	SetUseLighting(true);
-
-	// ライトの設定
-	ChangeLightTypeDir({ 0.5f, -0.5f, 0.5f });
-}
-
 void SceneManager::Update(void)
 {
 
@@ -123,7 +102,6 @@ void SceneManager::Draw(void)
 
 	// 暗転・明転
 	fader_->Draw();
-
 }
 
 void SceneManager::Destroy(void)
@@ -267,4 +245,23 @@ void SceneManager::Fade(void)
 
 }
 
+void SceneManager::Init3D(void)
+{
+	// 背景色設定
+	SetBackgroundColor(0, 139, 139);
 
+	// Zバッファを有効にする
+	SetUseZBuffer3D(true);
+
+	// Zバッファへの書き込みを有効にする
+	SetWriteZBuffer3D(true);
+
+	// バックカリングを有効にする
+	SetUseBackCulling(true);
+
+	// ライトの設定
+	SetUseLighting(true);
+
+	// ライトの設定
+	ChangeLightTypeDir({ 0.5f, -0.5f, 0.5f });
+}

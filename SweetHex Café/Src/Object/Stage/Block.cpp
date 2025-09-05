@@ -66,8 +66,3 @@ void Block::Release(void)
 {
     MV1DeleteModel(modelId_);
 }
-
-int Block::GetModelId(void)
-{
-    return modelId_;
-}

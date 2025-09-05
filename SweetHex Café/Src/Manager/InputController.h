@@ -19,6 +19,8 @@ public:
 	bool IsMoveLeft(void);
 	bool IsMoveRight(void);
 	bool IsDash(void);
+	bool IsAttack(void);
+	bool IsUse(void);
 
 private:
 	// シングルトン用インスタンス

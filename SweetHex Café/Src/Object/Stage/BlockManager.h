@@ -6,7 +6,7 @@ class BlockManager
 {
 public:
 	// ブロック用のモデル種類
-	static constexpr int NUM_BLOCK_MODELS = 13;
+	static constexpr int NUM_BLOCK_MODELS = 18;
 
 	// ブロックの数(マップのサイズ)
 	static constexpr int NUM_BLOCK_X = 20;

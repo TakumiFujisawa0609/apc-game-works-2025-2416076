@@ -14,19 +14,22 @@ public:
 	enum class TYPE
 	{
 		NONE = -1,
-		FLOOR_TILED = 0,		// タイルの床
-		FLOOR_WOOD = 1,			// 気の床
-		FLOOR_CONNECTION = 2,	// ミックスされた床
-		WALL_INNER = 3,			// 壁の角側
-		WALL_STRANGHT = 4,		// 壁
-		WALL_WINDOW = 5,		// 窓付き壁
-		COUNTER_INNER = 6,		// カウンター角
-		COUNTER_OUTER = 7,		// カウンター短
-		COUNTER_LARGE = 8,		// カウンター長
-		CASH_REGISTER = 9,		// レジ
-		COFFEE_MACHINE = 10,	// コーヒーマシン
-		STAND_MAXER = 11,		// スタンドマキサー
-		DISPLAY_CASE = 12,		// ディスプレイ
+		FLOOR_WOOD,			// 床
+		WALL_INNER,			// 壁の角側
+		WALL_STRANGHT,		// 壁(タイル)
+		WALL_DOOR,			// ドア
+		COUNTER_INNER,		// カウンター角
+		COUNTER_LARGE,		// カウンター長
+		CASH_REGISTER,		// レジ
+		COFFEE_MACHINE,		// コーヒーマシン
+		STAND_MAXER,		// スタンドマキサー
+		DISPLAY_CASE,		// ディスプレイ
+		STOVE,				// コンロ
+		FRIDGE,				// 冷蔵庫
+		SINK,				// シンク
+		CUTTINGBOARD,		// まな板
+		CHAIR,				// 椅子
+		TABLE,				// テーブル
 	};
 
 public:
@@ -43,8 +46,7 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	// モデルのハンドルIDを取得する
-	int GetModelId(void);
+	int GetModelId(void) { return modelId_; }
 
 private:
 
