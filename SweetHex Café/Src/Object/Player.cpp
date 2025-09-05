@@ -3,6 +3,7 @@
 #include "../Utility/Utility.h"
 #include "../Manager/InputManager.h"
 #include "../Manager/SceneManager.h"
+#include "../Manager/InputController.h"
 #include "../Manager/Camera.h"
 #include "Common/AnimationController.h"
 
@@ -75,15 +76,15 @@ VECTOR Player::GetPos(void) const
 
 void Player::ProcessMove(void)
 {
-	InputManager& ins = InputManager::GetInstance();
+	InputController& ins = InputController::GetInstance();
 
 	VECTOR moveDir = Utility::VECTOR_ZERO;
 
 	// キーが押されたら、その方向に移動する
-	if (ins.IsNew(KEY_INPUT_W)) { moveDir = Utility::DIR_F; }
-	if (ins.IsNew(KEY_INPUT_S)) { moveDir = Utility::DIR_B; }
-	if (ins.IsNew(KEY_INPUT_A)) { moveDir = Utility::DIR_L; }
-	if (ins.IsNew(KEY_INPUT_D)) { moveDir = Utility::DIR_R; }
+	if (ins.IsMoveUp()) { moveDir = Utility::DIR_F; }
+	if (ins.IsMoveDown()) { moveDir = Utility::DIR_B; }
+	if (ins.IsMoveLeft()) { moveDir = Utility::DIR_L; }
+	if (ins.IsMoveRight()) { moveDir = Utility::DIR_R; }
 
 	if (Utility::EqualsVZero(moveDir))
 	{
@@ -95,7 +96,7 @@ void Player::ProcessMove(void)
 
 		float speed = MOVE_SPEED;
 
-		if (ins.IsNew(KEY_INPUT_LSHIFT)) { speed *= 2.0f; }
+		if (ins.IsDash()) { speed *= 2.0f; }
 
 		// 移動量を計算する(方向×スピード)
 		VECTOR movePow = VScale(moveDir, speed);
@@ -113,7 +114,7 @@ void Player::ProcessMove(void)
 
 		MV1SetRotationXYZ(modelId_, angles_);
 
-		if (ins.IsNew(KEY_INPUT_LSHIFT))
+		if (ins.IsDash())
 		{
 			animController_->Play(static_cast<int>(ANIM_TYPE::RUN));
 		}

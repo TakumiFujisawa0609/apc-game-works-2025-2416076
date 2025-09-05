@@ -91,9 +91,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Stage\BlockManager.cpp">
-		<Filter>ソース ファイル</Filter>
-	</ClCompile>
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Object\Common\AnimationController.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Manager\InputController.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -144,9 +147,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Stage\BlockManager.h">
-		<Filter>ヘッダー ファイル</Filter>
-	</ClInclude>
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Object\Common\AnimationController.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Manager\InputController.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
