@@ -90,7 +90,7 @@ bool InputController::IsAttack(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_SPACE))
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		return true;
 	}
@@ -102,7 +102,7 @@ bool InputController::IsUse(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_F))
+	if (ins.IsTrgDown(KEY_INPUT_F))
 	{
 		return true;
 	}

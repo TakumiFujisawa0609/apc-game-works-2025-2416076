@@ -5,7 +5,7 @@ class Block
 {
 public:
 	// ブロックモデルの自己発光色
-	static constexpr COLOR_F COLOR_EMI = { 0.5f, 0.5f, 0.5f, 1.0f };
+	static constexpr COLOR_F COLOR_EMI = { 0.5f, 0.5f, 0.5f, 0.5f };
 
 	// ブロックモデルの大きさ
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };

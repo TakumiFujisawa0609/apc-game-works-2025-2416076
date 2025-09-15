@@ -20,7 +20,7 @@ void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ, flo
     angle_ = angle;
 
     // 色の調整(自己発光)
-    //MV1SetMaterialEmiColor(modelId_, 0, COLOR_EMI);
+    MV1SetMaterialEmiColor(modelId_, 0, COLOR_EMI);
 
     // 1ブロックあたりの大きさ
     const float SIZE_BLOCK = BlockManager::SIZE_BLOCK;
