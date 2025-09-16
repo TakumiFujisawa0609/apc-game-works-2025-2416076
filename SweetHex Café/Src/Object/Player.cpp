@@ -150,7 +150,7 @@ void Player::ProcessMove(void)
 
 		float speed = MOVE_SPEED;
 
-		if (ins.IsDash()) { speed *= 2.0f; }
+		if (ins.IsDash()) { speed = DASH_SPEED; }
 
 		// 移動量を計算する(方向×スピード)
 		VECTOR movePow = VScale(moveDir, speed);
@@ -168,12 +168,15 @@ void Player::ProcessMove(void)
 
 		MV1SetRotationXYZ(modelId_, angles_);
 
+		// アニメーションの切り替え
 		if (ins.IsDash())
 		{
+			// ダッシュ時
 			animController_->Play(static_cast<int>(ANIM_TYPE::RUN));
 		}
 		else
 		{
+			// 通常移動時
 			animController_->Play(static_cast<int>(ANIM_TYPE::WALK));
 		}
 	}
@@ -183,8 +186,10 @@ void Player::ProcessAttack(void)
 {
 	InputController& ins = InputController::GetInstance();
 
+	// 攻撃ボタンが押されたら
 	if (ins.IsAttack())
 	{
+		// 攻撃状態にする
 		ChangeState(STATE::ATTACK);
 	}
 }
