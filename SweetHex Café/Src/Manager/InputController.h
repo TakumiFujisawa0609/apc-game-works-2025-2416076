@@ -14,13 +14,24 @@ public:
 	void Destroy(void);
 
 	// ゲームで使用するアクションを登録
-	bool IsMoveUp(void);
-	bool IsMoveDown(void);
-	bool IsMoveLeft(void);
-	bool IsMoveRight(void);
+
+	// 上下左右
+	bool IsUp(void);
+	bool IsDown(void);
+	bool IsLeft(void);
+	bool IsRight(void);
+
+	// ダッシュ
 	bool IsDash(void);
+
+	// 攻撃
 	bool IsAttack(void);
+
+	// 使用
 	bool IsUse(void);
+
+	// 決定
+	bool IsDecide(void);
 
 private:
 	// シングルトン用インスタンス

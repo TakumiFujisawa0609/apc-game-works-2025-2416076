@@ -73,7 +73,7 @@ void Application::Run(void)
 	SceneManager& sceneManager = SceneManager::GetInstance();
 
 	// ゲームループ
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 && !isEnd_)
 	{
 
 		inputManager.Update();
@@ -119,8 +119,14 @@ bool Application::IsReleaseFail(void) const
 	return isReleaseFail_;
 }
 
+void Application::SetEnd(bool isEnd)
+{
+	isEnd_ = isEnd;
+}
+
 Application::Application(void)
 {
 	isInitFail_ = false;
 	isReleaseFail_ = false;
+	isEnd_ = false;
 }

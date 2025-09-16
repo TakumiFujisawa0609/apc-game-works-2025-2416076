@@ -135,10 +135,10 @@ void Player::ProcessMove(void)
 	VECTOR moveDir = Utility::VECTOR_ZERO;
 
 	// ÉLÅ[Ç™âüÇ≥ÇÍÇΩÇÁÅAÇªÇÃï˚å¸Ç…à⁄ìÆÇ∑ÇÈ
-	if (ins.IsMoveUp()) { moveDir = Utility::DIR_F; }
-	if (ins.IsMoveDown()) { moveDir = Utility::DIR_B; }
-	if (ins.IsMoveLeft()) { moveDir = Utility::DIR_L; }
-	if (ins.IsMoveRight()) { moveDir = Utility::DIR_R; }
+	if (ins.IsUp()) { moveDir = Utility::DIR_F; }
+	if (ins.IsDown()) { moveDir = Utility::DIR_B; }
+	if (ins.IsLeft()) { moveDir = Utility::DIR_L; }
+	if (ins.IsRight()) { moveDir = Utility::DIR_R; }
 
 	if (Utility::EqualsVZero(moveDir))
 	{

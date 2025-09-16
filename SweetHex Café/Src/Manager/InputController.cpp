@@ -26,11 +26,11 @@ void InputController::Destroy(void)
 	delete instance_;
 }
 
-bool InputController::IsMoveUp(void)
+bool InputController::IsUp(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_W))
+	if (ins.IsNew(KEY_INPUT_W) || ins.IsNew(KEY_INPUT_UP))
 	{
 		return true;
 	}
@@ -38,11 +38,11 @@ bool InputController::IsMoveUp(void)
 	return false;
 }
 
-bool InputController::IsMoveDown(void)
+bool InputController::IsDown(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_S))
+	if (ins.IsNew(KEY_INPUT_S) || ins.IsNew(KEY_INPUT_DOWN))
 	{
 		return true;
 	}
@@ -50,11 +50,11 @@ bool InputController::IsMoveDown(void)
 	return false;
 }
 
-bool InputController::IsMoveLeft(void)
+bool InputController::IsLeft(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_A))
+	if (ins.IsNew(KEY_INPUT_A) || ins.IsNew(KEY_INPUT_LEFT))
 	{
 		return true;
 	}
@@ -62,11 +62,11 @@ bool InputController::IsMoveLeft(void)
 	return false;
 }
 
-bool InputController::IsMoveRight(void)
+bool InputController::IsRight(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_D))
+	if (ins.IsNew(KEY_INPUT_D) || ins.IsNew(KEY_INPUT_RIGHT))
 	{
 		return true;
 	}
@@ -103,6 +103,18 @@ bool InputController::IsUse(void)
 	auto& ins = InputManager::GetInstance();
 
 	if (ins.IsTrgDown(KEY_INPUT_F))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputController::IsDecide(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		return true;
 	}

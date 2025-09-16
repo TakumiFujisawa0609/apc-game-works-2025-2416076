@@ -40,6 +40,9 @@ public:
 	// 解放成功／失敗の判定
 	bool IsReleaseFail(void) const;
 
+	// 終了フラグの設定
+	void SetEnd(bool isEnd);
+
 private:
 
 	// 静的インスタンス
@@ -50,6 +53,9 @@ private:
 
 	// 解放失敗
 	bool isReleaseFail_;
+
+	// 終了フラグ
+	bool isEnd_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
