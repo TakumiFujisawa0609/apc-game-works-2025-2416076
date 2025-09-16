@@ -3,9 +3,11 @@
 #include "../Utility/Utility.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
+#include "../Manager/InputController.h"
 #include "../Object/Grid.h"
 #include "../Object/Stage/BlockManager.h"
 #include "../Object/Player.h"
+#include "../Manager/Pause.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -27,13 +29,43 @@ void GameScene::Init(void)
 	player_ = new Player();
 	player_->Init();
 
+	pause_ = new Pause();
+	pause_->Init();
+
+	ChangeState(STATE::GAME);
+
 }
 
 void GameScene::Update(void)
 {
-	blockManager_->Update();
-	grid_->Update();
-	player_->Update();
+	InputController& ins = InputController::GetInstance();
+
+	switch (state_)
+	{
+	case STATE::GAME:
+		blockManager_->Update();
+		grid_->Update();
+		player_->Update();
+
+		// ポーズメニューへ
+		if(ins.IsPause())
+		{
+			pause_->SetPause(true);
+			ChangeState(STATE::PAUSE);
+		}
+
+		break;
+	case STATE::PAUSE:
+		pause_->Update();
+
+		if(!pause_->IsPause())
+		{
+			ChangeState(STATE::GAME);
+		}
+
+		break;
+	}
+
 }
 
 void GameScene::Draw(void)
@@ -41,6 +73,11 @@ void GameScene::Draw(void)
 	grid_->Draw();
 	blockManager_->Draw();
 	player_->Draw();
+
+	if (state_ == STATE::PAUSE)
+	{
+		pause_->Draw();
+	}
 
 #ifdef _DEBUG
 	DrawString(0, 0, "GameScene", 0xffffff);
@@ -58,4 +95,12 @@ void GameScene::Release(void)
 
 	player_->Release();
 	delete player_;
+
+	pause_->Release();
+	delete pause_;
+}
+
+void GameScene::ChangeState(STATE state)
+{
+	state_ = state;
 }

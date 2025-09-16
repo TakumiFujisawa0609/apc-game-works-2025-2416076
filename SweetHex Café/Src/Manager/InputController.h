@@ -15,11 +15,20 @@ public:
 
 	// ゲームで使用するアクションを登録
 
-	// 上下左右
-	bool IsUp(void);
-	bool IsDown(void);
-	bool IsLeft(void);
-	bool IsRight(void);
+	// 上下左右(移動)
+	bool IsMoveUp(void);
+	bool IsMoveDown(void);
+	bool IsMoveLeft(void);
+	bool IsMoveRight(void);
+
+	// 上下左右（選択）
+	bool IsSelectUp(void);
+	bool IsSelectDown(void);
+	bool IsSelectLeft(void);
+	bool IsSelectRight(void);
+
+	// 一時停止
+	bool IsPause(void);
 
 	// ダッシュ
 	bool IsDash(void);

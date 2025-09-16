@@ -110,9 +110,9 @@ void TitleScene::SelectTitleMenu(void)
 {
 	InputController& ins = InputController::GetInstance();
 
-	if (ins.IsUp())
+	if (ins.IsSelectUp())
 	{
-		ChangeState(STATE::START);
+		ChangeState(static_cast<STATE>(static_cast<int>(state_) - 1));
 	}
 
 	if (static_cast<int>(state_) <= 0)
@@ -120,9 +120,9 @@ void TitleScene::SelectTitleMenu(void)
 		ChangeState(STATE::START);
 	}
 
-	if (ins.IsDown())
+	if (ins.IsSelectDown())
 	{
-		ChangeState(STATE::EXIT);
+		ChangeState(static_cast<STATE>(static_cast<int>(state_) + 1));
 	}
 
 	if(static_cast<int>(state_) >= static_cast<int>(STATE::MAX) - 1)

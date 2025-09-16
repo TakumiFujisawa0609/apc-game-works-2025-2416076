@@ -5,10 +5,18 @@ class SceneManager;
 class Grid;
 class BlockManager;
 class Player;
+class Pause;
 
 class GameScene : public SceneBase
 {
 public:
+
+	enum class STATE
+	{
+		GAME,
+		PAUSE,
+		MAX,
+	};
 
 	// コンストラクタ
 	GameScene(void);
@@ -22,8 +30,15 @@ public:
 	void Release(void) override;
 
 private:
+	// ゲームの状態
+	STATE state_;
 
+	// 各オブジェクト
 	Grid* grid_;
 	BlockManager* blockManager_;
 	Player* player_;
+	Pause* pause_;
+
+	// 状態変更
+	void ChangeState(STATE state);
 };
