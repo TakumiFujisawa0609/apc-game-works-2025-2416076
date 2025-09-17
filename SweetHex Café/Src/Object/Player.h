@@ -63,10 +63,10 @@ public:
 	static constexpr int MAX_HP = 3;
 
 	// 移動速度
-	static constexpr float MOVE_SPEED = 3.0f;
+	static constexpr float MOVE_SPEED = 6.0f;
 
 	// ダッシュ移動速度
-	static constexpr float DASH_SPEED = 6.0f;
+	static constexpr float DASH_SPEED = 12.0f;
 
 	Player(void);
 	~Player(void);
