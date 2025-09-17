@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\ResultScene.cpp" />
     <ClCompile Include="Src\Manager\Pause.cpp" />
     <ClCompile Include="Src\Manager\InputController.cpp" />
     <ClCompile Include="Src\Object\Stage\BlockManager.cpp" />
@@ -40,6 +41,7 @@
     <ClCompile Include="Src\Utility\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\ResultScene.h" />
     <ClInclude Include="Src\Manager\Pause.h" />
     <ClInclude Include="Src\Manager\InputController.h" />
     <ClInclude Include="Src\Object\Stage\BlockManager.h" />

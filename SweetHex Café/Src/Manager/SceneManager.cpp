@@ -3,6 +3,7 @@
 #include "../Common/Fader.h"
 #include "../Scene/TitleScene.h"
 #include "../Scene/GameScene.h"
+#include "../Scene/ResultScene.h"
 #include "Camera.h"
 #include "SceneManager.h"
 
@@ -199,7 +200,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		//scene_ = new TutorialScene();
 		break;
 	case SCENE_ID::RESULT:
-		//scene_ = new ResultScene();
+		scene_ = new ResultScene();
 		break;
 	case SCENE_ID::GAMEOVER:
 		//scene_ = new GameOverScene();
