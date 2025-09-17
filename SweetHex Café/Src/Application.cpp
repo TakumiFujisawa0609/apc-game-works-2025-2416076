@@ -2,6 +2,7 @@
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
 #include "Manager/InputController.h"
+#include "Manager/SystemManager.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -59,6 +60,7 @@ void Application::Init(void)
 	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
 	InputController::CreateInstance();
+	SystemManager::CreateInstance();
 
 	// シーン管理初期化
 	SceneManager::CreateInstance();
@@ -69,7 +71,6 @@ void Application::Run(void)
 {
 
 	InputManager& inputManager = InputManager::GetInstance();
-	InputController& imputController = InputController::GetInstance();
 	SceneManager& sceneManager = SceneManager::GetInstance();
 
 	// ゲームループ
@@ -99,10 +100,12 @@ void Application::Destroy(void)
 	// シーン管理解放
 	SceneManager::GetInstance().Destroy();
 
-	InputController::GetInstance().Destroy();
-
 	// 入力制御解放
+	InputController::GetInstance().Destroy();
 	InputManager::GetInstance().Destroy();
+
+	// システム管理解放
+	SystemManager::GetInstance().Destroy();
 
 	// インスタンスのメモリ解放
 	delete instance_;
