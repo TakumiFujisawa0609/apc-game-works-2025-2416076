@@ -1,14 +1,15 @@
 #pragma once
 #include <DxLib.h>
+#include "../Application.h"
 
 class Timer
 {
 public:
 	// 時間
-	static constexpr float COUNTDOWN_TIME = 180.0f * 1000.0f;
+	static constexpr float COUNTDOWN_TIME = 60.0f * 1000.0f;
 
 	// タイマーの位置
-	static constexpr int DEFAULT_POS_X = 600;
+	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X / 2;
 	static constexpr int DEFAULT_POS_Y = 50;
 
 	// コンストラクタ
@@ -27,10 +28,7 @@ public:
 	//タイマーが終了したかどうかを取得
 	bool GetIsTimeUp(void)const { return secondsLeft_ <= 0; }
 
-	void CountStart(void) {
-		startTime_ = GetNowCount();
-		COUNTDOWN_TIME / 1000; // 秒単位で初期化
-	}
+	void CountStart(void);
 
 private:
 	//開始時間を取得

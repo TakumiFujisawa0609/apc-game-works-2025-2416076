@@ -6,6 +6,7 @@ class Grid;
 class BlockManager;
 class Player;
 class Pause;
+class Timer;
 
 class GameScene : public SceneBase
 {
@@ -38,7 +39,12 @@ private:
 	BlockManager* blockManager_;
 	Player* player_;
 	Pause* pause_;
+	Timer* timer_;
 
 	// ó‘Ô•ÏX
 	void ChangeState(STATE state);
+
+	// XVˆ—
+	void UpdateGame(void);
+	void UpdatePause(void);
 };
