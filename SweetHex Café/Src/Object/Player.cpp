@@ -153,6 +153,12 @@ void Player::Damage(int damage)
 
 void Player::ProcessMove(BlockManager* block)
 {
+	// 攻撃中やノックバック中は移動させない
+	if (state_ != STATE::STANDBY)
+	{
+		return;
+	}
+
 	InputController& ins = InputController::GetInstance();
 
 	VECTOR moveDir = Utility::VECTOR_ZERO;
