@@ -126,7 +126,7 @@ bool InputController::IsPause(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_ESCAPE))
+	if (ins.IsTrgDown(KEY_INPUT_ESCAPE))
 	{
 		return true;
 	}

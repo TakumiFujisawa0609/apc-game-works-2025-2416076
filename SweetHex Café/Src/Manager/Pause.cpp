@@ -45,7 +45,7 @@ void Pause::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	// ポーズメニューの状態ごとの描画
+	// ポーズメニューの状態ごとの描画(デバッグ)
 	switch (pause_)
 	{
 	case PAUSE::CONTINUE:
@@ -102,9 +102,15 @@ void Pause::SelectPause(void)
 	}
 
 	// メニューの範囲外に行かないようにする
-	if(static_cast<int>(pause_) > static_cast<int>(PAUSE::MAX))
+	if(static_cast<int>(pause_) >= static_cast<int>(PAUSE::MAX))
 	{
 		ChangePause(PAUSE::EXIT);
+	}
+
+	if (ins.IsPause())
+	{
+		// ポーズ解除
+		SetPause(false);
 	}
 
 }
@@ -147,7 +153,7 @@ void Pause::DrawContinue(void)
 {
 	DrawString(450, 300, "CONTINUE", 0x00ff00);
 	DrawString(450, 320, "RETURN TITLE", 0xffffff);
-	DrawString(450, 340, "EXIT", 0xffffff);
+	DrawString(450, 340, "QUIT GAME", 0xffffff);
 
 }
 
@@ -155,12 +161,12 @@ void Pause::DrawReturnTitle(void)
 {
 	DrawString(450, 300, "CONTINUE", 0xffffff);
 	DrawString(450, 320, "RETURN TITLE", 0x00ff00);
-	DrawString(450, 340, "EXIT", 0xffffff);
+	DrawString(450, 340, "QUIT GAME", 0xffffff);
 }
 
 void Pause::DrawExit(void)
 {
 	DrawString(450, 300, "CONTINUE", 0xffffff);
 	DrawString(450, 320, "RETURN TITLE", 0xffffff);
-	DrawString(450, 340, "EXIT", 0x00ff00);
+	DrawString(450, 340, "QUIT GAME", 0x00ff00);
 }

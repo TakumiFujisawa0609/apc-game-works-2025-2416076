@@ -42,6 +42,7 @@ public:
 
 	// モデルの大きさ
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
+
 	// 初期位置
 	static constexpr VECTOR DEFAULT_POS = { 300.0f, 10.0f, 300.0f };
 
@@ -68,6 +69,12 @@ public:
 	// ダッシュ移動速度
 	static constexpr float DASH_SPEED = 12.0f;
 
+	// 当たり判定用前方範囲
+	static constexpr float COL_RANGE = 20.0f;
+
+	// 衝突判定用半径
+	static constexpr float COLLISION_RADIUS = 50.0f;
+
 	Player(void);
 	~Player(void);
 
@@ -77,15 +84,18 @@ public:
 	void Release(void);
 
 	VECTOR GetPos(void)const;
+	void CollisionStage(VECTOR pos);
+	float GetSpeed(void)const;
+	VECTOR GetDir(void)const;
 
 	// 状態の変更
 	void ChangeState(STATE state);
 
-	// 衝突判定
-	void CollisionStage(VECTOR pos);
-
 	// ダメージを与える
 	void Damage(int damage);
+
+	VECTOR GetNextPos(float speed) const;
+	void ApplyPos(VECTOR newPos);
 
 private:
 	AnimationController* animController_;
@@ -94,10 +104,13 @@ private:
 	int modelId_;
 	VECTOR pos_;
 	VECTOR angles_;
+	VECTOR localAngles_;
 	VECTOR scales_;
 
 	// 移動方向
 	VECTOR moveDir_; 
+
+	float speed_;
 
 	// ノックバック方向
 	VECTOR knockBackDir_;
@@ -110,9 +123,10 @@ private:
 	STATE state_;
 
 private:
+	void ProcessAttack(void);
+
 	// 行動制御
 	void ProcessMove(void);
-	void ProcessAttack(void);
 
 	// 状態遷移
 	void ChangeStandby(void);
@@ -125,4 +139,9 @@ private:
 	void UpdateKnockback(void);
 	void UpdateAttack(void);
 	void UpdateDead(void);
+
+	void InitTransformPost(void);
+
+	// 遅延回転処理
+	void DelayRotate(void);
 };

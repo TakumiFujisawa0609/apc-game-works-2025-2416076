@@ -103,8 +103,12 @@ void GameScene::UpdateGame(void)
 
 	blockManager_->Update();
 	grid_->Update();
-	player_->Update();
 	timer_->Update();
+
+	Collision();
+
+	player_->Update();
+
 
 	// ポーズメニューへ
 	if (ins.IsPause())
@@ -119,7 +123,6 @@ void GameScene::UpdateGame(void)
 		SceneManager::GetInstance().ChangeScene(
 			SceneManager::SCENE_ID::RESULT);
 	}
-
 }
 
 void GameScene::UpdatePause(void)
@@ -130,5 +133,40 @@ void GameScene::UpdatePause(void)
 	{
 		ChangeState(STATE::GAME);
 	}
+}
 
+void GameScene::Collision(void)
+{
+	float speed = player_->GetSpeed();
+
+	if (speed > 0.0f)
+	{
+		// ステージブロックとプレイヤーの衝突
+		VECTOR playerPos = player_->GetPos();
+
+		// 向き
+		VECTOR dir = player_->GetDir();
+
+		// 前方座標
+		const float COLLISION_OFFSET = 15.0f;
+		const float COLLISION_HEIGHT = 10.0f;
+
+		// 前方方向を計算
+		VECTOR forwardPos = VAdd(playerPos, VScale(dir, COLLISION_OFFSET));
+
+		// 線分の始点と終点
+		VECTOR startPos = playerPos;
+		VECTOR endPos = forwardPos;
+
+		startPos.y = endPos.y = COLLISION_HEIGHT;
+
+		// ステージとの衝突判定
+		MV1_COLL_RESULT_POLY result;
+
+		if (blockManager_->IsCollisionLine(startPos, endPos, &result))
+		{
+			// プレイヤーに衝突座標を渡す
+			player_->CollisionStage(result.HitPosition);
+		}
+	}
 }

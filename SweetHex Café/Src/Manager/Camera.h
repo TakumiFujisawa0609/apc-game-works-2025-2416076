@@ -8,7 +8,7 @@ class Camera
 public:
 	// カメラの初期位置
 	static constexpr VECTOR DEFAULT_POS =
-	{ 0.0f, 1000.0f, -1000.0f };
+	{ 0.0f, 900.0f, -750.0f };
 
 	// カメラの初期角度
 	static constexpr VECTOR DEFAULT_ANGLES =

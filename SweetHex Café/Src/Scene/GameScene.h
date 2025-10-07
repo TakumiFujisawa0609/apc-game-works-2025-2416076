@@ -47,4 +47,6 @@ private:
 	// XVˆ—
 	void UpdateGame(void);
 	void UpdatePause(void);
+
+	void Collision(void);
 };

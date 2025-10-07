@@ -114,5 +114,10 @@ public:
 	static void DrawLineDir(const VECTOR& pos, const VECTOR& dir, int color, float len = 50.0f);
 	static void DrawLineXYZ(const VECTOR& pos, const Quaternion& rot, float len = 50.0f);
 
+	// Šp“x‚ğ -ƒÎ ` ƒÎ ‚É³‹K‰»
+	static float NormalizeAngle(float rad);
+
+	// Šp“x‚ÌüŒ`•âŠÔ(í‚ÉÅ’ZŒo˜H)
+	static float LerpAngle(float from, float to, float t);
 };
 
