@@ -60,7 +60,7 @@ void GameScene::Draw(void)
 {
 	grid_->Draw();
 	blockManager_->Draw();
-	player_->Draw();
+	player_->Draw(blockManager_);
 	timer_->Draw();
 
 	if (state_ == STATE::PAUSE)

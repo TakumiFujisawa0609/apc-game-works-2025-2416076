@@ -75,9 +75,51 @@ void Player::Update(void)
 	animController_->Update();
 }
 
-void Player::Draw(void)
+void Player::Draw(BlockManager* block)
 {
 	MV1DrawModel(modelId_);
+
+#ifdef _DEBUG
+
+	VECTOR playerPos = pos_;
+	VECTOR dir = moveDir_;
+
+	const float COLLISION_OFFSET = 40.0f;   // 前方距離
+	const float COLLISION_HEIGHT = 10.0f;   // 高さ
+
+	VECTOR startPos = playerPos;
+	VECTOR endPos = VAdd(playerPos, VScale(dir, COLLISION_OFFSET));
+
+	startPos.y = endPos.y = COLLISION_HEIGHT;
+
+	DrawSphere3D(startPos, 5, 16, 0xff0000, 0xff0000, true);
+	DrawSphere3D(endPos, 5, 16, 0xff0000, 0xff0000, true);
+
+
+	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
+
+	if (hit.hit)
+	{
+		// タグで判定
+		if (hit.tag == "FRIDGE")
+		{
+			// 冷蔵庫に当たった場合の処理
+			DrawString(0, 20, "冷蔵庫に当たった", 0x000000);
+		}
+		else if (hit.tag == "CASH_REGISTER")
+		{
+			// レジに当たった場合の処理
+			DrawString(0, 20, "レジに当たった", 0x000000);
+		}
+		else if (hit.tag == "DISPLAY_CASE")
+		{
+			// 提供カウンターに当たった場合の処理
+			DrawString(0, 20, "提供カウンターに当たった", 0x000000);
+		}
+	}
+
+#endif // _DEBUG
+
 }
 
 void Player::Release(void)

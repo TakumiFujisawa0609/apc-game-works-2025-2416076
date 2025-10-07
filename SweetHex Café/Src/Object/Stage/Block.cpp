@@ -56,15 +56,15 @@ void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ, flo
     {
     case TYPE::CASH_REGISTER:
         // レジ
-        tag_ = "CashRegister";
+        tag_ = "CASH_REGISTER";
         break;
     case TYPE::DISPLAY_CASE:
         // 提供カウンター
-        tag_ = "DisplayCase";
+        tag_ = "DISPLAY_CASE";
         break;
     case TYPE::FRIDGE:
         // 冷蔵庫
-        tag_ = "Fridge";
+        tag_ = "FRIDGE";
         break;
     default:
         tag_ = "None";
