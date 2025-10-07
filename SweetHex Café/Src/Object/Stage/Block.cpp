@@ -51,6 +51,25 @@ void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ, flo
 
     // 衝突判定（モデルの全て）の前準備を行う
     MV1SetupCollInfo(modelId_, -1);
+
+    switch (type)
+    {
+    case TYPE::CASH_REGISTER:
+        // レジ
+        tag_ = "CashRegister";
+        break;
+    case TYPE::DISPLAY_CASE:
+        // 提供カウンター
+        tag_ = "DisplayCase";
+        break;
+    case TYPE::FRIDGE:
+        // 冷蔵庫
+        tag_ = "Fridge";
+        break;
+    default:
+        tag_ = "None";
+        break;
+    }
 }
 
 void Block::Update(void)

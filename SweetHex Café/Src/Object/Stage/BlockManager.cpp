@@ -175,9 +175,10 @@ void BlockManager::LoadMapCsvData(void)
 	}
 }
 
-bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result) const
+BlockManager::CollisionResult BlockManager::CheckCollisionLine(VECTOR start, VECTOR end) const
 {
-	bool ret = false;
+	CollisionResult result = { false, -1, VGet(0, 0, 0) };
+
 	for (int y = 0; y < NUM_BLOCK_Y; y++)
 	{
 		for (int z = 0; z < NUM_BLOCK_Z; z++)
@@ -187,22 +188,24 @@ bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESUL
 				// 2次元配列からBlock情報を取り出す
 				Block* block = blocks_[y][z][x];
 
-				if (block != nullptr)
+				// ブロックがないなら次にいく
+				if (block == nullptr)
 				{
+					continue;
+				}
 
-					// 線分とモデルの衝突判定
-					MV1_COLL_RESULT_POLY res =
-						MV1CollCheck_Line(block->GetModelId(), -1, topPos, downPos);
+				MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(block->GetModelId(), -1, start, end);
 
-					if (res.HitFlag)
-					{
-						// 結果を返す
-						*result = res;
-						return true;
-					}
+				if (hit.HitFlag)
+				{
+					result.hit = true;
+					result.modelId = block->GetModelId();
+					result.hitPos = hit.HitPosition;
+					result.tag = block->GetTag();
+					return result;
 				}
 			}
 		}
 	}
-	return ret;
+	return result;
 }
