@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <DxLib.h>
 
 class Block
@@ -47,6 +48,7 @@ public:
 	void Release(void);
 
 	int GetModelId(void) { return modelId_; }
+	const std::string& GetTag(void) { return tag_; }
 
 private:
 
@@ -55,6 +57,8 @@ private:
 
 	// モデルのハンドルID
 	int modelId_;
+
+	std::string tag_;
 
 	// 座標
 	VECTOR pos_;

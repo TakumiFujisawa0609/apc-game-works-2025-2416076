@@ -99,17 +99,16 @@ bool Player::MoveForward(const BlockManager* block)
 	VECTOR dir = moveDir_;
 
 	const float COLLISION_OFFSET = 40.0f;   // 前方距離
-	const float COLLISION_HEIGHT = 10.0f;   // 高さ（腰あたり）
+	const float COLLISION_HEIGHT = 10.0f;   // 高さ
 
 	VECTOR startPos = playerPos;
 	VECTOR endPos = VAdd(playerPos, VScale(dir, COLLISION_OFFSET));
 
 	startPos.y = endPos.y = COLLISION_HEIGHT;
 
-	MV1_COLL_RESULT_POLY result;
-	bool hit = block->IsCollisionLine(startPos, endPos, &result);
+	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
 
-	return !hit; // 当たってなければ進める
+	return !hit.hit; // 当たってなければ進める
 }
 
 void Player::SetMove(bool isMove)

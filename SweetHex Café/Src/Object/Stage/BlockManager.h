@@ -1,10 +1,20 @@
 #pragma once
+#include <string>
 #include <DxLib.h>
 class Block;
 
 class BlockManager
 {
 public:
+
+	struct CollisionResult
+	{
+		bool hit;
+		int modelId;
+		VECTOR hitPos;
+		std::string tag;
+	};
+
 	// ブロック用のモデル種類
 	static constexpr int NUM_BLOCK_MODELS = 18;
 
@@ -36,8 +46,7 @@ public:
 	void LoadMapCsvData(void);
 
 	// 線分とブロックの衝突判定
-	bool IsCollisionLine(
-		VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result) const;
+	CollisionResult CheckCollisionLine(VECTOR start, VECTOR end) const;
 
 private:
 
