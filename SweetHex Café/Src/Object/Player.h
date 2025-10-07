@@ -2,6 +2,7 @@
 #include <DxLib.h>
 
 class AnimationController;
+class BlockManager;
 
 class Player
 {
@@ -84,9 +85,8 @@ public:
 	void Release(void);
 
 	VECTOR GetPos(void)const;
-	void CollisionStage(VECTOR pos);
-	float GetSpeed(void)const;
-	VECTOR GetDir(void)const;
+	bool MoveForward(const BlockManager* block);
+	void SetMove(bool isMove);
 
 	// 状態の変更
 	void ChangeState(STATE state);
@@ -94,8 +94,8 @@ public:
 	// ダメージを与える
 	void Damage(int damage);
 
-	VECTOR GetNextPos(float speed) const;
-	void ApplyPos(VECTOR newPos);
+	// 行動制御
+	void ProcessMove(BlockManager* block);
 
 private:
 	AnimationController* animController_;
@@ -112,6 +112,8 @@ private:
 
 	float speed_;
 
+	bool isMove_;
+
 	// ノックバック方向
 	VECTOR knockBackDir_;
 	// ノックバックカウンタ(点滅用)
@@ -124,9 +126,6 @@ private:
 
 private:
 	void ProcessAttack(void);
-
-	// 行動制御
-	void ProcessMove(void);
 
 	// 状態遷移
 	void ChangeStandby(void);

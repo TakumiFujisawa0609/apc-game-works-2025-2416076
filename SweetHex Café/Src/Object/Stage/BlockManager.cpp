@@ -175,7 +175,7 @@ void BlockManager::LoadMapCsvData(void)
 	}
 }
 
-bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result)
+bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result) const
 {
 	bool ret = false;
 	for (int y = 0; y < NUM_BLOCK_Y; y++)

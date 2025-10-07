@@ -7,6 +7,7 @@
 #include "../Manager/InputController.h"
 #include "../Manager/Camera.h"
 #include "Common/AnimationController.h"
+#include "Stage/BlockManager.h"
 
 Player::Player(void)
 {
@@ -92,21 +93,28 @@ VECTOR Player::GetPos(void) const
 	return pos_;
 }
 
-void Player::CollisionStage(VECTOR pos)
+bool Player::MoveForward(const BlockManager* block)
 {
-	// 衝突判定に指定座標に押し戻す
-	pos_ = pos;
-	speed_ = 0.0f;
+	VECTOR playerPos = pos_;
+	VECTOR dir = moveDir_;
+
+	const float COLLISION_OFFSET = 40.0f;   // 前方距離
+	const float COLLISION_HEIGHT = 10.0f;   // 高さ（腰あたり）
+
+	VECTOR startPos = playerPos;
+	VECTOR endPos = VAdd(playerPos, VScale(dir, COLLISION_OFFSET));
+
+	startPos.y = endPos.y = COLLISION_HEIGHT;
+
+	MV1_COLL_RESULT_POLY result;
+	bool hit = block->IsCollisionLine(startPos, endPos, &result);
+
+	return !hit; // 当たってなければ進める
 }
 
-float Player::GetSpeed(void) const
+void Player::SetMove(bool isMove)
 {
-	return speed_;
-}
-
-VECTOR Player::GetDir(void) const
-{
-	return moveDir_;
+	isMove_ = isMove;
 }
 
 void Player::ChangeState(STATE state)
@@ -144,21 +152,7 @@ void Player::Damage(int damage)
 	}
 }
 
-VECTOR Player::GetNextPos(float speed) const
-{
-
-	VECTOR movePow = VScale(moveDir_, speed);
-
-	return VAdd(pos_, movePow);
-}
-
-void Player::ApplyPos(VECTOR newPos)
-{
-	pos_ = newPos;
-	MV1SetPosition(modelId_, pos_);
-}
-
-void Player::ProcessMove(void)
+void Player::ProcessMove(BlockManager* block)
 {
 	InputController& ins = InputController::GetInstance();
 
@@ -205,11 +199,17 @@ void Player::ProcessMove(void)
 			}
 		}
 
-		// 移動量を計算する
-		VECTOR movePow = VScale(moveDir_, speed_);
-
-		// 移動量処理
-		pos_ = VAdd(pos_, movePow);
+		if (MoveForward(block))
+		{
+			// 移動量を計算する
+			VECTOR movePow = VScale(moveDir_, speed_);
+			// 移動量処理
+			pos_ = VAdd(pos_, movePow);
+		}
+		else
+		{
+			speed_ = 0.0f;
+		}
 
 		// アニメーションの切り替え
 		if (ins.IsDash())
@@ -225,9 +225,10 @@ void Player::ProcessMove(void)
 	}
 	else
 	{
-		speed_ = 0.0f;
 		animController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 	}
+
+	MV1SetPosition(modelId_, pos_);
 }
 
 void Player::ProcessAttack(void)
@@ -264,9 +265,7 @@ void Player::ChangeDead(void)
 
 void Player::UpdateStandby(void)
 {
-	ProcessMove();
-
-	// 行列の合成(子, 親と指定すると親⇒子の順に適用される)
+	// 行列の合成
 	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
 
 	// 回転行列をモデルに反映

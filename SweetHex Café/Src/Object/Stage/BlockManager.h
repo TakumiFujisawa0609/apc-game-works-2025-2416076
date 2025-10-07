@@ -37,7 +37,7 @@ public:
 
 	// ü•ª‚ÆƒuƒƒbƒN‚ÌÕ“Ë”»’è
 	bool IsCollisionLine(
-		VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result);
+		VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result) const;
 
 private:
 
