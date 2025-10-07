@@ -55,6 +55,11 @@ void TitleScene::Draw(void)
 		break;
 	}
 
+	DrawString(
+		Application::SCREEN_SIZE_X / 2 - 80,
+		Application::SCREEN_SIZE_Y / 2,
+		"SweetHex Cafe", 0x000000);
+
 #ifdef _DEBUG
 	DrawString(0, 0, "TitleScene", 0xffffff);
 #endif // _DEBUG

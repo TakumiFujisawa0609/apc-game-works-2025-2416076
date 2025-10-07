@@ -41,8 +41,8 @@ void Camera::DrawDebug(void)
 {
 #ifdef _DEBUG
 
-	DrawFormatString(0, 60, 0xffffff, "カメラ座標 : %.2f,%.2f,%.2f", pos_.x, pos_.y, pos_.z);
-	DrawFormatString(0, 80, 0xffffff, "カメラ角度 : %.2f,%.2f,%.2f", angles_.x *180.0f / DX_PI_F, angles_.y * 180.0f / DX_PI_F, angles_.z* 180.0f/DX_PI_F);
+	/*DrawFormatString(0, 60, 0xffffff, "カメラ座標 : %.2f,%.2f,%.2f", pos_.x, pos_.y, pos_.z);
+	DrawFormatString(0, 80, 0xffffff, "カメラ角度 : %.2f,%.2f,%.2f", angles_.x *180.0f / DX_PI_F, angles_.y * 180.0f / DX_PI_F, angles_.z* 180.0f/DX_PI_F);*/
 
 
 #endif // _DEBUG
