@@ -92,8 +92,8 @@ void Player::Draw(BlockManager* block)
 
 	startPos.y = endPos.y = COLLISION_HEIGHT;
 
-	DrawSphere3D(startPos, 5, 16, 0xff0000, 0xff0000, true);
-	DrawSphere3D(endPos, 5, 16, 0xff0000, 0xff0000, true);
+	DrawSphere3D(startPos, 10, 16, 0xff0000, 0xff0000, true);
+	DrawSphere3D(endPos, 10, 16, 0xff0000, 0xff0000, true);
 
 
 	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
@@ -151,11 +151,6 @@ bool Player::MoveForward(const BlockManager* block)
 	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
 
 	return !hit.hit; // 当たってなければ進める
-}
-
-void Player::SetMove(bool isMove)
-{
-	isMove_ = isMove;
 }
 
 void Player::ChangeState(STATE state)
@@ -234,7 +229,7 @@ void Player::ProcessMove(BlockManager* block)
 		moveDir_ = VTransform(moveDir, mat);
 
 		// 移動方向に合わせてプレイヤーの向きを回転
-		angles_.y = atan2f(moveDir_.x, moveDir_.z);
+		//angles_.y = atan2f(moveDir_.x, moveDir_.z);
 
 		if (ins.IsMoveDown() || ins.IsMoveLeft() || ins.IsMoveRight() || ins.IsMoveUp())
 		{
@@ -379,5 +374,5 @@ void Player::DelayRotate(void)
 	float goal = atan2f(moveDir_.x, moveDir_.z);
 
 	// 常に最短経路で補間
-	angles_.y = Utility::LerpAngle(angles_.y, goal, 0.05f);
+	angles_.y = Utility::LerpAngle(angles_.y, goal, 0.5f);
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+class FpsControl;
+
 class Application
 {
 
@@ -47,6 +49,9 @@ private:
 
 	// 静的インスタンス
 	static Application* instance_;
+
+	// FPSコントローラー
+	FpsControl* fps_;
 
 	// 初期化失敗
 	bool isInitFail_;

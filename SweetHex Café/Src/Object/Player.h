@@ -86,7 +86,6 @@ public:
 
 	VECTOR GetPos(void)const;
 	bool MoveForward(const BlockManager* block);
-	void SetMove(bool isMove);
 
 	// ó‘Ô‚Ì•ÏX
 	void ChangeState(STATE state);

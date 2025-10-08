@@ -49,7 +49,6 @@ void BlockManager::Update(void)
 				if (blocks_[y][z][x] != nullptr) 
 				{
 					blocks_[y][z][x]->Update();
-
 				}
 			}
 		}

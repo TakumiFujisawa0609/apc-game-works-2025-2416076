@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\FpsControl.cpp" />
     <ClCompile Include="Src\Scene\ResultScene.cpp" />
     <ClCompile Include="Src\Manager\Pause.cpp" />
     <ClCompile Include="Src\Manager\InputController.cpp" />
@@ -44,6 +45,7 @@
     <ClCompile Include="Src\Manager\SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\FpsControl.h" />
     <ClInclude Include="Src\Scene\ResultScene.h" />
     <ClInclude Include="Src\Manager\Pause.h" />
     <ClInclude Include="Src\Manager\InputController.h" />

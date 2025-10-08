@@ -3,6 +3,7 @@
 #include "Manager/SceneManager.h"
 #include "Manager/InputController.h"
 #include "Manager/SystemManager.h"
+#include "Common/FpsControl.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -58,6 +59,11 @@ void Application::Init(void)
 
 	// 入力制御初期化
 	SetUseDirectInputFlag(true);
+
+	//FPS初期化
+	fps_ = new FpsControl;
+	fps_->Init();
+
 	InputManager::CreateInstance();
 	InputController::CreateInstance();
 	SystemManager::CreateInstance();
@@ -76,12 +82,17 @@ void Application::Run(void)
 	// ゲームループ
 	while (ProcessMessage() == 0 && !isEnd_)
 	{
+		//フレームレート更新
+		if (!fps_->UpdateFrameRate()) continue;
 
 		inputManager.Update();
 		sceneManager.Update();
 
 		sceneManager.Draw();
 
+
+		fps_->CalcFrameRate();
+		fps_->DrawFrameRate();
 		ScreenFlip();
 
 	}
@@ -90,13 +101,6 @@ void Application::Run(void)
 
 void Application::Destroy(void)
 {
-
-	// DxLib終了
-	if (DxLib_End() == -1)
-	{
-		isReleaseFail_ = true;
-	}
-
 	// シーン管理解放
 	SceneManager::GetInstance().Destroy();
 
@@ -106,6 +110,16 @@ void Application::Destroy(void)
 
 	// システム管理解放
 	SystemManager::GetInstance().Destroy();
+
+	//フレームレート解放
+	delete fps_;
+
+	// DxLib終了
+	if (DxLib_End() == -1)
+	{
+		isReleaseFail_ = true;
+		return;
+	}
 
 	// インスタンスのメモリ解放
 	delete instance_;
