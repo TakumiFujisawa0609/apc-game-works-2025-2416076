@@ -1,9 +1,11 @@
 #include <chrono>
 #include <DxLib.h>
+
 #include "../Common/Fader.h"
 #include "../Scene/TitleScene.h"
 #include "../Scene/GameScene.h"
 #include "../Scene/ResultScene.h"
+#include "../Scene/GameOverScene.h"
 #include "Camera.h"
 #include "SceneManager.h"
 
@@ -203,7 +205,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		scene_ = new ResultScene();
 		break;
 	case SCENE_ID::GAMEOVER:
-		//scene_ = new GameOverScene();
+		scene_ = new GameOverScene();
 		break;
 
 	}

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\GameOverScene.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemySlime.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
@@ -48,6 +49,7 @@
     <ClCompile Include="Src\Manager\SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\GameOverScene.h" />
     <ClInclude Include="Src\Object\Enemy\EnemySlime.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />

@@ -363,6 +363,12 @@ void Player::UpdateAttack(void)
 
 void Player::UpdateDead(void)
 {
+	// アニメーションが終わったら、エンド状態にする
+	if (animController_->IsEnd())
+	{
+		SceneManager::GetInstance().ChangeScene(
+			SceneManager::SCENE_ID::GAMEOVER);
+	}
 }
 
 void Player::InitTransformPost(void)
