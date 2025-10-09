@@ -11,6 +11,8 @@
 #include "../Object/Stage/BlockManager.h"
 #include "../Object/Player.h"
 #include "../Object/Timer.h"
+#include "../Object/Enemy/EnemyManager.h"
+#include "../Object/Enemy/EnemyBase.h"
 
 #include "GameScene.h"
 
@@ -39,6 +41,9 @@ void GameScene::Init(void)
 	timer_ = new Timer();
 	timer_->Init();
 
+	enemyManager_ = new EnemyManager(player_);
+	enemyManager_->Init();
+
 	ChangeState(STATE::GAME);
 
 }
@@ -60,6 +65,7 @@ void GameScene::Draw(void)
 {
 	grid_->Draw();
 	blockManager_->Draw();
+	enemyManager_->Draw();
 	player_->Draw(blockManager_);
 	timer_->Draw();
 
@@ -85,6 +91,9 @@ void GameScene::Release(void)
 	player_->Release();
 	delete player_;
 
+	enemyManager_->Release();
+	delete enemyManager_;
+
 	pause_->Release();
 	delete pause_;
 
@@ -103,11 +112,12 @@ void GameScene::UpdateGame(void)
 
 	blockManager_->Update();
 	grid_->Update();
+	enemyManager_->Update();
 	timer_->Update();
+	player_->Update();
 
 	Collision();
-
-	player_->Update();
+	CollisionEnemy();
 
 
 	// ポーズメニューへ
@@ -139,4 +149,30 @@ void GameScene::Collision(void)
 {
 	// 進めるかどうかをチェックする
 	player_->ProcessMove(blockManager_);
+}
+
+void GameScene::CollisionEnemy(void)
+{
+	// エネミーとプレイヤーの衝突判定
+	VECTOR playerPos = player_->GetPos();
+	// 敵の情報を取得
+	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+	for (EnemyBase* enemy : enemys)
+	{
+
+		if (!enemy->IsCollisionState())
+		{
+			continue;
+		}
+
+
+		// 敵とプレイヤーの衝突判定条件を満たしたら、
+		if (Utility::IsHitSpheres(playerPos, Player::COLLISION_RADIUS,
+			enemy->GetPos(), enemy->GetRadius()))
+		{
+			VECTOR enemyDir = enemy->GetDir();
+			//player_->KnockBack(enemyDir, 20.0f);
+			player_->Damage(1);
+		}
+	}
 }

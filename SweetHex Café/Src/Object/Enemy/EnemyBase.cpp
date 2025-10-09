@@ -1,10 +1,15 @@
 #include "../../Application.h"
 #include "../../Utility/Utility.h"
 
+#include "../Stage/BlockManager.h"
 #include "../Common/AnimationController.h"
 #include "../Player.h"
 
 #include "EnemyBase.h"
+
+EnemyBase::EnemyBase(void)
+{
+}
 
 EnemyBase::~EnemyBase(void)
 {
@@ -90,7 +95,7 @@ void EnemyBase::Draw(void)
 	}
 
 #ifdef _DEBUG
-	DrawSphere3D(pos_, collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
+	//DrawSphere3D(pos_, collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
 #endif // _DEBUG
 }
 
@@ -219,7 +224,7 @@ void EnemyBase::Move(void)
 	{
 		pos_.x = 0.0f;
 	}
-	/*if (pos_.x > BlockManager::WORLD_SIZE)
+	if (pos_.x > BlockManager::WORLD_SIZE)
 	{
 		pos_.x = BlockManager::WORLD_SIZE;
 	}
@@ -231,10 +236,10 @@ void EnemyBase::Move(void)
 	if (pos_.z > BlockManager::WORLD_SIZE)
 	{
 		pos_.z = BlockManager::WORLD_SIZE;
-	}*/
+	}
 
 	// ƒ‚ƒfƒ‹‚ÉÀ•W‚ğİ’è
-	//MV1SetPosition(modelId_, pos_);
+	MV1SetPosition(modelId_, pos_);
 }
 
 void EnemyBase::SetSpawnPosition(void)
@@ -268,6 +273,7 @@ void EnemyBase::ChangeEnd(void)
 
 void EnemyBase::UpdateStandby(void)
 {
+	LookPlayer();
 	Move();
 }
 

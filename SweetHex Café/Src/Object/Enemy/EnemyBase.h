@@ -7,6 +7,8 @@ class AnimationController;
 
 class EnemyBase
 {
+public:
+
 	// 標準の拡散光色
 	static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f };
 
@@ -32,8 +34,16 @@ class EnemyBase
 	// アニメーション種別
 	enum class ANIM_TYPE
 	{
+		ANGER,
+		EXCITE,
+		SAD,
 		IDLE,
+		IDLE_BREAK,
+		JUMP,
 		MOVE,
+		SQUISH_END,
+		SQUISH_START,
+		WIGGIE,
 		MAX,
 	};
 

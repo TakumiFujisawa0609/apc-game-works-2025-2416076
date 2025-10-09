@@ -30,6 +30,8 @@ void Player::Init(void)
 
 	speed_ = 0.0f;
 
+	collisionRadius_ = COLLISION_RADIUS;
+
 	// モデルの角度
 	angles_ = Utility::VECTOR_ZERO;
 	localAngles_ = { 0.0f, Utility::Deg2RadF(180.0f), 0.0f };
@@ -84,7 +86,7 @@ void Player::Draw(BlockManager* block)
 	VECTOR playerPos = pos_;
 	VECTOR dir = moveDir_;
 
-	const float COLLISION_OFFSET = 40.0f;   // 前方距離
+	const float COLLISION_OFFSET = 50.0f;   // 前方距離
 	const float COLLISION_HEIGHT = 10.0f;   // 高さ
 
 	VECTOR startPos = playerPos;
@@ -118,6 +120,8 @@ void Player::Draw(BlockManager* block)
 		}
 	}
 
+	DrawSphere3D(pos_, collisionRadius_, 10, 0xff0000, 0xff0000, false);
+
 #endif // _DEBUG
 
 }
@@ -140,7 +144,7 @@ bool Player::MoveForward(const BlockManager* block)
 	VECTOR playerPos = pos_;
 	VECTOR dir = moveDir_;
 
-	const float COLLISION_OFFSET = 40.0f;   // 前方距離
+	const float COLLISION_OFFSET = 50.0f;   // 前方距離
 	const float COLLISION_HEIGHT = 10.0f;   // 高さ
 
 	VECTOR startPos = playerPos;
@@ -264,6 +268,17 @@ void Player::ProcessMove(BlockManager* block)
 			// 通常移動時
 			animController_->Play(static_cast<int>(ANIM_TYPE::WALK));
 		}
+
+		// 移動制限処理
+		if (pos_.x < 0.0f)
+		{
+			pos_.x = 0.0f;
+		}
+		if (pos_.x > BlockManager::WORLD_SIZE)
+		{
+			pos_.x = BlockManager::WORLD_SIZE;
+		}
+
 	}
 	else
 	{

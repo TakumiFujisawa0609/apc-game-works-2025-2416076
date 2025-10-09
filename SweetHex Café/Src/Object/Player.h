@@ -118,6 +118,9 @@ private:
 	// ノックバックカウンタ(点滅用)
 	int cntKnockBack_;
 
+	// 衝突判定用半径
+	float collisionRadius_;
+
 	int hp_;
 
 	// 現在の状態

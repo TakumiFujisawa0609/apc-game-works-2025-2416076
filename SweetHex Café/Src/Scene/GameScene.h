@@ -7,6 +7,7 @@ class BlockManager;
 class Player;
 class Pause;
 class Timer;
+class EnemyManager;
 
 class GameScene : public SceneBase
 {
@@ -40,6 +41,8 @@ private:
 	Player* player_;
 	Pause* pause_;
 	Timer* timer_;
+	EnemyManager* enemyManager_;
+
 
 	// ó‘Ô•ÏX
 	void ChangeState(STATE state);
@@ -49,4 +52,5 @@ private:
 	void UpdatePause(void);
 
 	void Collision(void);
+	void CollisionEnemy(void);
 };
