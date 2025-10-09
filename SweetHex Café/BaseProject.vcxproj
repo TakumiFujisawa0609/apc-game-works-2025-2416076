@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Enemy\EnemySlime.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Common\FpsControl.cpp" />
     <ClCompile Include="Src\Scene\ResultScene.cpp" />
     <ClCompile Include="Src\Manager\Pause.cpp" />
@@ -45,6 +48,9 @@
     <ClCompile Include="Src\Manager\SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Enemy\EnemySlime.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Common\FpsControl.h" />
     <ClInclude Include="Src\Scene\ResultScene.h" />
     <ClInclude Include="Src\Manager\Pause.h" />

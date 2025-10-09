@@ -1,0 +1,354 @@
+#include "../../Application.h"
+#include "../../Utility/Utility.h"
+
+#include "../Common/AnimationController.h"
+#include "../Player.h"
+
+#include "EnemyBase.h"
+
+EnemyBase::~EnemyBase(void)
+{
+}
+
+void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
+{
+	type_ = type;
+
+	player_ = player;
+
+	modelId_ = MV1DuplicateModel(baseModelId);
+
+	// パラメータ
+	SetParam();
+
+	// 色の調整(自己発光)
+	MV1SetMaterialEmiColor(modelId_, 0, COLOR_EMI_DEFAULT);
+
+	// 大きさ
+	MV1SetScale(modelId_, scales_);
+
+	SetSpawnPosition();
+
+	animController_ = new AnimationController(modelId_);
+
+	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
+	{
+		animController_->AddInFbx(i, 30.0f, i);
+	}
+
+	animController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+
+	// 初期状態
+	ChangeState(STATE::STANDBY);
+
+	cntAttack_ = 0.0f;
+}
+
+void EnemyBase::Update(void)
+{
+	switch (state_)
+	{
+	case EnemyBase::STATE::STANDBY:
+		UpdateStandby();
+		break;
+	case EnemyBase::STATE::ATTACK:
+		UpdateAttack();
+		break;
+	case EnemyBase::STATE::HIT_REACT:
+		UpdateHit();
+		break;
+	case EnemyBase::STATE::DEAD_REACK:
+		UpdateDead();
+		break;
+	case EnemyBase::STATE::END:
+		UpdateEnd();
+		break;
+	}
+
+	animController_->Update();
+}
+
+void EnemyBase::Draw(void)
+{
+	switch (state_)
+	{
+	case EnemyBase::STATE::STANDBY:
+		DrawStandby();
+		break;
+	case EnemyBase::STATE::ATTACK:
+		DrawAttack();
+		break;
+	case EnemyBase::STATE::HIT_REACT:
+		DrawHit();
+		break;
+	case EnemyBase::STATE::DEAD_REACK:
+		DrawDead();
+		break;
+	case EnemyBase::STATE::END:
+		DrawEnd();
+		break;
+	}
+
+#ifdef _DEBUG
+	DrawSphere3D(pos_, collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
+#endif // _DEBUG
+}
+
+void EnemyBase::Release(void)
+{
+	MV1DeleteModel(modelId_);
+
+	animController_->Release();
+	delete animController_;
+}
+
+void EnemyBase::ChangeState(STATE state)
+{
+	state_ = state;
+
+	switch (state_)
+	{
+	case EnemyBase::STATE::STANDBY:
+		ChangeStandby();
+		break;
+	case EnemyBase::STATE::ATTACK:
+		ChangeAttack();
+		break;
+	case EnemyBase::STATE::HIT_REACT:
+		ChangeHit();
+		break;
+	case EnemyBase::STATE::DEAD_REACK:
+		ChangeDead();
+		break;
+	case EnemyBase::STATE::END:
+		ChangeEnd();
+		break;
+	}
+}
+
+VECTOR EnemyBase::GetPos(void)const
+{
+	return pos_;
+}
+
+float EnemyBase::GetRadius(void) const
+{
+	return collisionRadius_;
+}
+
+VECTOR EnemyBase::GetDir(void) const
+{
+	return moveDir_;
+}
+
+EnemyBase::STATE EnemyBase::GetState(void)const
+{
+	return state_;
+}
+
+bool EnemyBase::IsAlive(void)
+{
+	return isAlive_;
+}
+
+void EnemyBase::SetAlive(bool isAlive)
+{
+	isAlive_ = isAlive;
+}
+
+void EnemyBase::Damage(int damage)
+{
+	hp_ -= damage;
+
+	if (hp_ < 0)
+	{
+		hp_ = 0;
+	}
+
+	if (hp_ <= 0)
+	{
+		ChangeState(STATE::DEAD_REACK);
+	}
+	else
+	{
+		ChangeState(STATE::HIT_REACT);
+	}
+}
+
+bool EnemyBase::IsCollisionState(void)
+{
+	return state_ == STATE::STANDBY
+		|| state_ == STATE::ATTACK;
+}
+
+void EnemyBase::LookPlayer(void)
+{
+	// プレイヤー（相手）の座標を取得
+	VECTOR playerPos = player_->GetPos();
+
+	// 相手へのベクトルを計算
+	VECTOR diff = VSub(playerPos, pos_);
+	diff.y = 0.0f;
+
+	// ベクトルの正規化で単位ベクトル（方向）を取得
+	moveDir_ = VNorm(diff);
+
+	// 方向から角度（ラジアン）に変換
+	angles_.y = atan2(moveDir_.x, moveDir_.z);
+
+	// モデルの方向が正の負の方向を向いているので、補正
+	angles_.y += Utility::Deg2RadF(180.0f);
+
+	// 回転はY軸のみ
+	angles_.x = angles_.z = 0.0f;
+
+	// モデルに角度を設定
+	MV1SetRotationXYZ(modelId_, angles_);
+}
+
+void EnemyBase::Move(void)
+{
+	// 移動量（方向×スピード）
+	VECTOR movePow = VScale(moveDir_, speed_);
+
+	// 移動処理（座標+移動量)
+	pos_ = VAdd(pos_, movePow);
+
+	// 移動制限処理
+	if (pos_.x < 0.0f)
+	{
+		pos_.x = 0.0f;
+	}
+	/*if (pos_.x > BlockManager::WORLD_SIZE)
+	{
+		pos_.x = BlockManager::WORLD_SIZE;
+	}
+
+	if (pos_.z < 0.0f)
+	{
+		pos_.z = 0.0f;
+	}
+	if (pos_.z > BlockManager::WORLD_SIZE)
+	{
+		pos_.z = BlockManager::WORLD_SIZE;
+	}*/
+
+	// モデルに座標を設定
+	//MV1SetPosition(modelId_, pos_);
+}
+
+void EnemyBase::SetSpawnPosition(void)
+{
+}
+
+void EnemyBase::ChangeStandby(void)
+{
+	MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+}
+
+void EnemyBase::ChangeAttack(void)
+{
+}
+
+void EnemyBase::ChangeHit(void)
+{
+	// ヒットカウンタリセット
+	reactCnt_ = 0;
+	//animController_->Play(static_cast<int>(ANIM_TYPE::HIT_REACT));
+}
+
+void EnemyBase::ChangeDead(void)
+{
+	reactCnt_ = 0;
+}
+
+void EnemyBase::ChangeEnd(void)
+{
+}
+
+void EnemyBase::UpdateStandby(void)
+{
+	Move();
+}
+
+void EnemyBase::UpdateAttack(void)
+{
+	if (animController_->IsEnd())
+	{
+		ChangeState(STATE::STANDBY);
+	}
+}
+
+void EnemyBase::UpdateHit(void)
+{
+	// 指定時間になったら通常状態に戻す
+	if (reactCnt_ >= CNT_HIT_REACT)
+	{
+		ChangeState(STATE::STANDBY);
+		return;
+	}
+
+	if (reactCnt_ % TERM_BLINK == 0)
+	{
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+	}
+	else
+	{
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
+	}
+
+	reactCnt_++;
+}
+
+void EnemyBase::UpdateDead(void)
+{
+	if (reactCnt_ >= CNT_DEAD_REACT && animController_->IsEnd())
+	{
+		ChangeState(STATE::END);
+	}
+
+	if (animController_->IsEnd())
+	{
+		isAlive_ = false;
+	}
+
+	if (reactCnt_ % TERM_BLINK == 0)
+	{
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+	}
+	else
+	{
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
+	}
+}
+
+void EnemyBase::UpdateEnd(void)
+{
+}
+
+void EnemyBase::DrawStandby(void)
+{
+	MV1DrawModel(modelId_);
+}
+
+void EnemyBase::DrawAttack(void)
+{
+	MV1DrawModel(modelId_);
+}
+
+void EnemyBase::DrawHit(void)
+{
+	MV1DrawModel(modelId_);
+}
+
+void EnemyBase::DrawDead(void)
+{
+	if (isAlive_)
+	{
+		MV1DrawModel(modelId_);
+	}
+}
+
+void EnemyBase::DrawEnd(void)
+{
+}
