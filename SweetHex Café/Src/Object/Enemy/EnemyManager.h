@@ -8,7 +8,7 @@ class EnemyManager
 {
 public:
 
-	static constexpr int SPAWN_INTERVEL_SLIME = 180;
+	static constexpr int SPAWN_INTERVEL_SLIME = 300;
 
 	EnemyManager(Player* player);
 	~EnemyManager();
@@ -19,6 +19,8 @@ public:
 	void Release(void);
 
 	std::vector<EnemyBase*> GetEnemys(void);
+
+	void MoveForward(BlockManager* block);
 
 private:
 	// エネミー用のモデルハンドルID

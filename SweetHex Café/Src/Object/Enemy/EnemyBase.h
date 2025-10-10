@@ -4,6 +4,7 @@
 
 class Player;
 class AnimationController;
+class BlockManager;
 
 class EnemyBase
 {
@@ -76,14 +77,15 @@ public:
 	float GetRadius(void)const;
 	VECTOR GetDir(void)const;
 	STATE GetState(void)const;
-	bool IsAlive(void);
+	bool IsAlive(void)const;
 	void SetAlive(bool isAlive);
+	bool MoveForward(const BlockManager* block);
 
 	// ダメージを与える
 	void Damage(int damage);
 
 	// 衝突判定が有効な状態
-	bool IsCollisionState(void);
+	bool IsCollisionState(void)const;
 
 protected:
 	Player* player_;
@@ -106,6 +108,8 @@ protected:
 	STATE state_;
 
 	int cntAttack_;
+
+	bool isMove_;
 
 	// 衝突判定用半径
 	float collisionRadius_;

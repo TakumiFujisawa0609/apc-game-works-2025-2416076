@@ -112,13 +112,13 @@ void GameScene::UpdateGame(void)
 
 	blockManager_->Update();
 	grid_->Update();
-	enemyManager_->Update();
 	timer_->Update();
-	player_->Update();
 
 	Collision();
 	CollisionEnemy();
 
+	enemyManager_->Update();
+	player_->Update();
 
 	// ポーズメニューへ
 	if (ins.IsPause())
@@ -148,7 +148,8 @@ void GameScene::UpdatePause(void)
 void GameScene::Collision(void)
 {
 	// 進めるかどうかをチェックする
-	player_->ProcessMove(blockManager_);
+	player_->MoveForward(blockManager_);
+	enemyManager_->MoveForward(blockManager_);
 }
 
 void GameScene::CollisionEnemy(void)

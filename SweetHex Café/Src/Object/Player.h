@@ -93,8 +93,7 @@ public:
 	// ダメージを与える
 	void Damage(int damage);
 
-	// 行動制御
-	void ProcessMove(BlockManager* block);
+
 
 private:
 	AnimationController* animController_;
@@ -128,6 +127,8 @@ private:
 
 private:
 	void ProcessAttack(void);
+	// 行動制御
+	void ProcessMove(void);
 
 	// 状態遷移
 	void ChangeStandby(void);

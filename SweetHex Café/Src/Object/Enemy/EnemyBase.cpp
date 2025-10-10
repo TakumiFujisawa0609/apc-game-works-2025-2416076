@@ -47,6 +47,8 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 	ChangeState(STATE::STANDBY);
 
 	cntAttack_ = 0.0f;
+
+	isMove_ = true;
 }
 
 void EnemyBase::Update(void)
@@ -151,7 +153,7 @@ EnemyBase::STATE EnemyBase::GetState(void)const
 	return state_;
 }
 
-bool EnemyBase::IsAlive(void)
+bool EnemyBase::IsAlive(void)const
 {
 	return isAlive_;
 }
@@ -161,8 +163,41 @@ void EnemyBase::SetAlive(bool isAlive)
 	isAlive_ = isAlive;
 }
 
+bool EnemyBase::MoveForward(const BlockManager* block)
+{
+	VECTOR enemyPos = pos_;
+	VECTOR dir = moveDir_;
+
+	const float COLLISION_OFFSET = 70.0f;   // 前方距離
+	const float COLLISION_HEIGHT = 10.0f;   // 高さ
+
+	VECTOR startPos = enemyPos;
+	VECTOR endPos = VAdd(enemyPos, VScale(dir, COLLISION_OFFSET));
+
+	startPos.y = endPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
+
+	if (hit.hit)
+	{
+		isMove_ = false;
+	}
+	else
+	{
+		isMove_ = true;
+	}
+
+	return isMove_;	// 当たってなければ進める
+}
+
 void EnemyBase::Damage(int damage)
 {
+	// 攻撃中やノックバック中はダメージを受けない
+	if (state_ == STATE::HIT_REACT)
+	{
+		return;
+	}
+
 	hp_ -= damage;
 
 	if (hp_ < 0)
@@ -180,7 +215,7 @@ void EnemyBase::Damage(int damage)
 	}
 }
 
-bool EnemyBase::IsCollisionState(void)
+bool EnemyBase::IsCollisionState(void)const
 {
 	return state_ == STATE::STANDBY
 		|| state_ == STATE::ATTACK;
@@ -213,11 +248,14 @@ void EnemyBase::LookPlayer(void)
 
 void EnemyBase::Move(void)
 {
-	// 移動量（方向×スピード）
-	VECTOR movePow = VScale(moveDir_, speed_);
-
-	// 移動処理（座標+移動量)
-	pos_ = VAdd(pos_, movePow);
+	// 前方方向に障害物があるか確認
+	if (isMove_)
+	{
+		// 移動量を計算する
+		VECTOR movePow = VScale(moveDir_, speed_);
+		// 移動量処理
+		pos_ = VAdd(pos_, movePow);
+	}
 
 	// 移動制限処理
 	if (pos_.x < 0.0f)

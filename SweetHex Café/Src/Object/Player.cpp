@@ -51,6 +51,8 @@ void Player::Init(void)
 
 	hp_ = MAX_HP;
 
+	isMove_ = true;
+
 	ChangeState(STATE::STANDBY);
 }
 
@@ -96,6 +98,8 @@ void Player::Draw(BlockManager* block)
 
 	DrawSphere3D(startPos, 10, 16, 0xff0000, 0xff0000, true);
 	DrawSphere3D(endPos, 10, 16, 0xff0000, 0xff0000, true);
+
+	DrawFormatString(0, 40, 0x000000, "%.2f, %.2f,%.2f", pos_.x, pos_.y, pos_.z);
 
 
 	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
@@ -154,7 +158,16 @@ bool Player::MoveForward(const BlockManager* block)
 
 	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
 
-	return !hit.hit; // 当たってなければ進める
+	if (hit.hit)
+	{
+		isMove_ = false;
+	}
+	else
+	{
+		isMove_ = true;
+	}
+
+	return isMove_;
 }
 
 void Player::ChangeState(STATE state)
@@ -180,7 +193,14 @@ void Player::ChangeState(STATE state)
 
 void Player::Damage(int damage)
 {
+	// ノックバック中はダメージを受けない
+	if (state_ == STATE::KNOCKBACK)
+	{
+		return;
+	}
+
 	hp_ -= damage;
+
 	if (hp_ < 0)
 	{
 		hp_ = 0;
@@ -192,7 +212,7 @@ void Player::Damage(int damage)
 	}
 }
 
-void Player::ProcessMove(BlockManager* block)
+void Player::ProcessMove(void)
 {
 	// 攻撃中やノックバック中は移動させない
 	if (state_ != STATE::STANDBY)
@@ -245,7 +265,8 @@ void Player::ProcessMove(BlockManager* block)
 			}
 		}
 
-		if (MoveForward(block))
+		// 前方方向に障害物があるか確認
+		if (isMove_)
 		{
 			// 移動量を計算する
 			VECTOR movePow = VScale(moveDir_, speed_);
@@ -267,16 +288,6 @@ void Player::ProcessMove(BlockManager* block)
 		{
 			// 通常移動時
 			animController_->Play(static_cast<int>(ANIM_TYPE::WALK));
-		}
-
-		// 移動制限処理
-		if (pos_.x < 0.0f)
-		{
-			pos_.x = 0.0f;
-		}
-		if (pos_.x > BlockManager::WORLD_SIZE)
-		{
-			pos_.x = BlockManager::WORLD_SIZE;
 		}
 
 	}
@@ -322,6 +333,8 @@ void Player::ChangeDead(void)
 
 void Player::UpdateStandby(void)
 {
+	ProcessMove();
+
 	// 行列の合成
 	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
 
