@@ -14,7 +14,7 @@ public:
 	static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	// 点滅時の拡散光色
-	static constexpr COLOR_F COLOR_DIF_BLINK = { 1.0f, 0.2f, 0.2f, 1.0f };
+	static constexpr COLOR_F COLOR_DIF_BLINK = { 1.0f, 0.0f, 0.0f, 1.0f };
 
 	// 点滅間隔
 	static constexpr int TERM_BLINK = 8;
@@ -35,16 +35,16 @@ public:
 	// アニメーション種別
 	enum class ANIM_TYPE
 	{
-		ANGER,
-		EXCITE,
-		SAD,
-		IDLE,
-		IDLE_BREAK,
-		JUMP,
-		MOVE,
-		SQUISH_END,
-		SQUISH_START,
-		WIGGIE,
+		ANGER,			// 怒り
+		EXCITE,			// わくわく
+		SAD,			// 悲しい
+		IDLE,			// 待機
+		IDLE_BREAK,		// 待機崩れる
+		JUMP,			// ジャンプ
+		MOVE,			// 移動
+		SQUISH_END,		// へこみ終了
+		SQUISH_START,	// へこみ開始
+		WIGGIE,			// ゆらゆら
 		MAX,
 	};
 

@@ -150,7 +150,7 @@ bool InputController::IsAttack(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	if (ins.IsTrgDown(KEY_INPUT_J))
 	{
 		return true;
 	}

@@ -3,7 +3,7 @@
 
 #include "../Stage/BlockManager.h"
 #include "../Common/AnimationController.h"
-#include "../Player.h"
+#include "../Player/Player.h"
 
 #include "EnemyBase.h"
 
@@ -46,7 +46,7 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 	// ‰Šúó‘Ô
 	ChangeState(STATE::STANDBY);
 
-	cntAttack_ = 0.0f;
+	cntAttack_ = 0;
 
 	isMove_ = true;
 }
@@ -303,6 +303,7 @@ void EnemyBase::ChangeHit(void)
 void EnemyBase::ChangeDead(void)
 {
 	reactCnt_ = 0;
+	animController_->Play(static_cast<int>(ANIM_TYPE::SQUISH_START), false);
 }
 
 void EnemyBase::ChangeEnd(void)

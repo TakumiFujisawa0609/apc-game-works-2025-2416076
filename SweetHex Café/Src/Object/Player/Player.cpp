@@ -1,13 +1,17 @@
 #include "Player.h"
-#include "../Application.h"
-#include "../Utility/Utility.h"
-#include "../Utility/MatrixUtility.h"
-#include "../Manager/InputManager.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/InputController.h"
-#include "../Manager/Camera.h"
-#include "Common/AnimationController.h"
-#include "Stage/BlockManager.h"
+
+#include "../../Application.h"
+#include "../../Utility/Utility.h"
+#include "../../Utility/MatrixUtility.h"
+
+#include "../../Manager/InputManager.h"
+#include "../../Manager/SceneManager.h"
+#include "../../Manager/InputController.h"
+#include "../../Manager/Camera.h"
+
+#include "../Common/AnimationController.h"
+#include "../Stage/BlockManager.h"
+#include "../Weapon/WeaponPunch.h"
 
 Player::Player(void)
 {
@@ -53,6 +57,13 @@ void Player::Init(void)
 
 	isMove_ = true;
 
+	// •Ší‚Ì‰Šú‰»
+	weaponPunch_ = new WeaponPunch();
+	weaponPunch_->Init(WeaponBase::TYPE::PUNCH);
+
+	// ‰Šú•Ší‚Íƒpƒ“ƒ`
+	useWeapon_ = weaponPunch_;
+
 	ChangeState(STATE::STANDBY);
 }
 
@@ -75,6 +86,7 @@ void Player::Update(void)
 		UpdateDead();
 		break;
 	}
+	useWeapon_->Update();
 
 	animController_->Update();
 }
@@ -82,6 +94,8 @@ void Player::Update(void)
 void Player::Draw(BlockManager* block)
 {
 	MV1DrawModel(modelId_);
+
+	useWeapon_->Draw();
 
 #ifdef _DEBUG
 
@@ -136,6 +150,11 @@ void Player::Release(void)
 
 	animController_->Release();
 	delete animController_;
+
+	weaponPunch_->Release();
+	delete weaponPunch_;
+
+	useWeapon_ = nullptr;
 }
 
 VECTOR Player::GetPos(void) const
@@ -210,6 +229,11 @@ void Player::Damage(int damage)
 	{
 		ChangeState(STATE::DEAD);
 	}
+}
+
+WeaponBase* Player::GetUseWeapon(void)
+{
+	return useWeapon_;
 }
 
 void Player::ProcessMove(void)
@@ -323,6 +347,8 @@ void Player::ChangeKnockback(void)
 
 void Player::ChangeAttack(void)
 {
+	useWeapon_->Use(pos_, moveDir_);
+
 	animController_->Play(static_cast<int>(ANIM_TYPE::PUNCH), false);
 }
 

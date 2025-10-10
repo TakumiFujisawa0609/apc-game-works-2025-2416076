@@ -3,6 +3,8 @@
 
 class AnimationController;
 class BlockManager;
+class WeaponBase;
+class WeaponPunch;
 
 class Player
 {
@@ -76,6 +78,8 @@ public:
 	// 衝突判定用半径
 	static constexpr float COLLISION_RADIUS = 50.0f;
 
+public:
+
 	Player(void);
 	~Player(void);
 
@@ -93,10 +97,15 @@ public:
 	// ダメージを与える
 	void Damage(int damage);
 
-
+	WeaponBase* GetUseWeapon(void);
 
 private:
+	// アニメーション
 	AnimationController* animController_;
+
+	// 武器
+	WeaponBase* useWeapon_;
+	WeaponPunch* weaponPunch_;
 
 	// モデルのハンドルID
 	int modelId_;

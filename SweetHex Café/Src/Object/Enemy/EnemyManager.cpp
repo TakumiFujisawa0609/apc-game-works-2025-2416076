@@ -20,32 +20,25 @@ void EnemyManager::Init(void)
 
 	enemyModelIds_.emplace_back(
 		MV1LoadModel((Application::PATH_MODEL + "Enemy/Slime.mv1").c_str()));
-
-	EnemyBase* newEnemy = new EnemySlime();
-
-	newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_);
-
-	// リストに追加
-	enemys_.emplace_back(newEnemy);
 }
 
 void EnemyManager::Update(void)
 {
-	//// 出現カウンタ
-	//cntSpawn_++;
+	// 出現カウンタ
+	cntSpawn_++;
 
-	//if (cntSpawn_ >= SPAWN_INTERVEL_SLIME)
-	//{
-	//	EnemyBase* newEnemy = new EnemySlime();
+	if (cntSpawn_ >= SPAWN_INTERVEL_SLIME)
+	{
+		EnemyBase* newEnemy = new EnemySlime();
 
-	//	newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_);
+		newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_);
 
-	//	// リストに追加
-	//	enemys_.emplace_back(newEnemy);
+		// リストに追加
+		enemys_.emplace_back(newEnemy);
 
-	//	// カウンターをリセット
-	//	cntSpawn_ = 0;
-	//}
+		// カウンターをリセット
+		cntSpawn_ = 0;
+	}
 
 	for (EnemyBase* enemy : enemys_)
 	{

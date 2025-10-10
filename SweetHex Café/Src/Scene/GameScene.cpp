@@ -9,10 +9,11 @@
 
 #include "../Object/Grid.h"
 #include "../Object/Stage/BlockManager.h"
-#include "../Object/Player.h"
+#include "../Object/Player/Player.h"
 #include "../Object/Timer.h"
 #include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Enemy/EnemyBase.h"
+#include "../Object/Weapon/WeaponBase.h"
 
 #include "GameScene.h"
 
@@ -114,8 +115,10 @@ void GameScene::UpdateGame(void)
 	grid_->Update();
 	timer_->Update();
 
+	// “–‚½‚è”»’è
 	Collision();
 	CollisionEnemy();
+	CollisionWeapon();
 
 	enemyManager_->Update();
 	player_->Update();
@@ -174,6 +177,33 @@ void GameScene::CollisionEnemy(void)
 			VECTOR enemyDir = enemy->GetDir();
 			//player_->KnockBack(enemyDir, 20.0f);
 			player_->Damage(1);
+		}
+	}
+}
+
+void GameScene::CollisionWeapon(void)
+{
+	// “G‚Æ•Ší‚Ì“–‚½‚è”»’è
+	// •Ší‚Ìî•ñ
+	WeaponBase* useWeapon = player_->GetUseWeapon();
+
+	// UŒ‚’†i•`‰æ‚³‚ê‚Ä‚¢‚éj‚È‚ç
+	if (useWeapon->IsAlive())
+	{
+		// “G‚Ìî•ñ‚ğæ“¾
+		std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+		for (EnemyBase* enemy : enemys)
+		{
+			if (!enemy->IsCollisionState())
+			{
+				continue;
+			}
+
+			if (Utility::IsHitSpheres(useWeapon->GetPos(), useWeapon->GetCollisionRadius(),
+				enemy->GetPos(), enemy->GetRadius()))
+			{
+				enemy->Damage(1);
+			}
 		}
 	}
 }
