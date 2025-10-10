@@ -1,8 +1,10 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+
 #include "../../Application.h"
 #include "../../Utility/Utility.h"
+
 #include "Block.h"
 #include "BlockManager.h"
 

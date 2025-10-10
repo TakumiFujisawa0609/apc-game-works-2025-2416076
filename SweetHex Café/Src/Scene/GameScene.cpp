@@ -119,6 +119,7 @@ void GameScene::UpdateGame(void)
 	Collision();
 	CollisionEnemy();
 	CollisionWeapon();
+	CollisionEnemy2Enemy();
 
 	enemyManager_->Update();
 	player_->Update();
@@ -163,27 +164,34 @@ void GameScene::CollisionEnemy(void)
 	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
 	for (EnemyBase* enemy : enemys)
 	{
-
 		if (!enemy->IsCollisionState())
 		{
 			continue;
 		}
 
+		VECTOR enemyPos = enemy->GetPos();
 
 		// 敵とプレイヤーの衝突判定条件を満たしたら、
 		if (Utility::IsHitSpheres(playerPos, Player::COLLISION_RADIUS,
-			enemy->GetPos(), enemy->GetRadius()))
+			enemyPos, enemy->GetRadius()))
 		{
-			VECTOR enemyDir = enemy->GetDir();
-			//player_->KnockBack(enemyDir, 20.0f);
-			player_->Damage(1);
+			Utility::AdjustPositionCollision(playerPos, Player::COLLISION_RADIUS,
+				enemyPos, enemy->GetRadius());
+			
+			player_->SetPos(playerPos);
+			enemy->SetPos(enemyPos);
+
+			if (!player_->IsInvincible())
+			{
+				player_->Damage(1);
+			}
 		}
 	}
 }
 
 void GameScene::CollisionWeapon(void)
 {
-	// 敵と武器の当たり判定
+
 	// 武器の情報
 	WeaponBase* useWeapon = player_->GetUseWeapon();
 
@@ -199,10 +207,47 @@ void GameScene::CollisionWeapon(void)
 				continue;
 			}
 
+			// 敵と武器の当たり判定
 			if (Utility::IsHitSpheres(useWeapon->GetPos(), useWeapon->GetCollisionRadius(),
 				enemy->GetPos(), enemy->GetRadius()))
 			{
 				enemy->Damage(1);
+			}
+		}
+
+		// 武器とブロックの当たり判定
+		player_->CollisionWeapon(blockManager_);
+	}
+}
+
+void GameScene::CollisionEnemy2Enemy(void)
+{
+	// 敵の情報を取得
+	std::vector<EnemyBase*> enemies = enemyManager_->GetEnemys();
+
+	// 敵同士の総当たり衝突判定と押し出し処理
+	for (size_t i = 0; i < enemies.size(); ++i)
+	{
+		for (size_t j = i + 1; j < enemies.size(); ++j)
+		{
+			EnemyBase* enemyA = enemies[i];
+			EnemyBase* enemyB = enemies[j];
+
+			// 衝突していたら
+			if (Utility::IsHitSpheres(enemyA->GetPos(), enemyA->GetRadius(),
+				enemyB->GetPos(), enemyB->GetRadius()))
+			{
+				// 敵の位置を一時的に格納
+				VECTOR tempPosA = enemyA->GetPos();
+				VECTOR tempPosB = enemyB->GetPos();
+
+				// 位置を補正
+				Utility::AdjustPositionCollision(tempPosA, enemyA->GetRadius(),
+					tempPosB, enemyB->GetRadius());
+
+				// 補正された位置を各オブジェクトに反映
+				enemyA->SetPos(tempPosA);
+				enemyB->SetPos(tempPosB);
 			}
 		}
 	}

@@ -55,13 +55,13 @@ public:
 	static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 	// 点滅時の拡散光色
-	static constexpr COLOR_F COLOR_DIF_BLINK = { 1.0f, 0.2f, 0.2f, 1.0f };
+	static constexpr COLOR_F COLOR_DIF_BLINK = { 8.0f, 0.2f, 0.2f, 1.0f };
 
 	// ノックバックスピード
 	static constexpr float SPEED_KNOCKBACK = 10.0f;
 
 	// 点滅間隔
-	static constexpr int TERM_BLINK = 3;
+	static constexpr int TERM_BLINK = 10;
 
 	// 最大HP
 	static constexpr int MAX_HP = 3;
@@ -78,6 +78,9 @@ public:
 	// 衝突判定用半径
 	static constexpr float COLLISION_RADIUS = 50.0f;
 
+	// 無敵時間
+	static constexpr int INVINCIBLE_TIME = 60;
+
 public:
 
 	Player(void);
@@ -89,7 +92,10 @@ public:
 	void Release(void);
 
 	VECTOR GetPos(void)const;
+	void SetPos(VECTOR pos);
+
 	bool MoveForward(const BlockManager* block);
+	void CollisionWeapon(BlockManager* block);
 
 	// 状態の変更
 	void ChangeState(STATE state);
@@ -98,6 +104,8 @@ public:
 	void Damage(int damage);
 
 	WeaponBase* GetUseWeapon(void);
+
+	bool IsInvincible(void);
 
 private:
 	// アニメーション
@@ -125,6 +133,9 @@ private:
 	VECTOR knockBackDir_;
 	// ノックバックカウンタ(点滅用)
 	int cntKnockBack_;
+
+	// 無敵時間カウンタ
+	int invincibleTimeCount_;
 
 	// 衝突判定用半径
 	float collisionRadius_;

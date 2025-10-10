@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <DxLib.h>
+
 class Block;
 
 class BlockManager

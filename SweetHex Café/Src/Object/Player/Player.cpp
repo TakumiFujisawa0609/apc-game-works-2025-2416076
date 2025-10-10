@@ -57,6 +57,8 @@ void Player::Init(void)
 
 	isMove_ = true;
 
+	invincibleTimeCount_ = 0;
+
 	// 武器の初期化
 	weaponPunch_ = new WeaponPunch();
 	weaponPunch_->Init(WeaponBase::TYPE::PUNCH);
@@ -162,6 +164,13 @@ VECTOR Player::GetPos(void) const
 	return pos_;
 }
 
+void Player::SetPos(VECTOR pos)
+{
+	pos_ = pos;
+
+	MV1SetPosition(modelId_, pos_);
+}
+
 bool Player::MoveForward(const BlockManager* block)
 {
 	VECTOR playerPos = pos_;
@@ -189,6 +198,26 @@ bool Player::MoveForward(const BlockManager* block)
 	return isMove_;
 }
 
+void Player::CollisionWeapon(BlockManager* block)
+{
+	VECTOR weaponPos = useWeapon_->GetPos();
+	float speed = useWeapon_->GetSpeed();
+	VECTOR dir = moveDir_;
+
+	VECTOR startPos = weaponPos;
+	VECTOR endPos = VAdd(weaponPos, VScale(dir, speed));
+
+	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
+
+	bool ret;
+
+	// 衝突結果
+	if (hit.hit) 
+	{
+		useWeapon_->SetAlive(false);
+	}
+}
+
 void Player::ChangeState(STATE state)
 {
 	state_ = state;
@@ -212,8 +241,8 @@ void Player::ChangeState(STATE state)
 
 void Player::Damage(int damage)
 {
-	// ノックバック中はダメージを受けない
-	if (state_ == STATE::KNOCKBACK)
+	// 無敵時間中はダメージを受けない
+	if (invincibleTimeCount_ > 0)
 	{
 		return;
 	}
@@ -229,11 +258,29 @@ void Player::Damage(int damage)
 	{
 		ChangeState(STATE::DEAD);
 	}
+	else
+	{
+		// ノックバックに状態遷移
+		ChangeState(STATE::KNOCKBACK);
+	}
 }
 
 WeaponBase* Player::GetUseWeapon(void)
 {
 	return useWeapon_;
+}
+
+bool Player::IsInvincible(void)
+{
+	bool ret = false;
+
+	if (invincibleTimeCount_ > 0)
+	{
+		ret = true;
+		return ret;
+	}
+
+	return ret;
 }
 
 void Player::ProcessMove(void)
@@ -343,6 +390,9 @@ void Player::ChangeStandby(void)
 void Player::ChangeKnockback(void)
 {
 	animController_->Play(static_cast<int>(ANIM_TYPE::RECIEVE_HIT), false);
+	
+	// 無敵時間の設定
+	invincibleTimeCount_ = INVINCIBLE_TIME;
 }
 
 void Player::ChangeAttack(void)
@@ -359,6 +409,11 @@ void Player::ChangeDead(void)
 
 void Player::UpdateStandby(void)
 {
+	if (invincibleTimeCount_ > 0)
+	{
+		invincibleTimeCount_--;
+	}
+
 	ProcessMove();
 
 	// 行列の合成
@@ -376,11 +431,11 @@ void Player::UpdateKnockback(void)
 
 	if (cntKnockBack_ % TERM_BLINK == 0)
 	{
-		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
 	}
 	else
 	{
-		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
 	}
 
 	// アニメーションが終わったら、エンド状態にする

@@ -74,6 +74,7 @@ public:
 	// ó‘Ô‘JˆÚ
 	void ChangeState(STATE state);
 	VECTOR GetPos(void)const;
+	void SetPos(VECTOR pos);
 	float GetRadius(void)const;
 	VECTOR GetDir(void)const;
 	STATE GetState(void)const;

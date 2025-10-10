@@ -30,11 +30,14 @@ public:
 	// Õ“Ë”»’è—p”¼Œa
 	float GetCollisionRadius(void);
 
+	float GetSpeed(void);
+
 	// •Ší‚ğg—p‚·‚é
 	virtual void Use(VECTOR pos, VECTOR dir) = 0;
 
 	// ¶‘¶”»’è
 	bool IsAlive(void);
+	void SetAlive(bool isAlive);
 
 	// •Šíí•Ê‚Ìæ“¾
 	TYPE GetType(void);

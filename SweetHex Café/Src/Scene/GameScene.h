@@ -54,4 +54,5 @@ private:
 	void Collision(void);
 	void CollisionEnemy(void);
 	void CollisionWeapon(void);
+	void CollisionEnemy2Enemy(void);
 };

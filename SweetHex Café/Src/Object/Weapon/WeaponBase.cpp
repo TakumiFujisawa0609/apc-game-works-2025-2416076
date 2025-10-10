@@ -46,9 +46,19 @@ float WeaponBase::GetCollisionRadius(void)
 	return collisionRadius_;
 }
 
+float WeaponBase::GetSpeed(void)
+{
+	return speed_;
+}
+
 bool WeaponBase::IsAlive(void)
 {
 	return isAlive_;
+}
+
+void WeaponBase::SetAlive(bool isAlive)
+{
+	isAlive_ = isAlive;
 }
 
 WeaponBase::TYPE WeaponBase::GetType(void)

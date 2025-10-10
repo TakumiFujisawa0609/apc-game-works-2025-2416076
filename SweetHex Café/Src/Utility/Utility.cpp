@@ -555,4 +555,43 @@ float Utility::LerpAngle(float from, float to, float t)
     return from + diff * t;                 // 差分だけ補間して足す
 }
 
+void Utility::AdjustPositionCollision(VECTOR& posA, float radiusA, VECTOR& posB, float radiusB)
+{
+    // 2点間のベクトルを計算
+    VECTOR direction = VSub(posA, posB);
 
+    // 2点間の距離を計算
+    float distance = sqrtf(direction.x * direction.x
+                            + direction.y * direction.y
+                            + direction.z * direction.z);
+
+    // 最小衝突距離を計算
+    float minDistance = radiusA + radiusB;
+
+    // めり込みが発生しているかチェック
+    if (distance < minDistance)
+    {
+        // めり込み量を計算
+        float overlap = minDistance - distance;
+
+        // 押し出し方向の単位ベクトルを計算
+        // 距離が0の場合は単位ベクトルが計算できないため、処理を中断
+        if (distance == 0.0f)
+        {
+            // 完全に重なっている場合は、回避する
+            posA.z += overlap * 0.5f;
+            posB.z -= overlap * 0.5f;
+            return;
+        }
+
+        VECTOR normalDirection = VScale(direction, 1.0f / distance);
+
+        // 位置を補正
+        // めり込み量の半分ずつを、互いに逆方向に移動させる
+        VECTOR moveA = VScale(normalDirection, overlap * 0.5f);
+        VECTOR moveB = VScale(normalDirection, overlap * 0.5f);
+
+        posA = VAdd(posA, moveA); // AをBから遠ざける
+        posB = VSub(posB, moveB); // BをAから遠ざける
+    }
+}

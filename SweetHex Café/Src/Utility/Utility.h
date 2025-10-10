@@ -119,5 +119,8 @@ public:
 
 	// Šp“x‚ÌüŒ`•âŠÔ(í‚ÉÅ’ZŒo˜H)
 	static float LerpAngle(float from, float to, float t);
+
+	// ‚Ì‚ß‚è‚İ‚ğ–h~‚·‚é
+	static void AdjustPositionCollision(VECTOR& posA, float radiusA, VECTOR& posB, float radiusB);
 };
 

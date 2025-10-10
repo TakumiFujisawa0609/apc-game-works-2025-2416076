@@ -56,7 +56,7 @@ void WeaponPunch::SetParam(void)
 	collisionRadius_ = 50.0f;
 
 	// 使用時の位置調整
-	localPos_ = { 0.0f, 90.0f, 0.0f };
+	localPos_ = { 0.0f, 40.0f, 0.0f };
 
 	// アニメーショカウンタ初期化
 	cntAnimation_ = 0;

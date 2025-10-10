@@ -138,6 +138,13 @@ VECTOR EnemyBase::GetPos(void)const
 	return pos_;
 }
 
+void EnemyBase::SetPos(VECTOR pos)
+{
+	pos_ = pos;
+
+	MV1SetPosition(modelId_, pos_);
+}
+
 float EnemyBase::GetRadius(void) const
 {
 	return collisionRadius_;
