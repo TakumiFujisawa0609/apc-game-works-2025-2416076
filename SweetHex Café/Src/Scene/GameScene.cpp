@@ -183,6 +183,11 @@ void GameScene::CollisionEnemy(void)
 			continue;
 		}
 
+		if (!player_->IsCollisionState())
+		{
+			continue;
+		}
+
 		VECTOR enemyPos = enemy->GetPos();
 
 		// 敵とプレイヤーの衝突判定条件を満たしたら、

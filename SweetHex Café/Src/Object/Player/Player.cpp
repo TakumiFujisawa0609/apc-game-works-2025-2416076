@@ -99,6 +99,8 @@ void Player::Draw(BlockManager* block)
 
 	useWeapon_->Draw();
 
+	DrawFormatString(10, 60, 0x000000, "HP : %d", hp_);
+
 #ifdef _DEBUG
 
 	VECTOR playerPos = pos_;
@@ -318,6 +320,13 @@ bool Player::IsCollisionStage(void) const
 	return ret;
 }
 
+bool Player::IsCollisionState(void)const
+{
+	return state_ == STATE::STANDBY
+		|| state_ == STATE::ATTACK
+		|| state_ == STATE::KNOCKBACK;
+}
+
 void Player::ProcessMove(void)
 {
 	// 攻撃中やノックバック中は移動させない
@@ -358,10 +367,13 @@ void Player::ProcessMove(void)
 
 		moveDir_ = VTransform(moveDir, mat);
 
-		// 移動方向に合わせてプレイヤーの向きを回転
-		//angles_.y = atan2f(moveDir_.x, moveDir_.z);
+		bool joypadNum = false;
+		if (GetJoypadNum() != 0)
+		{
+			joypadNum = true;
+		}
 
-		if (ins.IsMoveDown() || ins.IsMoveLeft() || ins.IsMoveRight() || ins.IsMoveUp())
+		if (ins.IsMoveDown() || ins.IsMoveLeft() || ins.IsMoveRight() || ins.IsMoveUp() || joypadNum)
 		{
 			speed_ = Player::MOVE_SPEED;
 

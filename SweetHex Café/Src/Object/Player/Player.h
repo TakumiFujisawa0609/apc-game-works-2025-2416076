@@ -118,6 +118,7 @@ public:
 	bool IsInvincible(void);
 
 	bool IsCollisionStage(void)const;
+	bool IsCollisionState(void)const;
 
 private:
 	// アニメーション
