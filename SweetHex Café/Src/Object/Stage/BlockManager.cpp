@@ -24,18 +24,15 @@ void BlockManager::Init(void)
 	baseBlockModelIds_[1] = MV1LoadModel((PATH + "wall_tiles_kitchen_corner_inner.mv1").c_str());
 	baseBlockModelIds_[2] = MV1LoadModel((PATH + "wall_tiles_kitchen_straight.mv1").c_str());
 	baseBlockModelIds_[3] = MV1LoadModel((PATH + "wall_tiles_kitchen_doorway.mv1").c_str());
-	baseBlockModelIds_[4] = MV1LoadModel((PATH + "countertop_corner_inner.mv1").c_str());
-	baseBlockModelIds_[5] = MV1LoadModel((PATH + "countertop_straight_A.mv1").c_str());
-	baseBlockModelIds_[6] = MV1LoadModel((PATH + "cash_register.mv1").c_str());
-	baseBlockModelIds_[7] = MV1LoadModel((PATH + "coffee_machine.mv1").c_str());
-	baseBlockModelIds_[8] = MV1LoadModel((PATH + "stand_mixer.mv1").c_str());
-	baseBlockModelIds_[9] = MV1LoadModel((PATH + "display_case_long.mv1").c_str());
-	baseBlockModelIds_[10] = MV1LoadModel((PATH + "stove.mv1").c_str());
-	baseBlockModelIds_[11] = MV1LoadModel((PATH + "fridge.mv1").c_str());
-	baseBlockModelIds_[12] = MV1LoadModel((PATH + "countertop_sink.mv1").c_str());
-	baseBlockModelIds_[13] = MV1LoadModel((PATH + "cuttingboard.mv1").c_str());
-	baseBlockModelIds_[14] = MV1LoadModel((PATH + "chair.mv1").c_str());
-	baseBlockModelIds_[15] = MV1LoadModel((PATH + "table_round_B.mv1").c_str());
+	baseBlockModelIds_[4] = MV1LoadModel((PATH + "countertop_straight_A.mv1").c_str());
+	baseBlockModelIds_[5] = MV1LoadModel((PATH + "cash_register.mv1").c_str());
+	baseBlockModelIds_[6] = MV1LoadModel((PATH + "coffee_machine.mv1").c_str());
+	baseBlockModelIds_[7] = MV1LoadModel((PATH + "stand_mixer.mv1").c_str());
+	baseBlockModelIds_[8] = MV1LoadModel((PATH + "display_case_long.mv1").c_str());
+	baseBlockModelIds_[9] = MV1LoadModel((PATH + "stove.mv1").c_str());
+	baseBlockModelIds_[10] = MV1LoadModel((PATH + "fridge.mv1").c_str());
+	baseBlockModelIds_[11] = MV1LoadModel((PATH + "countertop_sink.mv1").c_str());
+	baseBlockModelIds_[12] = MV1LoadModel((PATH + "cuttingboard.mv1").c_str());
 
 	LoadMapCsvData();
 }

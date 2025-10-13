@@ -15,22 +15,19 @@ public:
 	enum class TYPE
 	{
 		NONE = -1,
-		FLOOR_WOOD,			// 床
-		WALL_INNER,			// 壁の角側
-		WALL_STRANGHT,		// 壁(タイル)
-		WALL_DOOR,			// ドア
-		COUNTER_INNER,		// カウンター角
-		COUNTER_LARGE,		// カウンター長
-		CASH_REGISTER,		// レジ
-		COFFEE_MACHINE,		// コーヒーマシン
-		STAND_MAXER,		// スタンドマキサー
-		DISPLAY_CASE,		// ディスプレイ
-		STOVE,				// コンロ
-		FRIDGE,				// 冷蔵庫
-		SINK,				// シンク
-		CUTTINGBOARD,		// まな板
-		CHAIR,				// 椅子
-		TABLE,				// テーブル
+		FLOOR_WOOD,			// 床0
+		WALL_INNER,			// 壁の角側1
+		WALL_STRANGHT,		// 壁(タイル)2
+		WALL_DOOR,			// ドア3
+		COUNTER_LARGE,		// カウンター長4
+		CASH_REGISTER,		// レジ5
+		COFFEE_MACHINE,		// コーヒーマシン6
+		STAND_MAXER,		// スタンドミキサー7
+		DISPLAY_CASE,		// ディスプレイ8
+		STOVE,				// コンロ9
+		FRIDGE,				// 冷蔵庫10
+		SINK,				// シンク11
+		CUTTINGBOARD,		// まな板12
 	};
 
 public:
