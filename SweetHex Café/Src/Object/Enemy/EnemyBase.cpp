@@ -47,8 +47,6 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 	ChangeState(STATE::STANDBY);
 
 	cntAttack_ = 0;
-
-	isMove_ = true;
 }
 
 void EnemyBase::Update(void)
@@ -170,31 +168,50 @@ void EnemyBase::SetAlive(bool isAlive)
 	isAlive_ = isAlive;
 }
 
-bool EnemyBase::MoveForward(const BlockManager* block)
+EnemyBase::SurroundingHits EnemyBase::CheckCollision(const BlockManager* block)
 {
 	VECTOR enemyPos = pos_;
 	VECTOR dir = moveDir_;
 
 	const float COLLISION_OFFSET = 70.0f;   // 前方距離
 	const float COLLISION_HEIGHT = 10.0f;   // 高さ
+	const float HALF_PI = DX_PI_F / 2.0f;   // 90度（ラジアン）
 
 	VECTOR startPos = enemyPos;
-	VECTOR endPos = VAdd(enemyPos, VScale(dir, COLLISION_OFFSET));
+	startPos.y = COLLISION_HEIGHT;
 
-	startPos.y = endPos.y = COLLISION_HEIGHT;
+	// 前方
+	VECTOR forwardEndPos = VAdd(enemyPos, VScale(dir, COLLISION_OFFSET));
+	forwardEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
+	BlockManager::CollisionResult hitForward = block->CheckCollisionLine(startPos, forwardEndPos);
+	hitsResult.hitForward = hitForward.hit;
 
-	if (hit.hit)
-	{
-		isMove_ = false;
-	}
-	else
-	{
-		isMove_ = true;
-	}
+	// 後方
+	VECTOR backwardDir = VScale(dir, -1.0f);
+	VECTOR backwardEndPos = VAdd(enemyPos, VScale(backwardDir, COLLISION_OFFSET));
+	backwardEndPos.y = COLLISION_HEIGHT;
 
-	return isMove_;	// 当たってなければ進める
+	BlockManager::CollisionResult hitBack = block->CheckCollisionLine(startPos, backwardEndPos);
+	hitsResult.hitBack = hitBack.hit;
+
+	// 右側
+	VECTOR rightDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, HALF_PI);
+	VECTOR rightEndPos = VAdd(enemyPos, VScale(rightDir, COLLISION_OFFSET));
+	rightEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitRight = block->CheckCollisionLine(startPos, rightEndPos);
+	hitsResult.hitRight = hitRight.hit;
+
+	// 左側
+	VECTOR leftDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, -HALF_PI);
+	VECTOR leftEndPos = VAdd(enemyPos, VScale(leftDir, COLLISION_OFFSET));
+	leftEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitLeft = block->CheckCollisionLine(startPos, leftEndPos);
+	hitsResult.hitLeft = hitLeft.hit;
+
+	return hitsResult;	// 当たってなければ進める
 }
 
 void EnemyBase::Damage(int damage)
@@ -228,6 +245,22 @@ bool EnemyBase::IsCollisionState(void)const
 		|| state_ == STATE::ATTACK;
 }
 
+bool EnemyBase::IsCollisionStage(void) const
+{
+	bool ret = false;
+
+	// どこかが当たってたら
+	if (hitsResult.hitForward ||
+		hitsResult.hitBack ||
+		hitsResult.hitLeft ||
+		hitsResult.hitRight)
+	{
+		ret = true;
+	}
+
+	return ret;
+}
+
 void EnemyBase::LookPlayer(void)
 {
 	// プレイヤー（相手）の座標を取得
@@ -255,8 +288,8 @@ void EnemyBase::LookPlayer(void)
 
 void EnemyBase::Move(void)
 {
-	// 前方方向に障害物があるか確認
-	if (isMove_)
+	// 障害物があるか確認
+	if (!hitsResult.hitForward)
 	{
 		// 移動量を計算する
 		VECTOR movePow = VScale(moveDir_, speed_);
@@ -304,7 +337,6 @@ void EnemyBase::ChangeHit(void)
 {
 	// ヒットカウンタリセット
 	reactCnt_ = 0;
-	//animController_->Play(static_cast<int>(ANIM_TYPE::HIT_REACT));
 }
 
 void EnemyBase::ChangeDead(void)

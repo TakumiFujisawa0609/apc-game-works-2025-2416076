@@ -14,6 +14,7 @@
 #include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Enemy/EnemyBase.h"
 #include "../Object/Weapon/WeaponBase.h"
+#include "../Object/Item/ItemManager.h"
 
 #include "GameScene.h"
 
@@ -42,8 +43,13 @@ void GameScene::Init(void)
 	timer_ = new Timer();
 	timer_->Init();
 
-	enemyManager_ = new EnemyManager(player_);
+	item_ = new ItemManager();
+	item_->Init();
+
+	enemyManager_ = new EnemyManager(player_, item_);
 	enemyManager_->Init();
+
+
 
 	ChangeState(STATE::GAME);
 
@@ -69,6 +75,11 @@ void GameScene::Draw(void)
 	enemyManager_->Draw();
 	player_->Draw(blockManager_);
 	timer_->Draw();
+
+	if (item_ != nullptr)
+	{
+		item_->Draw();
+	}
 
 	if (state_ == STATE::PAUSE)
 	{
@@ -100,6 +111,9 @@ void GameScene::Release(void)
 
 	timer_->Release();
 	delete timer_;
+
+	item_->Release();
+	delete item_;
 }
 
 void GameScene::ChangeState(STATE state)
@@ -153,7 +167,7 @@ void GameScene::Collision(void)
 {
 	// 進めるかどうかをチェックする
 	player_->MoveForward(blockManager_);
-	enemyManager_->MoveForward(blockManager_);
+	enemyManager_->CheckCollision(blockManager_);
 }
 
 void GameScene::CollisionEnemy(void)
@@ -237,6 +251,16 @@ void GameScene::CollisionEnemy2Enemy(void)
 			if (Utility::IsHitSpheres(enemyA->GetPos(), enemyA->GetRadius(),
 				enemyB->GetPos(), enemyB->GetRadius()))
 			{
+
+				bool isMovableA = !enemyA->IsCollisionStage();
+				bool isMovableB = !enemyB->IsCollisionStage();
+
+				// 両方ともステージと衝突している場合は、押し出し処理をスキップ
+				if (!isMovableA && !isMovableB)
+				{
+					continue;
+				}
+
 				// 敵の位置を一時的に格納
 				VECTOR tempPosA = enemyA->GetPos();
 				VECTOR tempPosB = enemyB->GetPos();
@@ -246,8 +270,15 @@ void GameScene::CollisionEnemy2Enemy(void)
 					tempPosB, enemyB->GetRadius());
 
 				// 補正された位置を各オブジェクトに反映
-				enemyA->SetPos(tempPosA);
-				enemyB->SetPos(tempPosB);
+				if (isMovableA) 
+				{
+					enemyA->SetPos(tempPosA);
+				}
+
+				if (isMovableB)
+				{
+					enemyB->SetPos(tempPosB);
+				}
 			}
 		}
 	}

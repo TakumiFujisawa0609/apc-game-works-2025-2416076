@@ -8,6 +8,7 @@ class Player;
 class Pause;
 class Timer;
 class EnemyManager;
+class ItemManager;
 
 class GameScene : public SceneBase
 {
@@ -42,6 +43,7 @@ private:
 	Pause* pause_;
 	Timer* timer_;
 	EnemyManager* enemyManager_;
+	ItemManager* item_;
 
 
 	// ó‘Ô•ÏX

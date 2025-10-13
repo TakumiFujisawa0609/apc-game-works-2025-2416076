@@ -25,11 +25,23 @@ public:
 	// 死亡時間
 	static constexpr int CNT_DEAD_REACT = 80;
 
+	// 90度（ラジアン）
+	const float HALF_PI = DX_PI_F / 2.0f;
+
 	// エネミー種別
 	enum class TYPE
 	{
 		SLIME,
 		MAX,
+	};
+
+	// 4方向の衝突情報
+	struct SurroundingHits
+	{
+		bool hitForward;
+		bool hitBack;
+		bool hitRight;
+		bool hitLeft;
 	};
 
 	// アニメーション種別
@@ -80,13 +92,14 @@ public:
 	STATE GetState(void)const;
 	bool IsAlive(void)const;
 	void SetAlive(bool isAlive);
-	bool MoveForward(const BlockManager* block);
+	SurroundingHits CheckCollision(const BlockManager* block);
 
 	// ダメージを与える
 	void Damage(int damage);
 
 	// 衝突判定が有効な状態
 	bool IsCollisionState(void)const;
+	bool IsCollisionStage(void)const;
 
 protected:
 	Player* player_;
@@ -110,7 +123,7 @@ protected:
 
 	int cntAttack_;
 
-	bool isMove_;
+	SurroundingHits hitsResult = { false, false, false, false };
 
 	// 衝突判定用半径
 	float collisionRadius_;
