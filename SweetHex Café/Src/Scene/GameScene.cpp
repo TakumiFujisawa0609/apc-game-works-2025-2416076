@@ -166,7 +166,7 @@ void GameScene::UpdatePause(void)
 void GameScene::Collision(void)
 {
 	// 進めるかどうかをチェックする
-	player_->MoveForward(blockManager_);
+	player_->CheckCollision(blockManager_);
 	enemyManager_->CheckCollision(blockManager_);
 }
 
@@ -189,11 +189,27 @@ void GameScene::CollisionEnemy(void)
 		if (Utility::IsHitSpheres(playerPos, Player::COLLISION_RADIUS,
 			enemyPos, enemy->GetRadius()))
 		{
+			bool isMoveEnemy = !enemy->IsCollisionStage();
+			bool isMovePlayer = !player_->IsCollisionStage();
+
+			// 両方ともステージと衝突している場合は、押し出し処理をスキップ
+			if (!isMoveEnemy && !isMovePlayer)
+			{
+				continue;
+			}
+
 			Utility::AdjustPositionCollision(playerPos, Player::COLLISION_RADIUS,
 				enemyPos, enemy->GetRadius());
 			
-			player_->SetPos(playerPos);
-			enemy->SetPos(enemyPos);
+			if (isMoveEnemy)
+			{
+				enemy->SetPos(enemyPos);
+			}
+
+			if (isMovePlayer)
+			{
+				player_ ->SetPos(playerPos);
+			}
 
 			if (!player_->IsInvincible())
 			{

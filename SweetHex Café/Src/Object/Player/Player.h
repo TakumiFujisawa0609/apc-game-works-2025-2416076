@@ -43,6 +43,15 @@ public:
 		DEAD,
 	};
 
+	// 4方向の衝突情報
+	struct SurroundingHits
+	{
+		bool hitForward;
+		bool hitBack;
+		bool hitRight;
+		bool hitLeft;
+	};
+
 	// モデルの大きさ
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 
@@ -94,7 +103,7 @@ public:
 	VECTOR GetPos(void)const;
 	void SetPos(VECTOR pos);
 
-	bool MoveForward(const BlockManager* block);
+	SurroundingHits CheckCollision(const BlockManager* block);
 	void CollisionWeapon(BlockManager* block);
 
 	// 状態の変更
@@ -106,6 +115,8 @@ public:
 	WeaponBase* GetUseWeapon(void);
 
 	bool IsInvincible(void);
+
+	bool IsCollisionStage(void)const;
 
 private:
 	// アニメーション
@@ -127,7 +138,7 @@ private:
 
 	float speed_;
 
-	bool isMove_;
+	SurroundingHits hitsResult = { false, false, false, false };
 
 	// ノックバック方向
 	VECTOR knockBackDir_;

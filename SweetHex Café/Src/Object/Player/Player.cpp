@@ -55,8 +55,6 @@ void Player::Init(void)
 
 	hp_ = MAX_HP;
 
-	isMove_ = true;
-
 	invincibleTimeCount_ = 0;
 
 	// 武器の初期化
@@ -171,31 +169,50 @@ void Player::SetPos(VECTOR pos)
 	MV1SetPosition(modelId_, pos_);
 }
 
-bool Player::MoveForward(const BlockManager* block)
+Player::SurroundingHits Player::CheckCollision(const BlockManager* block)
 {
 	VECTOR playerPos = pos_;
 	VECTOR dir = moveDir_;
 
 	const float COLLISION_OFFSET = 50.0f;   // 前方距離
 	const float COLLISION_HEIGHT = 10.0f;   // 高さ
+	const float HALF_PI = DX_PI_F / 2.0f;   // 90度（ラジアン）
 
 	VECTOR startPos = playerPos;
-	VECTOR endPos = VAdd(playerPos, VScale(dir, COLLISION_OFFSET));
+	startPos.y = COLLISION_HEIGHT;
 
-	startPos.y = endPos.y = COLLISION_HEIGHT;
+	// 前方
+	VECTOR forwardEndPos = VAdd(playerPos, VScale(dir, COLLISION_OFFSET));
+	forwardEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
+	BlockManager::CollisionResult hitForward = block->CheckCollisionLine(startPos, forwardEndPos);
+	hitsResult.hitForward = hitForward.hit;
 
-	if (hit.hit)
-	{
-		isMove_ = false;
-	}
-	else
-	{
-		isMove_ = true;
-	}
+	// 後方
+	VECTOR backwardDir = VScale(dir, -1.0f);
+	VECTOR backwardEndPos = VAdd(playerPos, VScale(backwardDir, COLLISION_OFFSET));
+	backwardEndPos.y = COLLISION_HEIGHT;
 
-	return isMove_;
+	BlockManager::CollisionResult hitBack = block->CheckCollisionLine(startPos, backwardEndPos);
+	hitsResult.hitBack = hitBack.hit;
+
+	// 右側
+	VECTOR rightDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, HALF_PI);
+	VECTOR rightEndPos = VAdd(playerPos, VScale(rightDir, COLLISION_OFFSET));
+	rightEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitRight = block->CheckCollisionLine(startPos, rightEndPos);
+	hitsResult.hitRight = hitRight.hit;
+
+	// 左側
+	VECTOR leftDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, -HALF_PI);
+	VECTOR leftEndPos = VAdd(playerPos, VScale(leftDir, COLLISION_OFFSET));
+	leftEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitLeft = block->CheckCollisionLine(startPos, leftEndPos);
+	hitsResult.hitLeft = hitLeft.hit;
+
+	return hitsResult;	// 当たってなければ進める
 }
 
 void Player::CollisionWeapon(BlockManager* block)
@@ -283,6 +300,22 @@ bool Player::IsInvincible(void)
 	return ret;
 }
 
+bool Player::IsCollisionStage(void) const
+{
+	bool ret = false;
+
+	// どこかが当たってたら
+	if (hitsResult.hitForward ||
+		hitsResult.hitBack ||
+		hitsResult.hitLeft ||
+		hitsResult.hitRight)
+	{
+		ret = true;
+	}
+
+	return ret;
+}
+
 void Player::ProcessMove(void)
 {
 	// 攻撃中やノックバック中は移動させない
@@ -337,7 +370,7 @@ void Player::ProcessMove(void)
 		}
 
 		// 前方方向に障害物があるか確認
-		if (isMove_)
+		if (!hitsResult.hitForward)
 		{
 			// 移動量を計算する
 			VECTOR movePow = VScale(moveDir_, speed_);
