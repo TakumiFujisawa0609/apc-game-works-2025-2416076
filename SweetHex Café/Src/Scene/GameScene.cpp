@@ -34,9 +34,6 @@ void GameScene::Init(void)
 	blockManager_ = new BlockManager();
 	blockManager_->Init();
 
-	player_ = new Player();
-	player_->Init();
-
 	pause_ = new Pause();
 	pause_->Init();
 
@@ -45,6 +42,9 @@ void GameScene::Init(void)
 
 	item_ = new ItemManager();
 	item_->Init();
+
+	player_ = new Player(item_);
+	player_->Init();
 
 	enemyManager_ = new EnemyManager(player_, item_);
 	enemyManager_->Init();

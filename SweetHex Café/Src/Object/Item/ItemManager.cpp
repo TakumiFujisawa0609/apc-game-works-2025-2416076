@@ -22,9 +22,9 @@ void ItemManager::Update(void)
 void ItemManager::Draw(void)
 {
     // リストに登録された全てのアイテムを描画
-    for (const VECTOR& pos_ : droppedItems_)
+    for (const VECTOR& pos : droppedItems_)
     {
-        DrawSphere3D(pos_, ITEM_RADIUS, 16, GetColor(0, 255, 0), GetColor(0, 255, 0), false);
+        DrawSphere3D(pos, ITEM_RADIUS, 16, GetColor(0, 255, 0), GetColor(0, 255, 0), false);
     }
 }
 

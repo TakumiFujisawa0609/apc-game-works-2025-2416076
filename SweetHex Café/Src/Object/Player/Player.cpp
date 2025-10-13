@@ -12,9 +12,11 @@
 #include "../Common/AnimationController.h"
 #include "../Stage/BlockManager.h"
 #include "../Weapon/WeaponPunch.h"
+#include "../Item/ItemManager.h"
 
-Player::Player(void)
+Player::Player(ItemManager* item)
 {
+	item_ = item;
 }
 
 Player::~Player(void)
@@ -403,6 +405,41 @@ void Player::ProcessMove(void)
 	MV1SetPosition(modelId_, pos_);
 }
 
+void Player::ProcessPickup(void)
+{
+	auto& ins = InputController::GetInstance();
+
+	const std::vector<VECTOR>& drop = item_->GetDroppedItems();
+
+		// リストの後ろからチェックする
+	for (int i = drop.size() - 1; i >= 0; i--)
+	{
+		const VECTOR& itemPos = drop[i];
+
+		// プレイヤーとアイテムの中心間の距離を計算
+		VECTOR direction = VSub(pos_, itemPos);
+		float distance = sqrtf(direction.x * direction.x
+			+ direction.y * direction.y
+			+ direction.z * direction.z);
+
+		// プレイヤーとアイテムの衝突判定半径の合計
+		float radius = collisionRadius_ + ItemManager::ITEM_RADIUS;
+
+		if (distance <= radius)
+		{
+			// 半径の合計より小さかったら
+			if (ins.IsUse())
+			{
+				// アイテム取得処理
+				// ItemManagerにアイテム削除
+				item_->RemoveItem(i);
+
+				break;
+			}
+		}
+	}
+}
+
 void Player::ProcessAttack(void)
 {
 	InputController& ins = InputController::GetInstance();
@@ -448,6 +485,8 @@ void Player::UpdateStandby(void)
 	}
 
 	ProcessMove();
+
+	ProcessPickup();
 
 	// 行列の合成
 	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);

@@ -5,6 +5,7 @@ class AnimationController;
 class BlockManager;
 class WeaponBase;
 class WeaponPunch;
+class ItemManager;
 
 class Player
 {
@@ -92,7 +93,7 @@ public:
 
 public:
 
-	Player(void);
+	Player(ItemManager* item);
 	~Player(void);
 
 	void Init(void);
@@ -125,6 +126,8 @@ private:
 	// 武器
 	WeaponBase* useWeapon_;
 	WeaponPunch* weaponPunch_;
+
+	ItemManager* item_;
 
 	// モデルのハンドルID
 	int modelId_;
@@ -160,6 +163,8 @@ private:
 	void ProcessAttack(void);
 	// 行動制御
 	void ProcessMove(void);
+
+	void ProcessPickup(void);
 
 	// 状態遷移
 	void ChangeStandby(void);
