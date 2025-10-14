@@ -15,7 +15,7 @@ EnemyBase::~EnemyBase(void)
 {
 }
 
-void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
+void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern)
 {
 	type_ = type;
 
@@ -47,6 +47,23 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 	ChangeState(STATE::STANDBY);
 
 	cntAttack_ = 0;
+
+	currentPattern_ = pattern;
+
+	auto it = ENEMY_MOVE_ROUTES.find(pattern);
+
+	if (it != ENEMY_MOVE_ROUTES.end())
+	{
+		currentRoute_ = it->second;
+	}
+	else 
+	{
+		currentRoute_.clear();
+	}
+
+	currentTargetIndex_ = 0;
+	isReturn_ = false;
+
 }
 
 void EnemyBase::Update(void)
@@ -214,6 +231,11 @@ EnemyBase::SurroundingHits EnemyBase::CheckCollision(const BlockManager* block)
 	return hitsResult;	// 当たってなければ進める
 }
 
+EnemyBase::PATTERN EnemyBase::GetPattern(void) const
+{
+	return currentPattern_;
+}
+
 void EnemyBase::Damage(int damage)
 {
 	// 攻撃中やノックバック中はダメージを受けない
@@ -324,6 +346,77 @@ void EnemyBase::SetSpawnPosition(void)
 {
 }
 
+void EnemyBase::MovePattern(void)
+{
+	if (currentRoute_.empty())
+	{
+		// ルートが定義されていないか、空のパターン (例: PATTERN_5, Wait) の場合は移動しない
+		return;
+	}
+
+	if (currentRoute_.size() <= 1)
+	{
+		// 1点しか目標がない場合（例: その場待機）は移動しない
+		return;
+	}
+
+	// 1. 目標地点を取得
+	const VECTOR& targetPos = currentRoute_[currentTargetIndex_];
+
+	// 2. 目標地点への方向ベクトルを計算し、モデルの向きを設定
+	VECTOR diff = VSub(targetPos, pos_);
+	diff.y = 0.0f;
+
+	float distance = VSize(diff);
+
+	if (distance < speed_)
+	{
+		// 3. 到達判定（目標地点に非常に近づいたら）
+		SetPos(targetPos); // 正確に目標地点へ移動
+
+		if (isReturn_)
+		{
+			currentTargetIndex_--;
+
+			if (currentTargetIndex_ < 0)
+			{
+				currentTargetIndex_ = 1;
+				isReturn_ = false;
+			}
+		}
+		else
+		{
+			currentTargetIndex_++;
+
+			if (currentTargetIndex_ >= currentRoute_.size())
+			{
+				currentTargetIndex_ = currentRoute_.size() - 2;
+
+				if (currentTargetIndex_ < 0)
+				{
+					currentTargetIndex_ = 0;
+					isReturn_ = false;
+				}
+
+				isReturn_ = true;
+			}
+		}
+	}
+	else
+	{
+		// 目標地点に向かって移動
+		moveDir_ = VNorm(diff); // 方向を更新
+
+		// モデルの向きを更新
+		angles_.y = atan2(moveDir_.x, moveDir_.z) + Utility::Deg2RadF(180.0f);
+		MV1SetRotationXYZ(modelId_, angles_);
+
+		// 移動
+		VECTOR movePow = VScale(moveDir_, speed_);
+		SetPos(VAdd(pos_, movePow));
+	}
+}
+
 void EnemyBase::ChangeStandby(void)
 {
 	MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
@@ -331,6 +424,7 @@ void EnemyBase::ChangeStandby(void)
 
 void EnemyBase::ChangeAttack(void)
 {
+	speed_ = RUN_SPEED;
 }
 
 void EnemyBase::ChangeHit(void)
@@ -351,16 +445,23 @@ void EnemyBase::ChangeEnd(void)
 
 void EnemyBase::UpdateStandby(void)
 {
-	LookPlayer();
-	Move();
+	if (hp_ < MAX_HP)
+	{
+		ChangeState(STATE::ATTACK);
+	}
+	MovePattern();
 }
 
 void EnemyBase::UpdateAttack(void)
 {
-	if (animController_->IsEnd())
-	{
-		ChangeState(STATE::STANDBY);
-	}
+
+	LookPlayer();
+	Move();
+
+	//if (animController_->IsEnd())
+	//{
+	//	ChangeState(STATE::STANDBY);
+	//}
 }
 
 void EnemyBase::UpdateHit(void)

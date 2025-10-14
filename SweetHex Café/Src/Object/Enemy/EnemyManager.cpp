@@ -23,6 +23,8 @@ void EnemyManager::Init(void)
 	enemyModelIds_.emplace_back(
 		MV1LoadModel((Application::PATH_MODEL + "Enemy/Slime.mv1").c_str()));
 
+	nextPatternIndex_ = static_cast<int>(EnemyBase::PATTERN::PATTERN_1);
+
 }
 
 void EnemyManager::Update(void)
@@ -34,9 +36,49 @@ void EnemyManager::Update(void)
 
 		if (cntSpawn_ >= SPAWN_INTERVEL_SLIME)
 		{
+			// パターン総数を定義
+			const int MAX_PATTERN_COUNT = static_cast<int>(EnemyBase::PATTERN::MAX);
+
+			// 現在使用中のパターンを記録するためのフラグ配列
+			std::vector<bool> isPatternUsed(MAX_PATTERN_COUNT, false);
+
+			// フィールドにいる全ての敵が使っているパターンにフラグを立てる
+			for (EnemyBase* enemy : enemys_)
+			{
+				int patternIndex = static_cast<int>(enemy->GetPattern());
+
+				// パターンインデックスが有効範囲内であることを確認
+				if (patternIndex >= 0 && patternIndex < MAX_PATTERN_COUNT)
+				{
+					isPatternUsed[patternIndex] = true;
+				}
+			}
+
+			// PATTERN_1 のインデックスから順にチェックし、未使用のパターンを見つける
+			EnemyBase::PATTERN pattern = EnemyBase::PATTERN::PATTERN_1; // 初期値
+			bool foundUnused = false;
+
+			for (int i = static_cast<int>(EnemyBase::PATTERN::PATTERN_1); i < MAX_PATTERN_COUNT; ++i)
+			{
+				if (!isPatternUsed[i])
+				{
+					// 見つかった未使用パターンを割り当て
+					pattern = static_cast<EnemyBase::PATTERN>(i);
+					foundUnused = true;
+					break;
+				}
+			}
+
+			// 敵の数が5体の場合、全てのパターンが使用中となるため PATTERN_1 に戻す
+			if (!foundUnused)
+			{
+				pattern = EnemyBase::PATTERN::PATTERN_1;
+			}
+
 			EnemyBase* newEnemy = new EnemySlime();
 
-			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_);
+
+			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, pattern);
 
 			// リストに追加
 			enemys_.emplace_back(newEnemy);

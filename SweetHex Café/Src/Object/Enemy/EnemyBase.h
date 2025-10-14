@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <map>
 #include <DxLib.h>
 
 class Player;
@@ -25,6 +26,10 @@ public:
 	// 死亡時間
 	static constexpr int CNT_DEAD_REACT = 80;
 
+	static constexpr int MAX_HP = 2;
+
+	static constexpr int RUN_SPEED = 4;
+
 	// 90度（ラジアン）
 	const float HALF_PI = DX_PI_F / 2.0f;
 
@@ -33,6 +38,41 @@ public:
 	{
 		SLIME,
 		MAX,
+	};
+
+	// 行動パターン
+	enum class PATTERN
+	{
+		PATTERN_1,
+		PATTERN_2,
+		PATTERN_3,
+		PATTERN_4,
+		PATTERN_5,
+		MAX,
+	};
+
+	const std::map<PATTERN, std::vector<VECTOR>> ENEMY_MOVE_ROUTES =
+	{
+
+		{ PATTERN::PATTERN_1,
+		   { { 200, 10, 300 }, { 200, 10, 850 }, { 800, 10, 850 } } 
+		},
+
+		{ PATTERN::PATTERN_2,
+			{ { 1050, 10, 120 }, { 1650, 10, 120 }, { 1650, 10, 450 } }
+		},
+
+		{ PATTERN::PATTERN_3,
+			{ { 510, 10, 500 }, {1050, 10, 500} }
+		},
+
+		{ PATTERN::PATTERN_4,
+			{ { 2200, 10, 500 }, { 2200, 10, 162 }, { 2700,10, 162 } }
+		},
+		
+		{ PATTERN::PATTERN_5,
+			{ { 2150, 10, 534 }, { 2150, 10, 1290}, {2770, 10, 1290}, {2770, 10, 370}}
+		}
 	};
 
 	// 4方向の衝突情報
@@ -78,7 +118,7 @@ public:
 	EnemyBase(void);
 	~EnemyBase(void);
 
-	void Init(TYPE type, int baseModelId, Player* player);
+	void Init(TYPE type, int baseModelId, Player* player, PATTERN pattern);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
@@ -93,6 +133,7 @@ public:
 	bool IsAlive(void)const;
 	void SetAlive(bool isAlive);
 	SurroundingHits CheckCollision(const BlockManager* block);
+	PATTERN GetPattern(void)const;
 
 	// ダメージを与える
 	void Damage(int damage);
@@ -110,6 +151,16 @@ protected:
 	VECTOR scales_;
 	VECTOR moveDir_;
 	TYPE type_;
+
+	PATTERN currentPattern_;
+
+	std::vector<VECTOR> currentRoute_;
+
+	// 向かっている目的地点のインデックス
+	int currentTargetIndex_;
+
+	// 往復するか
+	bool isReturn_;
 
 	float speed_;
 
@@ -139,6 +190,8 @@ protected:
 	void LookPlayer(void);
 	void Move(void);
 	void SetSpawnPosition(void);
+
+	void MovePattern(void);
 
 	// パラメータ設定(純粋仮想関数)
 	virtual void SetParam(void) = 0;

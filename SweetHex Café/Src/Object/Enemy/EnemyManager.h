@@ -9,7 +9,7 @@ class EnemyManager
 {
 public:
 
-	static constexpr int SPAWN_INTERVEL_SLIME = 300;
+	static constexpr int SPAWN_INTERVEL_SLIME = 180;
 
 	// 敵の最大数
 	static constexpr int MAX_ENEMYS = 5;
@@ -32,6 +32,8 @@ private:
 
 	// エネミー
 	std::vector<EnemyBase*> enemys_;
+
+	int nextPatternIndex_;
 
 	Player* player_;
 	ItemManager* item_;

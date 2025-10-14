@@ -190,7 +190,8 @@ void GameScene::CollisionEnemy(void)
 
 		VECTOR enemyPos = enemy->GetPos();
 
-		// 敵とプレイヤーの衝突判定条件を満たしたら、
+	
+			// 敵とプレイヤーの衝突判定条件を満たしたら、
 		if (Utility::IsHitSpheres(playerPos, Player::COLLISION_RADIUS,
 			enemyPos, enemy->GetRadius()))
 		{
@@ -205,7 +206,7 @@ void GameScene::CollisionEnemy(void)
 
 			Utility::AdjustPositionCollision(playerPos, Player::COLLISION_RADIUS,
 				enemyPos, enemy->GetRadius());
-			
+
 			if (isMoveEnemy)
 			{
 				enemy->SetPos(enemyPos);
@@ -213,14 +214,18 @@ void GameScene::CollisionEnemy(void)
 
 			if (isMovePlayer)
 			{
-				player_ ->SetPos(playerPos);
+				player_->SetPos(playerPos);
 			}
 
-			if (!player_->IsInvincible())
+			if (enemy->GetState() == EnemyBase::STATE::ATTACK)
 			{
-				player_->Damage(1);
+				if (!player_->IsInvincible())
+				{
+					player_->Damage(1);
+				}
 			}
 		}
+
 	}
 }
 
