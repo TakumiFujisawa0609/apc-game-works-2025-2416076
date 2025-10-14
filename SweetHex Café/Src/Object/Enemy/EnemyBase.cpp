@@ -1,5 +1,6 @@
 #include "../../Application.h"
 #include "../../Utility/Utility.h"
+#include "../../Utility/MatrixUtility.h"
 
 #include "../Stage/BlockManager.h"
 #include "../Common/AnimationController.h"
@@ -32,7 +33,7 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern
 	// 大きさ
 	MV1SetScale(modelId_, scales_);
 
-	SetSpawnPosition();
+	isNotice_ = false;
 
 	animController_ = new AnimationController(modelId_);
 
@@ -236,6 +237,11 @@ EnemyBase::PATTERN EnemyBase::GetPattern(void) const
 	return currentPattern_;
 }
 
+bool EnemyBase::IsNotice(void) const
+{
+	return isNotice_;
+}
+
 void EnemyBase::Damage(int damage)
 {
 	// 攻撃中やノックバック中はダメージを受けない
@@ -342,8 +348,83 @@ void EnemyBase::Move(void)
 	MV1SetPosition(modelId_, pos_);
 }
 
-void EnemyBase::SetSpawnPosition(void)
+void EnemyBase::Search(void)
 {
+#pragma region 視野
+	VECTOR playerPos = player_->GetPos();
+
+	VECTOR dirEnemy = VNorm(moveDir_);
+
+	VECTOR diff = VSub(playerPos, pos_);
+
+	VECTOR dirPlayerForEnemy = VNorm(diff);
+
+	// 内積を使ってベクトルの比較
+	float dot = VDot(dirEnemy, dirPlayerForEnemy);
+	float angle = acosf(dot);
+
+	const float viweRad = Utility::Deg2RadF(VIEW_ANGLE);
+
+	float colX = pos_.x - playerPos.x;
+	float colZ = pos_.z - playerPos.z;
+	float colPos = 0.0f;
+	colPos = colX * colX + colZ * colZ;
+
+	if (angle <= viweRad && colPos <= VIEW_RANGE * VIEW_RANGE)
+	{
+		isNotice_ = true;
+	}
+	else
+	{
+		isNotice_ = false;
+	}
+#pragma endregion
+}
+
+void EnemyBase::DrawViewRange(void)
+{
+#pragma region 視野
+	MATRIX mat = MGetIdent();
+	mat = MatrixUtility::GetMatrixRotateXYZ(angles_);
+
+	const VECTOR dirForwardBase = VGet(0.0f, 0.0f, -1.0f);
+
+	// 前方方向
+	VECTOR forward = VTransform(dirForwardBase, mat);
+
+	// 右
+	MATRIX rightMat = MMult(mat, MGetRotY(Utility::Deg2RadF(VIEW_ANGLE)));
+	VECTOR right = VTransform(dirForwardBase, rightMat);
+	// 左
+	MATRIX leftMat = MMult(mat, MGetRotY(Utility::Deg2RadF(-VIEW_ANGLE)));
+	VECTOR left = VTransform(dirForwardBase, leftMat);
+
+	VECTOR pos0 = pos_;
+
+	VECTOR pos1 = VAdd(pos0, VScale(forward, VIEW_RANGE));
+	VECTOR pos2 = VAdd(pos0, VScale(left, VIEW_RANGE));
+	VECTOR pos3 = VAdd(pos0, VScale(right, VIEW_RANGE));
+
+	pos0.y = pos1.y = pos2.y = pos3.y = 10.0f;
+
+	if (isNotice_)
+	{
+		DrawTriangle3D(pos0, pos2, pos1,
+			0xcc44cc, true);
+
+		DrawTriangle3D(pos0, pos1, pos3,
+			0xcc44cc, true);
+	}
+	else
+	{
+		DrawTriangle3D(pos0, pos2, pos1,
+			0x00ff00, true);
+
+		DrawTriangle3D(pos0, pos1, pos3,
+			0x00ff00, true);
+	}
+
+#pragma endregion
 }
 
 void EnemyBase::MovePattern(void)
@@ -419,12 +500,13 @@ void EnemyBase::MovePattern(void)
 
 void EnemyBase::ChangeStandby(void)
 {
-	MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+	MV1SetMaterialEmiColor(modelId_, 0, COLOR_DIF_DEFAULT);
 }
 
 void EnemyBase::ChangeAttack(void)
 {
 	speed_ = RUN_SPEED;
+	MV1SetMaterialEmiColor(modelId_, 0, COLOR_DIF_BLINK);
 }
 
 void EnemyBase::ChangeHit(void)
@@ -449,7 +531,11 @@ void EnemyBase::UpdateStandby(void)
 	{
 		ChangeState(STATE::ATTACK);
 	}
+
 	MovePattern();
+
+	// 索敵
+	Search();
 }
 
 void EnemyBase::UpdateAttack(void)
@@ -457,6 +543,7 @@ void EnemyBase::UpdateAttack(void)
 
 	LookPlayer();
 	Move();
+	MV1SetMaterialAmbColor(modelId_, 0, COLOR_DIF_BLINK);
 
 	//if (animController_->IsEnd())
 	//{
@@ -475,11 +562,11 @@ void EnemyBase::UpdateHit(void)
 
 	if (reactCnt_ % TERM_BLINK == 0)
 	{
-		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+		MV1SetMaterialEmiColor(modelId_, 0, COLOR_DIF_DEFAULT);
 	}
 	else
 	{
-		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
+		MV1SetMaterialEmiColor(modelId_, 0, COLOR_DIF_BLINK);
 	}
 
 	reactCnt_++;
@@ -514,6 +601,9 @@ void EnemyBase::UpdateEnd(void)
 void EnemyBase::DrawStandby(void)
 {
 	MV1DrawModel(modelId_);
+
+	// 視野描画
+	DrawViewRange();
 }
 
 void EnemyBase::DrawAttack(void)

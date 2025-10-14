@@ -1,4 +1,6 @@
 #include <DxLib.h>
+
+#include "./../Application.h"
 #include "../Manager/InputController.h"
 #include "../Manager/SystemManager.h"
 #include "../Manager/SceneManager.h"
@@ -32,13 +34,11 @@ void ResultScene::Update(void)
 
 void ResultScene::Draw(void)
 {
-	DrawFormatString(10, 80, 0x000000, "score : %d", SystemManager::GetInstance().GetScore());
+	DrawFormatString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0x000000, "score : %d", SystemManager::GetInstance().GetScore());
 
-#ifdef _DEBUG
 	DrawString(0, 0, "ResultScene", 0xffffff);
 
 	DrawString(450, 500, "PRESS SPACE KEY", 0xffffff);
-#endif // _DEBUG
 }
 
 void ResultScene::Release(void)

@@ -30,6 +30,12 @@ public:
 
 	static constexpr int RUN_SPEED = 4;
 
+	// 視野の広さ
+	static constexpr float VIEW_RANGE = 600.0f;
+
+	// 視野角
+	static constexpr float VIEW_ANGLE = 30.0f;
+
 	// 90度（ラジアン）
 	const float HALF_PI = DX_PI_F / 2.0f;
 
@@ -134,6 +140,7 @@ public:
 	void SetAlive(bool isAlive);
 	SurroundingHits CheckCollision(const BlockManager* block);
 	PATTERN GetPattern(void)const;
+	bool IsNotice(void)const;
 
 	// ダメージを与える
 	void Damage(int damage);
@@ -174,6 +181,9 @@ protected:
 
 	int cntAttack_;
 
+	// 検知フラグ
+	bool isNotice_;
+
 	SurroundingHits hitsResult = { false, false, false, false };
 
 	// 衝突判定用半径
@@ -189,9 +199,12 @@ protected:
 
 	void LookPlayer(void);
 	void Move(void);
-	void SetSpawnPosition(void);
-
 	void MovePattern(void);
+
+	void Search(void);
+
+	// 視野描画
+	void DrawViewRange(void);
 
 	// パラメータ設定(純粋仮想関数)
 	virtual void SetParam(void) = 0;

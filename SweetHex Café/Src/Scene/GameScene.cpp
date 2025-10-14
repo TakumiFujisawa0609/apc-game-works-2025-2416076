@@ -252,6 +252,15 @@ void GameScene::CollisionWeapon(void)
 				enemy->GetPos(), enemy->GetRadius()))
 			{
 				enemy->Damage(1);
+
+				for (EnemyBase* enemy : enemyManager_->GetEnemys())
+				{
+					// Œx‰úó‘Ô‚ÅUŒ‚‚³‚ê‚Ä‚¢‚È‚¢Žq‚È‚çA’ÇÕEUŒ‚ˆ—‚Ö
+					if (enemy->IsNotice() && enemy->GetState() == EnemyBase::STATE::STANDBY)
+					{
+						enemy->ChangeState(EnemyBase::STATE::ATTACK);
+					}
+				}
 			}
 		}
 

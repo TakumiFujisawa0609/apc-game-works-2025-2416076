@@ -491,6 +491,7 @@ void Player::ChangeDead(void)
 
 void Player::UpdateStandby(void)
 {
+	// –³“GŽžŠÔ
 	if (invincibleTimeCount_ > 0)
 	{
 		invincibleTimeCount_--;

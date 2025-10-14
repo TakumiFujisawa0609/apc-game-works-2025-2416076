@@ -2,6 +2,7 @@
 #include "../Application.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputController.h"
+#include "../Manager/SystemManager.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)
@@ -16,6 +17,8 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
+
+	SystemManager::GetInstance().ResetGame();
 
 	ChangeState(STATE::START);
 }
