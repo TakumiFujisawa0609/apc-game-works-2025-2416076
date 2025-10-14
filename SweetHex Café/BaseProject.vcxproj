@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\SoundManager\SoundManager.cpp" />
     <ClCompile Include="Src\Object\Item\ItemManager.cpp" />
     <ClCompile Include="Src\Scene\GameOverScene.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemySlime.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="Src\Object\Weapon\WeaponPunch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\SoundManager\SoundManager.h" />
     <ClInclude Include="Src\Object\Item\ItemManager.h" />
     <ClInclude Include="Src\Scene\GameOverScene.h" />
     <ClInclude Include="Src\Object\Enemy\EnemySlime.h" />

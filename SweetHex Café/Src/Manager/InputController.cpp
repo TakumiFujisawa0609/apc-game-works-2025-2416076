@@ -1,4 +1,6 @@
 #include "InputManager.h"
+#include "SoundManager/SoundManager.h"
+
 #include "InputController.h"
 
 InputController* InputController::instance_ = nullptr;
@@ -152,6 +154,8 @@ bool InputController::IsAttack(void)
 
 	if (ins.IsTrgDown(KEY_INPUT_J) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::R_TRIGGER))
 	{
+		SoundManager::GetInstance()->Play(SoundManager::SE::PUNCH);
+
 		return true;
 	}
 

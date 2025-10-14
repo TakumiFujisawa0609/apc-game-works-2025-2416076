@@ -3,6 +3,7 @@
 #include "Manager/SceneManager.h"
 #include "Manager/InputController.h"
 #include "Manager/SystemManager.h"
+#include "Manager/SoundManager/SoundManager.h"
 #include "Common/FpsControl.h"
 #include "Application.h"
 
@@ -67,6 +68,8 @@ void Application::Init(void)
 	InputManager::CreateInstance();
 	InputController::CreateInstance();
 	SystemManager::CreateInstance();
+	SoundManager::CreateInstance();
+	SoundManager::GetInstance()->Init();
 
 	// シーン管理初期化
 	SceneManager::CreateInstance();
@@ -110,6 +113,9 @@ void Application::Destroy(void)
 
 	// システム管理解放
 	SystemManager::GetInstance().Destroy();
+
+
+	SoundManager::GetInstance()->Delete();
 
 	//フレームレート解放
 	delete fps_;
