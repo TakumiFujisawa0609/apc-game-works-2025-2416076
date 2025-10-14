@@ -23,7 +23,7 @@ public:
 	const int GetPlayerNum() const { return playerNum_; }
 
 	//スコアを格納
-	void SetScore(const int score) { score_ = score; }
+	void SetScore(int score) { score_ += score; }
 
 	//スコアを返す
 	const int GetScore() const { return score_; }

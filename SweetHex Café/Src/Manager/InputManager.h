@@ -46,6 +46,11 @@ public:
 		L_TRIGGER,
 		R_STICK,
 		L_STICK,
+		START,
+		PAD_UP,
+		PAD_DOWN,
+		PAD_LEFT,
+		PAD_RIGHT,
 		MAX
 	};
 
