@@ -1,10 +1,13 @@
 ﻿#include <DxLib.h>
+
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
 #include "Manager/InputController.h"
 #include "Manager/SystemManager.h"
 #include "Manager/SoundManager/SoundManager.h"
+
 #include "Common/FpsControl.h"
+
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
