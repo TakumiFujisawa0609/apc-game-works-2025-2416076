@@ -56,7 +56,6 @@ void BlockManager::Update(void)
 
 void BlockManager::Draw(void)
 {
-
 	for (int y = 0; y < NUM_BLOCK_Y; y++)
 	{
 		for (int z = 0; z < NUM_BLOCK_Z; z++)

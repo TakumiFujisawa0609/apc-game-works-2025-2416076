@@ -1,91 +1,77 @@
-#include "SoundManager.h"
 #include <DxLib.h>
+
+#include "../../Application.h"
+
+#include "SoundManager.h"
+
 
 SoundManager* SoundManager::instance_ = nullptr;
 
 void SoundManager::Init(void)
 {
-	////サウンドファイルのリスト作成
-	//const char* filename[static_cast<int>(BGM::MAX)]
-	//{
-	//};
+	// BGM	
 
-	//// すべてのサウンドの読み込み
-	//for (int i = 0; i < static_cast<int>(BGM::MAX); i++)
-	//{
-	//	bgmHandle_[i] = LoadSoundMem(filename[i]);
-	//}
+	// SE
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1424156_かわいい系モンスターのパンチ音.mp3").c_str()));
 
-	//サウンドファイルのリスト作成
-	const char* sename[static_cast<int>(SE::MAX)]
-	{
-		"Data/Sound/SE/AS_1424156_かわいい系モンスターのパンチ音.mp3",
-	};
-
-
-	// すべてのサウンドの読み込み
-	for (int i = 0; i < static_cast<int>(SE::MAX); i++)
-	{
-		seHandle_[i] = LoadSoundMem(sename[i]);
-	}
 }
 
 void SoundManager::Delete(void)
 {
-	//int bgmMax = static_cast<int>(BGM::MAX);
-
-	//for (int i = 0; i < bgmMax; i++)
-	//{
-	//	DeleteSoundMem(bgmHandle_[i]);
-	//}
-
-	int seMax = static_cast<int>(SE::MAX);
-
-	for (int i = 0; i < seMax; i++)
+	for (int bgm : bgmHandles_)
 	{
-		DeleteSoundMem(seHandle_[i]);
+		DeleteSoundMem(bgm);
 	}
 
-	delete instance_;
+	for (int se : seHandles_)
+	{
+		DeleteSoundMem(se);
+	}
+
+	bgmHandles_.clear();
+	seHandles_.clear();
 }
 
-void SoundManager::Play(BGM bgm, bool flg)
+void SoundManager::Play(BGM bgm, bool loop)
 {
-	//int handle = bgmHandle_[static_cast<int>(bgm)];
+	if (bgmHandles_.empty()) return;
 
-	//// 指定のハンドルが再生中か確認
-	//if (CheckSoundMem(handle) == 0)
-	//{
-	//	PlaySoundMem(bgmHandle_[static_cast<int>(bgm)], DX_PLAYTYPE_LOOP, flg);
-	//}
+	const int index = static_cast<int>(bgm);
+	if (index < 0 || index >= bgmHandles_.size())
+	{
+		return;
+	}
 
-	//ChangeVolumeSoundMem(255 * 70 / 100, bgmHandle_[static_cast<int>(bgm)]);
+	PlaySoundMem(bgmHandles_[static_cast<int>(bgm)], DX_PLAYTYPE_LOOP, loop);
+	ChangeVolumeSoundMem(255 * BGM_VOLUME / 100, bgmHandles_[static_cast<int>(bgm)]);
 }
 
 void SoundManager::Play(SE se)
 {
+	if (seHandles_.empty()) return;
 
-	PlaySoundMem(seHandle_[static_cast<int>(se)], DX_PLAYTYPE_BACK);
+	const int index = static_cast<int>(se);
+	if (index < 0 || index >= seHandles_.size())
+	{
+		return;
+	}
 
-	ChangeVolumeSoundMem(255 * 40 / 100, seHandle_[static_cast<int>(se)]);
+	PlaySoundMem(seHandles_[static_cast<int>(se)], DX_PLAYTYPE_BACK);
+	ChangeVolumeSoundMem(255 * SE_VOLUME / 100, seHandles_[static_cast<int>(se)]);
 }
 
-void SoundManager::Stop(BGM bgm)
+void SoundManager::StopSound(void)
 {
-	//StopSoundMem(bgmHandle_[static_cast<int>(bgm)]);
-}
+	for (int bgm : bgmHandles_)
+	{
+		StopSoundMem(bgm);
+	}
 
-void SoundManager::Stop(SE se)
-{
-	StopSoundMem(seHandle_[static_cast<int>(se)]);
-}
-
-SoundManager::SoundManager(void)
-{
-}
-
-SoundManager::SoundManager(const SoundManager& manager)
-{
+	for (int se : seHandles_)
+	{
+		StopSoundMem(se);
+	}
 }
 
 SoundManager::~SoundManager(void)
