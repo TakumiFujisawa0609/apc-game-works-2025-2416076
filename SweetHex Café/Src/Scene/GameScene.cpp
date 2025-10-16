@@ -43,13 +43,11 @@ void GameScene::Init(void)
 	item_ = new ItemManager();
 	item_->Init();
 
-	player_ = new Player(item_);
+	player_ = new Player(item_, blockManager_);
 	player_->Init();
 
-	enemyManager_ = new EnemyManager(player_, item_);
+	enemyManager_ = new EnemyManager(player_, item_, blockManager_);
 	enemyManager_->Init();
-
-
 
 	ChangeState(STATE::GAME);
 
@@ -130,7 +128,6 @@ void GameScene::UpdateGame(void)
 	timer_->Update();
 
 	// 当たり判定
-	Collision();
 	CollisionEnemy();
 	CollisionWeapon();
 	CollisionEnemy2Enemy();
@@ -161,13 +158,6 @@ void GameScene::UpdatePause(void)
 	{
 		ChangeState(STATE::GAME);
 	}
-}
-
-void GameScene::Collision(void)
-{
-	// 進めるかどうかをチェックする
-	player_->CheckCollision(blockManager_);
-	enemyManager_->CheckCollision(blockManager_);
 }
 
 void GameScene::CollisionEnemy(void)

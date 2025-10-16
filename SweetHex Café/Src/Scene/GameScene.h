@@ -53,7 +53,6 @@ private:
 	void UpdateGame(void);
 	void UpdatePause(void);
 
-	void Collision(void);
 	void CollisionEnemy(void);
 	void CollisionWeapon(void);
 	void CollisionEnemy2Enemy(void);

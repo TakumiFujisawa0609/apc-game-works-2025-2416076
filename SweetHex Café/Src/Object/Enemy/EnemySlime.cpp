@@ -2,7 +2,8 @@
 
 #include "EnemySlime.h"
 
-EnemySlime::EnemySlime(void)
+EnemySlime::EnemySlime(BlockManager* block)
+	: EnemyBase(block)
 {
 }
 

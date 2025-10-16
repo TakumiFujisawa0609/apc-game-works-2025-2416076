@@ -6,10 +6,11 @@
 
 #include "EnemyManager.h"
 
-EnemyManager::EnemyManager(Player* player, ItemManager* item)
+EnemyManager::EnemyManager(Player* player, ItemManager* item, BlockManager* block)
 {
 	player_ = player;
 	item_ = item;
+	block_ = block;
 }
 
 EnemyManager::~EnemyManager()
@@ -75,7 +76,7 @@ void EnemyManager::Update(void)
 				pattern = EnemyBase::PATTERN::PATTERN_1;
 			}
 
-			EnemyBase* newEnemy = new EnemySlime();
+			EnemyBase* newEnemy = new EnemySlime(block_);
 
 
 			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, pattern);
@@ -150,12 +151,4 @@ void EnemyManager::Release(void)
 std::vector<EnemyBase*> EnemyManager::GetEnemys(void)
 {
 	return enemys_;
-}
-
-void EnemyManager::CheckCollision(BlockManager* block)
-{
-	for (EnemyBase* enemy : enemys_)
-	{
-		enemy->CheckCollision(block);
-	}
 }

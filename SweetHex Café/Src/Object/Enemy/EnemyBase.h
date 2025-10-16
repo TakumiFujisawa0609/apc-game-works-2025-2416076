@@ -121,7 +121,7 @@ public:
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	// コンストラクタ・デストラクタ
-	EnemyBase(void);
+	EnemyBase(BlockManager* block);
 	~EnemyBase(void);
 
 	void Init(TYPE type, int baseModelId, Player* player, PATTERN pattern);
@@ -131,6 +131,8 @@ public:
 
 	// 状態遷移
 	void ChangeState(STATE state);
+
+	// ゲッター・セッター
 	VECTOR GetPos(void)const;
 	void SetPos(VECTOR pos);
 	float GetRadius(void)const;
@@ -138,7 +140,6 @@ public:
 	STATE GetState(void)const;
 	bool IsAlive(void)const;
 	void SetAlive(bool isAlive);
-	SurroundingHits CheckCollision(const BlockManager* block);
 	PATTERN GetPattern(void)const;
 	bool IsNotice(void)const;
 
@@ -151,6 +152,7 @@ public:
 
 protected:
 	Player* player_;
+	BlockManager* block_;
 
 	int modelId_;
 	VECTOR pos_;
@@ -229,4 +231,6 @@ protected:
 	virtual void DrawHit(void);
 	virtual void DrawDead(void);
 	virtual void DrawEnd(void);
+
+	SurroundingHits CheckCollision(void);
 };

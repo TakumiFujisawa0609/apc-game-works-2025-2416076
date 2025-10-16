@@ -4,6 +4,7 @@
 class EnemyBase;
 class Player;
 class ItemManager;
+class BlockManager;
 
 class EnemyManager
 {
@@ -14,7 +15,7 @@ public:
 	// 敵の最大数
 	static constexpr int MAX_ENEMYS = 5;
 
-	EnemyManager(Player* player, ItemManager* item);
+	EnemyManager(Player* player, ItemManager* item, BlockManager* block);
 	~EnemyManager();
 
 	void Init(void);
@@ -23,8 +24,6 @@ public:
 	void Release(void);
 
 	std::vector<EnemyBase*> GetEnemys(void);
-
-	void CheckCollision(BlockManager* block);
 
 private:
 	// エネミー用のモデルハンドルID
@@ -37,6 +36,7 @@ private:
 
 	Player* player_;
 	ItemManager* item_;
+	BlockManager* block_;
 
 	int cntSpawn_;
 };

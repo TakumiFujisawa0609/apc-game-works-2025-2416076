@@ -66,6 +66,9 @@ void Block::Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ, flo
         // —â‘ ŒÉ
         tag_ = "FRIDGE";
         break;
+    case TYPE::WALL_STRANGHT:
+        tag_ = "WALL";
+        break;
     default:
         tag_ = "None";
         break;

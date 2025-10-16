@@ -1,3 +1,5 @@
+#include "EnemyBase.h"
+
 #include "../../Application.h"
 #include "../../Utility/Utility.h"
 #include "../../Utility/MatrixUtility.h"
@@ -6,10 +8,9 @@
 #include "../Common/AnimationController.h"
 #include "../Player/Player.h"
 
-#include "EnemyBase.h"
-
-EnemyBase::EnemyBase(void)
+EnemyBase::EnemyBase(BlockManager* block)
 {
+	block_ = block;
 }
 
 EnemyBase::~EnemyBase(void)
@@ -87,6 +88,9 @@ void EnemyBase::Update(void)
 		UpdateEnd();
 		break;
 	}
+
+	// ステージとの当たり判定
+	CheckCollision();
 
 	animController_->Update();
 }
@@ -186,7 +190,7 @@ void EnemyBase::SetAlive(bool isAlive)
 	isAlive_ = isAlive;
 }
 
-EnemyBase::SurroundingHits EnemyBase::CheckCollision(const BlockManager* block)
+EnemyBase::SurroundingHits EnemyBase::CheckCollision(void)
 {
 	VECTOR enemyPos = pos_;
 	VECTOR dir = moveDir_;
@@ -202,7 +206,7 @@ EnemyBase::SurroundingHits EnemyBase::CheckCollision(const BlockManager* block)
 	VECTOR forwardEndPos = VAdd(enemyPos, VScale(dir, COLLISION_OFFSET));
 	forwardEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitForward = block->CheckCollisionLine(startPos, forwardEndPos);
+	BlockManager::CollisionResult hitForward = block_->CheckCollisionLine(startPos, forwardEndPos);
 	hitsResult.hitForward = hitForward.hit;
 
 	// 後方
@@ -210,7 +214,7 @@ EnemyBase::SurroundingHits EnemyBase::CheckCollision(const BlockManager* block)
 	VECTOR backwardEndPos = VAdd(enemyPos, VScale(backwardDir, COLLISION_OFFSET));
 	backwardEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitBack = block->CheckCollisionLine(startPos, backwardEndPos);
+	BlockManager::CollisionResult hitBack = block_->CheckCollisionLine(startPos, backwardEndPos);
 	hitsResult.hitBack = hitBack.hit;
 
 	// 右側
@@ -218,7 +222,7 @@ EnemyBase::SurroundingHits EnemyBase::CheckCollision(const BlockManager* block)
 	VECTOR rightEndPos = VAdd(enemyPos, VScale(rightDir, COLLISION_OFFSET));
 	rightEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitRight = block->CheckCollisionLine(startPos, rightEndPos);
+	BlockManager::CollisionResult hitRight = block_->CheckCollisionLine(startPos, rightEndPos);
 	hitsResult.hitRight = hitRight.hit;
 
 	// 左側
@@ -226,7 +230,7 @@ EnemyBase::SurroundingHits EnemyBase::CheckCollision(const BlockManager* block)
 	VECTOR leftEndPos = VAdd(enemyPos, VScale(leftDir, COLLISION_OFFSET));
 	leftEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitLeft = block->CheckCollisionLine(startPos, leftEndPos);
+	BlockManager::CollisionResult hitLeft = block_->CheckCollisionLine(startPos, leftEndPos);
 	hitsResult.hitLeft = hitLeft.hit;
 
 	return hitsResult;	// 当たってなければ進める
@@ -370,9 +374,23 @@ void EnemyBase::Search(void)
 	float colPos = 0.0f;
 	colPos = colX * colX + colZ * colZ;
 
+	// 視野内にいるか確認
 	if (angle <= viweRad && colPos <= VIEW_RANGE * VIEW_RANGE)
 	{
-		isNotice_ = true;
+		BlockManager::CollisionResult hit = block_->CheckCollisionLine(pos_, playerPos);
+
+		// 視野内でもプレイヤーと敵の間に壁があるなら
+		if (hit.tag == "WALL")
+		{
+			// 検知しない
+			isNotice_ = false;
+		}
+		else
+		{
+			// 検知する
+			isNotice_ = true;
+		}
+
 	}
 	else
 	{
@@ -431,20 +449,20 @@ void EnemyBase::MovePattern(void)
 {
 	if (currentRoute_.empty())
 	{
-		// ルートが定義されていないか、空のパターン (例: PATTERN_5, Wait) の場合は移動しない
+		// ルートが定義されていない場合は移動しない
 		return;
 	}
 
 	if (currentRoute_.size() <= 1)
 	{
-		// 1点しか目標がない場合（例: その場待機）は移動しない
+		// 1点しか目標がない場合は移動しない
 		return;
 	}
 
-	// 1. 目標地点を取得
+	// 目標地点を取得
 	const VECTOR& targetPos = currentRoute_[currentTargetIndex_];
 
-	// 2. 目標地点への方向ベクトルを計算し、モデルの向きを設定
+	// 目標地点への方向ベクトルを計算し、モデルの向きを設定
 	VECTOR diff = VSub(targetPos, pos_);
 	diff.y = 0.0f;
 
@@ -452,7 +470,7 @@ void EnemyBase::MovePattern(void)
 
 	if (distance < speed_)
 	{
-		// 3. 到達判定（目標地点に非常に近づいたら）
+		// 到達判定
 		SetPos(targetPos); // 正確に目標地点へ移動
 
 		if (isReturn_)
@@ -486,7 +504,7 @@ void EnemyBase::MovePattern(void)
 	else
 	{
 		// 目標地点に向かって移動
-		moveDir_ = VNorm(diff); // 方向を更新
+		moveDir_ = VNorm(diff);
 
 		// モデルの向きを更新
 		angles_.y = atan2(moveDir_.x, moveDir_.z) + Utility::Deg2RadF(180.0f);
@@ -507,6 +525,7 @@ void EnemyBase::ChangeAttack(void)
 {
 	speed_ = RUN_SPEED;
 	MV1SetMaterialEmiColor(modelId_, 0, COLOR_DIF_BLINK);
+	animController_->Play(static_cast<int>(ANIM_TYPE::ANGER));
 }
 
 void EnemyBase::ChangeHit(void)
@@ -517,8 +536,8 @@ void EnemyBase::ChangeHit(void)
 
 void EnemyBase::ChangeDead(void)
 {
-	reactCnt_ = 0;
 	animController_->Play(static_cast<int>(ANIM_TYPE::SQUISH_START), false);
+	MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
 }
 
 void EnemyBase::ChangeEnd(void)
@@ -540,15 +559,8 @@ void EnemyBase::UpdateStandby(void)
 
 void EnemyBase::UpdateAttack(void)
 {
-
 	LookPlayer();
 	Move();
-	MV1SetMaterialAmbColor(modelId_, 0, COLOR_DIF_BLINK);
-
-	//if (animController_->IsEnd())
-	//{
-	//	ChangeState(STATE::STANDBY);
-	//}
 }
 
 void EnemyBase::UpdateHit(void)
@@ -574,7 +586,7 @@ void EnemyBase::UpdateHit(void)
 
 void EnemyBase::UpdateDead(void)
 {
-	if (reactCnt_ >= CNT_DEAD_REACT && animController_->IsEnd())
+	if (animController_->IsEnd())
 	{
 		ChangeState(STATE::END);
 	}
@@ -582,15 +594,6 @@ void EnemyBase::UpdateDead(void)
 	if (animController_->IsEnd())
 	{
 		isAlive_ = false;
-	}
-
-	if (reactCnt_ % TERM_BLINK == 0)
-	{
-		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
-	}
-	else
-	{
-		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
 	}
 }
 

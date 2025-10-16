@@ -14,9 +14,10 @@
 #include "../Weapon/WeaponPunch.h"
 #include "../Item/ItemManager.h"
 
-Player::Player(ItemManager* item)
+Player::Player(ItemManager* item, BlockManager* block)
 {
 	item_ = item;
+	block_ = block;
 }
 
 Player::~Player(void)
@@ -89,6 +90,8 @@ void Player::Update(void)
 		break;
 	}
 	useWeapon_->Update();
+
+	CheckCollision();
 
 	animController_->Update();
 }
@@ -173,7 +176,7 @@ void Player::SetPos(VECTOR pos)
 	MV1SetPosition(modelId_, pos_);
 }
 
-Player::SurroundingHits Player::CheckCollision(const BlockManager* block)
+Player::SurroundingHits Player::CheckCollision(void)
 {
 	VECTOR playerPos = pos_;
 	VECTOR dir = moveDir_;
@@ -189,7 +192,7 @@ Player::SurroundingHits Player::CheckCollision(const BlockManager* block)
 	VECTOR forwardEndPos = VAdd(playerPos, VScale(dir, COLLISION_OFFSET));
 	forwardEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitForward = block->CheckCollisionLine(startPos, forwardEndPos);
+	BlockManager::CollisionResult hitForward = block_->CheckCollisionLine(startPos, forwardEndPos);
 	hitsResult.hitForward = hitForward.hit;
 
 	// Œã•û
@@ -197,7 +200,7 @@ Player::SurroundingHits Player::CheckCollision(const BlockManager* block)
 	VECTOR backwardEndPos = VAdd(playerPos, VScale(backwardDir, COLLISION_OFFSET));
 	backwardEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitBack = block->CheckCollisionLine(startPos, backwardEndPos);
+	BlockManager::CollisionResult hitBack = block_->CheckCollisionLine(startPos, backwardEndPos);
 	hitsResult.hitBack = hitBack.hit;
 
 	// ‰E‘¤
@@ -205,7 +208,7 @@ Player::SurroundingHits Player::CheckCollision(const BlockManager* block)
 	VECTOR rightEndPos = VAdd(playerPos, VScale(rightDir, COLLISION_OFFSET));
 	rightEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitRight = block->CheckCollisionLine(startPos, rightEndPos);
+	BlockManager::CollisionResult hitRight = block_->CheckCollisionLine(startPos, rightEndPos);
 	hitsResult.hitRight = hitRight.hit;
 
 	// ¶‘¤
@@ -213,7 +216,7 @@ Player::SurroundingHits Player::CheckCollision(const BlockManager* block)
 	VECTOR leftEndPos = VAdd(playerPos, VScale(leftDir, COLLISION_OFFSET));
 	leftEndPos.y = COLLISION_HEIGHT;
 
-	BlockManager::CollisionResult hitLeft = block->CheckCollisionLine(startPos, leftEndPos);
+	BlockManager::CollisionResult hitLeft = block_->CheckCollisionLine(startPos, leftEndPos);
 	hitsResult.hitLeft = hitLeft.hit;
 
 	return hitsResult;	// “–‚½‚Á‚Ä‚È‚¯‚ê‚Îi‚ß‚é

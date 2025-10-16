@@ -93,7 +93,7 @@ public:
 
 public:
 
-	Player(ItemManager* item);
+	Player(ItemManager* item, BlockManager* block);
 	~Player(void);
 
 	void Init(void);
@@ -104,7 +104,7 @@ public:
 	VECTOR GetPos(void)const;
 	void SetPos(VECTOR pos);
 
-	SurroundingHits CheckCollision(const BlockManager* block);
+	SurroundingHits CheckCollision(void);
 	void CollisionWeapon(BlockManager* block);
 
 	// 状態の変更
@@ -129,6 +129,8 @@ private:
 	WeaponPunch* weaponPunch_;
 
 	ItemManager* item_;
+
+	BlockManager* block_;
 
 	// モデルのハンドルID
 	int modelId_;
