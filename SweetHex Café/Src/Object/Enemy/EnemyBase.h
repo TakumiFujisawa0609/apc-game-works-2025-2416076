@@ -113,7 +113,7 @@ public:
 		STANDBY,
 		ATTACK,
 		HIT_REACT,
-		DEAD_REACK,
+		DEAD_REACT,
 		END,
 	};
 

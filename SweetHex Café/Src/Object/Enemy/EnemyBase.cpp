@@ -81,7 +81,7 @@ void EnemyBase::Update(void)
 	case EnemyBase::STATE::HIT_REACT:
 		UpdateHit();
 		break;
-	case EnemyBase::STATE::DEAD_REACK:
+	case EnemyBase::STATE::DEAD_REACT:
 		UpdateDead();
 		break;
 	case EnemyBase::STATE::END:
@@ -108,7 +108,7 @@ void EnemyBase::Draw(void)
 	case EnemyBase::STATE::HIT_REACT:
 		DrawHit();
 		break;
-	case EnemyBase::STATE::DEAD_REACK:
+	case EnemyBase::STATE::DEAD_REACT:
 		DrawDead();
 		break;
 	case EnemyBase::STATE::END:
@@ -144,7 +144,7 @@ void EnemyBase::ChangeState(STATE state)
 	case EnemyBase::STATE::HIT_REACT:
 		ChangeHit();
 		break;
-	case EnemyBase::STATE::DEAD_REACK:
+	case EnemyBase::STATE::DEAD_REACT:
 		ChangeDead();
 		break;
 	case EnemyBase::STATE::END:
@@ -263,7 +263,7 @@ void EnemyBase::Damage(int damage)
 
 	if (hp_ <= 0)
 	{
-		ChangeState(STATE::DEAD_REACK);
+		ChangeState(STATE::DEAD_REACT);
 	}
 	else
 	{
