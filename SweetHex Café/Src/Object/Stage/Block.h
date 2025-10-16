@@ -21,13 +21,12 @@ public:
 		WALL_DOOR,			// ドア3
 		COUNTER_LARGE,		// カウンター長4
 		CASH_REGISTER,		// レジ5
-		COFFEE_MACHINE,		// コーヒーマシン6
-		STAND_MAXER,		// スタンドミキサー7
-		DISPLAY_CASE,		// ディスプレイ8
-		STOVE,				// コンロ9
-		FRIDGE,				// 冷蔵庫10
-		SINK,				// シンク11
-		CUTTINGBOARD,		// まな板12
+		STAND_MAXER,		// スタンドミキサー6
+		DISPLAY_CASE,		// ディスプレイ7
+		STOVE,				// コンロ8
+		FRIDGE,				// 冷蔵庫9
+		SINK,				// シンク10
+		CUTTINGBOARD,		// まな板11
 	};
 
 public:
