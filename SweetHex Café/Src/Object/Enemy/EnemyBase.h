@@ -6,6 +6,7 @@
 class Player;
 class AnimationController;
 class BlockManager;
+class HpManager;
 
 class EnemyBase
 {
@@ -153,6 +154,7 @@ public:
 protected:
 	Player* player_;
 	BlockManager* block_;
+	HpManager* hpManager_;
 
 	int modelId_;
 	VECTOR pos_;

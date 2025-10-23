@@ -6,6 +6,7 @@
 
 #include "../Stage/BlockManager.h"
 #include "../Common/AnimationController.h"
+#include "../Common/HP/HpManager.h"
 #include "../Player/Player.h"
 
 EnemyBase::EnemyBase(BlockManager* block)
@@ -27,6 +28,10 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern
 
 	// パラメータ
 	SetParam();
+
+	hpManager_ = new HpManager(VGet(pos_.x, pos_.y + 80.0f, pos_.z),
+								hp_, MAX_HP, 0.2, 12, HpManager::TYPE::WORLD);
+	hpManager_->Init();
 
 	// 色の調整(自己発光)
 	MV1SetMaterialEmiColor(modelId_, 0, COLOR_EMI_DEFAULT);
@@ -92,6 +97,8 @@ void EnemyBase::Update(void)
 	// ステージとの当たり判定
 	CheckCollision();
 
+	hpManager_->Update();
+
 	animController_->Update();
 }
 
@@ -116,6 +123,9 @@ void EnemyBase::Draw(void)
 		break;
 	}
 
+	hpManager_->SetPos(VGet(pos_.x, pos_.y + 80.0f, pos_.z));
+	hpManager_->Draw();
+
 #ifdef _DEBUG
 	//DrawSphere3D(pos_, collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
 #endif // _DEBUG
@@ -127,6 +137,9 @@ void EnemyBase::Release(void)
 
 	animController_->Release();
 	delete animController_;
+
+	hpManager_->Release();
+	delete hpManager_;
 }
 
 void EnemyBase::ChangeState(STATE state)
@@ -255,6 +268,7 @@ void EnemyBase::Damage(int damage)
 	}
 
 	hp_ -= damage;
+	hpManager_->SetHp(hp_);
 
 	if (hp_ < 0)
 	{

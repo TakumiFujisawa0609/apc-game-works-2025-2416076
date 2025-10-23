@@ -1,11 +1,14 @@
 #pragma once
 #include <DxLib.h>
 
+#include "../../Application.h"
+
 class AnimationController;
 class BlockManager;
 class WeaponBase;
 class WeaponPunch;
 class ItemManager;
+class HpManager;
 
 class Player
 {
@@ -91,6 +94,9 @@ public:
 	// –³“GŽžŠÔ
 	static constexpr int INVINCIBLE_TIME = 60;
 
+	// HP•`‰æˆÊ’u
+	static constexpr VECTOR HP_DRAW_POS = { Application::SCREEN_SIZE_X - 80, 30.0f, 0.0f };
+
 public:
 
 	Player(ItemManager* item, BlockManager* block);
@@ -129,6 +135,8 @@ private:
 	WeaponPunch* weaponPunch_;
 
 	ItemManager* item_;
+
+	HpManager* hpManager_;
 
 	BlockManager* block_;
 

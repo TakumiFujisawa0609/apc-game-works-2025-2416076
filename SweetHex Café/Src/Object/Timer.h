@@ -9,7 +9,7 @@ public:
 	static constexpr float COUNTDOWN_TIME = 60.0f * 1000.0f;
 
 	// タイマーの位置
-	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X / 2;
+	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 60;
 	static constexpr int DEFAULT_POS_Y = 50;
 
 	// コンストラクタ

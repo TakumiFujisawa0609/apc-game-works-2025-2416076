@@ -1,6 +1,5 @@
 #include "Player.h"
 
-#include "../../Application.h"
 #include "../../Utility/Utility.h"
 #include "../../Utility/MatrixUtility.h"
 
@@ -10,6 +9,7 @@
 #include "../../Manager/Camera.h"
 
 #include "../Common/AnimationController.h"
+#include "../Common/HP/HpManager.h"
 #include "../Stage/BlockManager.h"
 #include "../Weapon/WeaponPunch.h"
 #include "../Item/ItemManager.h"
@@ -58,6 +58,9 @@ void Player::Init(void)
 
 	hp_ = MAX_HP;
 
+	hpManager_ = new HpManager(HP_DRAW_POS, hp_, MAX_HP, 0.5, 30, HpManager::TYPE::UI);
+	hpManager_->Init();
+
 	invincibleTimeCount_ = 0;
 
 	// •Ší‚Ì‰Šú‰»
@@ -93,6 +96,8 @@ void Player::Update(void)
 
 	CheckCollision();
 
+	hpManager_->Update();
+
 	animController_->Update();
 }
 
@@ -102,7 +107,7 @@ void Player::Draw(BlockManager* block)
 
 	useWeapon_->Draw();
 
-	DrawFormatString(10, 60, 0x000000, "HP : %d", hp_);
+	hpManager_->Draw();
 
 #ifdef _DEBUG
 
@@ -162,6 +167,9 @@ void Player::Release(void)
 	delete weaponPunch_;
 
 	useWeapon_ = nullptr;
+
+	hpManager_->Release();
+	delete hpManager_;
 }
 
 VECTOR Player::GetPos(void) const
@@ -272,6 +280,8 @@ void Player::Damage(int damage)
 	}
 
 	hp_ -= damage;
+
+	hpManager_->SetHp(hp_);
 
 	if (hp_ < 0)
 	{
