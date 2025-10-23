@@ -1,8 +1,13 @@
 #include <DxLib.h>
-#include "Pause.h"
-#include "InputController.h"
-#include "SceneManager.h"
+
 #include "../Application.h"
+
+#include "InputController.h"
+#include "InputManager.h"
+#include "SceneManager.h"
+#include "../Utility/Utility.h"
+
+#include "Pause.h"
 
 Pause::Pause(void)
 {
@@ -82,23 +87,67 @@ void Pause::ChangePause(PAUSE pause)
 void Pause::SelectPause(void)
 {
 	InputController& ins = InputController::GetInstance();
+	VECTOR dir = Utility::VECTOR_ZERO;
 
-	// 上キーでポーズメニューの選択
-	if (ins.IsSelectUp())
+	// キーボード
+	if (GetJoypadNum() == 0)
 	{
-		ChangePause(static_cast<PAUSE>(static_cast<int>(pause_) - 1));
+		// 上キーでポーズメニューの選択
+		if (ins.IsSelectUp())
+		{
+			ChangePause(static_cast<PAUSE>(static_cast<int>(pause_) - 1));
+		}
+
+		//	 下キーでポーズメニューの選択
+		if (ins.IsSelectDown())
+		{
+			ChangePause(static_cast<PAUSE>(static_cast<int>(pause_) + 1));
+		}
+	}
+	// ゲームパッド
+	else
+	{
+
+		InputManager::JOYPAD_IN_STATE padState =
+			InputManager::GetInstance().GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+		dir = InputManager::GetInstance().GetDirectionXZAKey(padState.AKeyLX, padState.AKeyLY);
+
+		// スティックの上下入力を一度だけ反応させる
+		static bool stickUpPressed = false;
+		static bool stickDownPressed = false;
+		const float THRESHOLD = 0.8f;
+		const float RESET_ZONE = 0.1f;
+
+		// 上方向
+		if (!stickUpPressed && dir.z < THRESHOLD)
+		{
+			stickUpPressed = true;
+			ChangePause(static_cast<PAUSE>(static_cast<int>(pause_) - 1));
+		}
+		else if (stickUpPressed && dir.z > RESET_ZONE)
+		{
+			// ニュートラルに戻したらリセット
+			stickUpPressed = false; 
+		}
+
+		// 下方向
+		if (!stickDownPressed && dir.z > -THRESHOLD)
+		{
+			stickDownPressed = true;
+			ChangePause(static_cast<PAUSE>(static_cast<int>(pause_) + 1));
+		}
+		else if (stickDownPressed && dir.z < -RESET_ZONE)
+		{
+			// ニュートラルに戻したらリセット
+			stickDownPressed = false;
+		}
 	}
 
 	// メニューの範囲外に行かないようにする
 	if(static_cast<int>(pause_) <= 0)
 	{
 		ChangePause(PAUSE::CONTINUE);
-	}
-
-	//	 下キーでポーズメニューの選択
-	if (ins.IsSelectDown())
-	{
-		ChangePause(static_cast<PAUSE>(static_cast<int>(pause_) + 1));
 	}
 
 	// メニューの範囲外に行かないようにする

@@ -1,8 +1,14 @@
 #include <DxLib.h>
+
 #include "../Application.h"
+
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputController.h"
+#include "../Manager/InputManager.h"
 #include "../Manager/SystemManager.h"
+
+#include "../Utility/Utility.h"
+
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)
@@ -117,20 +123,67 @@ void TitleScene::DrawExit(void)
 void TitleScene::SelectTitleMenu(void)
 {
 	InputController& ins = InputController::GetInstance();
+	VECTOR dir = Utility::VECTOR_ZERO;
 
-	if (ins.IsSelectUp())
+
+	// キーボード
+	if (GetJoypadNum() == 0)
 	{
-		ChangeState(static_cast<STATE>(static_cast<int>(state_) - 1));
+		// 上キーでポーズメニューの選択
+		if (ins.IsSelectUp())
+		{
+			ChangeState(static_cast<STATE>(static_cast<int>(state_) - 1));
+		}
+
+		//	 下キーでポーズメニューの選択
+		if (ins.IsSelectDown())
+		{
+			ChangeState(static_cast<STATE>(static_cast<int>(state_) + 1));
+		}
 	}
+	// ゲームパッド
+	else
+	{
+		InputManager::JOYPAD_IN_STATE padState =
+			InputManager::GetInstance().GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+		dir = InputManager::GetInstance().GetDirectionXZAKey(padState.AKeyLX, padState.AKeyLY);
+
+		// スティックの上下入力を一度だけ反応させる
+		static bool stickUpPressed = false;
+		static bool stickDownPressed = false;
+		const float THRESHOLD = 0.8f;
+		const float RESET_ZONE = 0.1f;
+
+		// 上方向
+		if (!stickUpPressed && dir.z < THRESHOLD)
+		{
+			stickUpPressed = true;
+			ChangeState(static_cast<STATE>(static_cast<int>(state_) - 1));
+		}
+		else if (stickUpPressed && dir.z > RESET_ZONE)
+		{
+			// ニュートラルに戻したらリセット
+			stickUpPressed = false;
+		}
+
+		// 下方向
+		if (!stickDownPressed && dir.z > -THRESHOLD)
+		{
+			stickDownPressed = true;
+			ChangeState(static_cast<STATE>(static_cast<int>(state_) + 1));
+		}
+		else if (stickDownPressed && dir.z < -RESET_ZONE)
+		{
+			// ニュートラルに戻したらリセット
+			stickDownPressed = false;
+		}
+	}
+
 
 	if (static_cast<int>(state_) <= 0)
 	{
 		ChangeState(STATE::START);
-	}
-
-	if (ins.IsSelectDown())
-	{
-		ChangeState(static_cast<STATE>(static_cast<int>(state_) + 1));
 	}
 
 	if(static_cast<int>(state_) >= static_cast<int>(STATE::MAX) - 1)

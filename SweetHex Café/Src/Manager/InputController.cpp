@@ -32,7 +32,7 @@ bool InputController::IsMoveUp(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_W) || ins.IsNew(KEY_INPUT_UP) || ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_UP))
+	if (ins.IsNew(KEY_INPUT_W) || ins.IsNew(KEY_INPUT_UP))
 	{
 		return true;
 	}
@@ -44,7 +44,7 @@ bool InputController::IsMoveDown(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_S) || ins.IsNew(KEY_INPUT_DOWN) || ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_DOWN))
+	if (ins.IsNew(KEY_INPUT_S) || ins.IsNew(KEY_INPUT_DOWN))
 	{
 		return true;
 	}
@@ -56,7 +56,7 @@ bool InputController::IsMoveLeft(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_A) || ins.IsNew(KEY_INPUT_LEFT) || ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_LEFT))
+	if (ins.IsNew(KEY_INPUT_A) || ins.IsNew(KEY_INPUT_LEFT))
 	{
 		return true;
 	}
@@ -68,7 +68,7 @@ bool InputController::IsMoveRight(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_D) || ins.IsNew(KEY_INPUT_RIGHT) || ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_RIGHT))
+	if (ins.IsNew(KEY_INPUT_D) || ins.IsNew(KEY_INPUT_RIGHT))
 	{
 		return true;
 	}
@@ -80,7 +80,7 @@ bool InputController::IsSelectUp(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_W) || ins.IsTrgDown(KEY_INPUT_UP) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_UP))
+	if (ins.IsTrgDown(KEY_INPUT_W) || ins.IsTrgDown(KEY_INPUT_UP))
 	{
 		return true;
 	}
@@ -92,7 +92,7 @@ bool InputController::IsSelectDown(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_S) || ins.IsTrgDown(KEY_INPUT_DOWN) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_DOWN))
+	if (ins.IsTrgDown(KEY_INPUT_S) || ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
 		return true;
 	}
@@ -104,7 +104,7 @@ bool InputController::IsSelectLeft(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_A) || ins.IsTrgDown(KEY_INPUT_LEFT) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_LEFT))
+	if (ins.IsTrgDown(KEY_INPUT_A) || ins.IsTrgDown(KEY_INPUT_LEFT))
 	{
 		return true;
 	}
@@ -116,7 +116,7 @@ bool InputController::IsSelectRight(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_D) || ins.IsTrgDown(KEY_INPUT_RIGHT) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::PAD_RIGHT))
+	if (ins.IsTrgDown(KEY_INPUT_D) || ins.IsTrgDown(KEY_INPUT_RIGHT))
 	{
 		return true;
 	}
@@ -140,7 +140,7 @@ bool InputController::IsDash(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_LSHIFT) || ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::L_STICK))
+	if (ins.IsNew(KEY_INPUT_LSHIFT) || ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::L_TRIGGER))
 	{
 		return true;
 	}
@@ -152,7 +152,7 @@ bool InputController::IsAttack(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_J) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::R_TRIGGER))
+	if (ins.IsTrgDown(KEY_INPUT_J) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN))
 	{
 		SoundManager::GetInstance()->Play(SoundManager::SE::PUNCH);
 
@@ -166,7 +166,7 @@ bool InputController::IsUse(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.IsTrgDown(KEY_INPUT_F) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN))
+	if (ins.IsTrgDown(KEY_INPUT_F) || ins.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::RIGHT))
 	{
 		return true;
 	}
