@@ -6,6 +6,7 @@
 #include "../Manager/InputController.h"
 #include "../Manager/InputManager.h"
 #include "../Manager/SystemManager.h"
+#include "../Manager/SoundManager/SoundManager.h"
 
 #include "../Utility/Utility.h"
 
@@ -27,6 +28,8 @@ void TitleScene::Init(void)
 	SystemManager::GetInstance().ResetGame();
 
 	ChangeState(STATE::START);
+
+	SoundManager::GetInstance()->Play(SoundManager::BGM::GAME);
 }
 
 void TitleScene::Update(void)

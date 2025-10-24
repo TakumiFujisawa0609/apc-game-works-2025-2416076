@@ -9,7 +9,9 @@ SoundManager* SoundManager::instance_ = nullptr;
 
 void SoundManager::Init(void)
 {
-	// BGM	
+	// BGM
+	bgmHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/BGM/AS_815874_お昼時のカフェをイメージしたBossa.mp3").c_str()));
 
 	// SE
 	seHandles_.emplace_back(
