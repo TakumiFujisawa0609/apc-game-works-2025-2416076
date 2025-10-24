@@ -6,6 +6,7 @@
 #include "../../Manager/InputManager.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputController.h"
+#include "../../Manager/SoundManager/SoundManager.h"
 #include "../../Manager/Camera.h"
 
 #include "../Common/AnimationController.h"
@@ -458,6 +459,7 @@ void Player::ProcessPickup(void)
 				// アイテム取得処理
 				// ItemManagerにアイテム削除
 				item_->RemoveItem(i);
+				SoundManager::GetInstance()->Play(SoundManager::SE::PICKUP);
 
 				break;
 			}

@@ -14,7 +14,9 @@ public:
 	// SE‚ÌŽí—Þ
 	enum class SE
 	{
-		PUNCH,
+		PUNCH, 
+		ENTRY,
+		PICKUP,
 		MAX,
 	};
 

@@ -15,6 +15,12 @@ void SoundManager::Init(void)
 	seHandles_.emplace_back(
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1424156_かわいい系モンスターのパンチ音.mp3").c_str()));
 
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_970270_喫茶店やBarのカウベル入店・退店音3.mp3").c_str()));
+
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_850615_キャッチ／捕まえる／ぴょこっ.mp3").c_str()));
+
 }
 
 void SoundManager::Delete(void)

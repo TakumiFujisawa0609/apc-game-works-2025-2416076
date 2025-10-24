@@ -103,12 +103,6 @@ void HpManager::Draw(void)
 			}
 		}
 	}
-
-#ifdef _DEBUG
-
-	DrawFormatString(0, 120, 0x000000, "%.2f, %.2f,%.2f", pos_.x, pos_.y, pos_.z);
-
-#endif // _DEBUG
 }
 
 void HpManager::Release(void)

@@ -1,6 +1,7 @@
 #include "EnemyBase.h"
 
 #include "../../Application.h"
+#include "../../Manager/SoundManager/SoundManager.h"
 #include "../../Utility/Utility.h"
 #include "../../Utility/MatrixUtility.h"
 
@@ -71,6 +72,7 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern
 	currentTargetIndex_ = 0;
 	isReturn_ = false;
 
+	SoundManager::GetInstance()->Play(SoundManager::SE::ENTRY);
 }
 
 void EnemyBase::Update(void)
