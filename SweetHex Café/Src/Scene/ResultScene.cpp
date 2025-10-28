@@ -4,7 +4,7 @@
 #include "../Manager/InputController.h"
 #include "../Manager/SystemManager.h"
 #include "../Manager/SceneManager.h"
-
+#include "../Manager/SoundManager/SoundManager.h"
 
 #include "ResultScene.h"
 
@@ -43,4 +43,5 @@ void ResultScene::Draw(void)
 
 void ResultScene::Release(void)
 {
+	SoundManager::GetInstance()->StopSound();
 }

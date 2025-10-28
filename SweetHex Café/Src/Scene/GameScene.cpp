@@ -5,6 +5,7 @@
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
 #include "../Manager/InputController.h"
+#include "../Manager/SoundManager/SoundManager.h"
 #include "../Manager/Pause.h"
 
 #include "../Object/Grid.h"

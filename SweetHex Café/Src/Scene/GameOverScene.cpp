@@ -1,6 +1,9 @@
 #include <DxLib.h>
+
 #include "../Manager/InputController.h"
 #include "../Manager/SceneManager.h"
+#include "../Manager/SoundManager/SoundManager.h"
+
 #include "GameOverScene.h"
 
 GameOverScene::GameOverScene(void)
@@ -36,4 +39,5 @@ void GameOverScene::Draw(void)
 
 void GameOverScene::Release(void)
 {
+	SoundManager::GetInstance()->StopSound();
 }

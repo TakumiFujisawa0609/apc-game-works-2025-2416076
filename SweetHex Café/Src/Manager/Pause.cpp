@@ -5,6 +5,8 @@
 #include "InputController.h"
 #include "InputManager.h"
 #include "SceneManager.h"
+#include "SoundManager/SoundManager.h"
+
 #include "../Utility/Utility.h"
 
 #include "Pause.h"
@@ -181,6 +183,7 @@ void Pause::UpdateReturnTitle(void)
 
 	if (ins.IsDecide())
 	{
+		SoundManager::GetInstance()->StopSound();
 		// ƒ^ƒCƒgƒ‹‚É–ß‚é
 		SceneManager::GetInstance().ChangeScene(
 			SceneManager::SCENE_ID::TITLE);
