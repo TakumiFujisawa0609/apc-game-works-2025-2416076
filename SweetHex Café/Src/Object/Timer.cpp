@@ -22,7 +22,7 @@ void Timer::Update(void)
 	//タイマーの更新
 	int nowTime = GetNowCount();
     int elapsed = (nowTime - startTime_) / 1000;
-    secondsLeft_ = (COUNTDOWN_TIME / 1000) - elapsed;
+    secondsLeft_ = (static_cast<int>(COUNTDOWN_TIME) / 1000) - elapsed;
 
     if (secondsLeft_ < 0)
     {
@@ -54,5 +54,5 @@ void Timer::Release(void)
 void Timer::CountStart(void)
 {
     startTime_ = GetNowCount();
-    secondsLeft_ = COUNTDOWN_TIME / 1000;
+    secondsLeft_ = static_cast<int>(COUNTDOWN_TIME) / 1000;
 }

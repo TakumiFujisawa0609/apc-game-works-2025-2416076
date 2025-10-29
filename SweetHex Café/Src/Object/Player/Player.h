@@ -54,6 +54,10 @@ public:
 		bool hitBack;
 		bool hitRight;
 		bool hitLeft;
+		bool hitForwardRight;
+		bool hitForwardLeft;
+		bool hitBackRight;
+		bool hitBackLeft;
 	};
 
 	// ƒ‚ƒfƒ‹‚Ì‘å‚«‚³

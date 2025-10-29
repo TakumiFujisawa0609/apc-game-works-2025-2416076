@@ -71,15 +71,15 @@ void HpManager::Draw(void)
 				float posX = drawPos.x + i * iconWidth_;
 				float posY = drawPos.y;
 
-				DrawRotaGraph(posX, posY, size_, 0.0, imgHeartLost_, true);
+				DrawRotaGraph(static_cast<int>(posX), static_cast<int>(posY), static_cast<double>(size_), 0.0, imgHeartLost_, true);
 
 				if (i > hp_ - 1)
 				{
-					DrawRotaGraph(posX, posY, hps_[i].scale, 0.0, imgHeart_, true);
+					DrawRotaGraph(static_cast<int>(posX), static_cast<int>(posY), static_cast<double>(hps_[i].scale), 0.0, imgHeart_, true);
 				}
 				else
 				{
-					DrawRotaGraph(posX, posY, size_, 0.0, imgHeart_, true);
+					DrawRotaGraph(static_cast<int>(posX), static_cast<int>(posY), static_cast<double>(size_), 0.0, imgHeart_, true);
 				}
 			}
 		}
@@ -91,15 +91,15 @@ void HpManager::Draw(void)
 			float posX = drawPos.x + i * iconWidth_;
 			float posY = drawPos.y;
 
-			DrawRotaGraph(posX, posY, size_, 0.0, imgHeartLost_, true);
+			DrawRotaGraph(static_cast<int>(posX), static_cast<int>(posY), static_cast<double>(size_), 0.0, imgHeartLost_, true);
 
 			if (i > hp_ - 1)
 			{
-				DrawRotaGraph(posX, posY, hps_[i].scale, 0.0, imgHeart_, true);
+				DrawRotaGraph(static_cast<int>(posX), static_cast<int>(posY), static_cast<double>(hps_[i].scale), 0.0, imgHeart_, true);
 			}
 			else
 			{
-				DrawRotaGraph(posX, posY, size_, 0.0, imgHeart_, true);
+				DrawRotaGraph(static_cast<int>(posX), static_cast<int>(posY), static_cast<double>(size_), 0.0, imgHeart_, true);
 			}
 		}
 	}
@@ -125,9 +125,9 @@ void HpManager::InitHp(void)
 	{
 		HP hp;
 
-		hp.x = i * iconWidth_ + pos_.x;
-		hp.y = pos_.y;
-		hp.z = pos_.z;
+		hp.x = i * iconWidth_ + static_cast<int>(pos_.x);
+		hp.y = static_cast<int>(pos_.y);
+		hp.z = static_cast<int>(pos_.z);
 		hp.scale = size_;
 		hp.isAlive = true;
 

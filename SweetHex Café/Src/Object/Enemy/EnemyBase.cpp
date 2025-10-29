@@ -31,7 +31,7 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern
 	SetParam();
 
 	hpManager_ = new HpManager(VGet(pos_.x, pos_.y + 80.0f, pos_.z),
-								hp_, MAX_HP, 0.2, 12, HpManager::TYPE::WORLD);
+								hp_, MAX_HP, 0.2f, 12, HpManager::TYPE::WORLD);
 	hpManager_->Init();
 
 	// F‚Ì’²®(Ž©ŒÈ”­Œõ)
@@ -505,7 +505,7 @@ void EnemyBase::MovePattern(void)
 
 			if (currentTargetIndex_ >= currentRoute_.size())
 			{
-				currentTargetIndex_ = currentRoute_.size() - 2;
+				currentTargetIndex_ = static_cast<int>(currentRoute_.size()) - 2;
 
 				if (currentTargetIndex_ < 0)
 				{

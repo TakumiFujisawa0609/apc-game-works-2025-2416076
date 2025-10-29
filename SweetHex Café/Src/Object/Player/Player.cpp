@@ -192,8 +192,8 @@ Player::SurroundingHits Player::CheckCollision(void)
 
 	const float COLLISION_OFFSET = 50.0f;   // 前方距離
 	const float COLLISION_HEIGHT = 10.0f;   // 高さ
-	const float HALF_PI = DX_PI_F / 2.0f;   // 90度（ラジアン）
-
+	const float HALF_PI = DX_PI_F / 2.0f;   // 90度
+	const float QUARTER_PI = HALF_PI / 2.0f;
 	VECTOR startPos = playerPos;
 	startPos.y = COLLISION_HEIGHT;
 
@@ -228,6 +228,38 @@ Player::SurroundingHits Player::CheckCollision(void)
 	BlockManager::CollisionResult hitLeft = block_->CheckCollisionLine(startPos, leftEndPos);
 	hitsResult.hitLeft = hitLeft.hit;
 
+	// 右斜め前
+	VECTOR forwardRightDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, QUARTER_PI);
+	VECTOR forwardRightEndPos = VAdd(playerPos, VScale(forwardRightDir, COLLISION_OFFSET));
+	forwardRightEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitForwardRight = block_->CheckCollisionLine(startPos, forwardRightEndPos);
+	hitsResult.hitForwardRight = hitForwardRight.hit;
+
+	// 左斜め前
+	VECTOR forwardLeftDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, -QUARTER_PI);
+	VECTOR forwardLeftEndPos = VAdd(playerPos, VScale(forwardLeftDir, COLLISION_OFFSET));
+	forwardLeftEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitForwardLeft = block_->CheckCollisionLine(startPos, forwardLeftEndPos);
+	hitsResult.hitForwardLeft = hitForwardLeft.hit;
+
+	// 右斜め後ろ
+	VECTOR backRightDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, HALF_PI + QUARTER_PI);
+	VECTOR backRightEndPos = VAdd(playerPos, VScale(backRightDir, COLLISION_OFFSET));
+	backRightEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitBackRight = block_->CheckCollisionLine(startPos, backRightEndPos);
+	hitsResult.hitBackRight = hitBackRight.hit;
+
+	// 左斜め後ろ
+	VECTOR backLeftDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, -HALF_PI - QUARTER_PI);
+	VECTOR backLeftEndPos = VAdd(playerPos, VScale(backLeftDir, COLLISION_OFFSET));
+	backLeftEndPos.y = COLLISION_HEIGHT;
+
+	BlockManager::CollisionResult hitBackLeft = block_->CheckCollisionLine(startPos, backLeftEndPos);
+	hitsResult.hitBackLeft = hitBackLeft.hit;
+
 	return hitsResult;	// 当たってなければ進める
 }
 
@@ -241,8 +273,6 @@ void Player::CollisionWeapon(BlockManager* block)
 	VECTOR endPos = VAdd(weaponPos, VScale(dir, speed));
 
 	BlockManager::CollisionResult hit = block->CheckCollisionLine(startPos, endPos);
-
-	bool ret;
 
 	// 衝突結果
 	if (hit.hit) 
@@ -326,7 +356,11 @@ bool Player::IsCollisionStage(void) const
 	if (hitsResult.hitForward ||
 		hitsResult.hitBack ||
 		hitsResult.hitLeft ||
-		hitsResult.hitRight)
+		hitsResult.hitRight ||
+		hitsResult.hitForwardRight ||
+		hitsResult.hitForwardLeft ||
+		hitsResult.hitBackRight ||
+		hitsResult.hitBackLeft )
 	{
 		ret = true;
 	}
@@ -411,7 +445,7 @@ void Player::ProcessMove(void)
 		}
 
 		// アニメーションの切り替え
-		if (ins.IsDash())
+		if (speed_ >= Player::DASH_SPEED)
 		{
 			// ダッシュ時
 			animController_->Play(static_cast<int>(ANIM_TYPE::RUN));
@@ -438,7 +472,7 @@ void Player::ProcessPickup(void)
 	const std::vector<VECTOR>& drop = item_->GetDroppedItems();
 
 		// リストの後ろからチェックする
-	for (int i = drop.size() - 1; i >= 0; i--)
+	for (int i = static_cast<int>(drop.size()) - 1; i >= 0; i--)
 	{
 		const VECTOR& itemPos = drop[i];
 
