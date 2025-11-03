@@ -174,7 +174,12 @@ private:
 	// Œ»İ‚Ìó‘Ô
 	STATE state_;
 
+	int itemModelId_;
+
+	bool isHoldItem_;
+
 private:
+
 	void ProcessAttack(void);
 	// s“®§Œä
 	void ProcessMove(void);

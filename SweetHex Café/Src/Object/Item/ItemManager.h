@@ -5,8 +5,15 @@
 class ItemManager
 {
 public:
+	// アイテムのデータ
+	struct DATA
+	{
+		int modelId;
+		VECTOR pos;
+		float radius;
+	};
 
-	// アイテムの半径を定数として定義（衝突判定に使用）
+	// アイテムの半径
 	static constexpr float ITEM_RADIUS = 40.0f;
 
 	static constexpr int ITEM_ID_DEFAULT = 1;

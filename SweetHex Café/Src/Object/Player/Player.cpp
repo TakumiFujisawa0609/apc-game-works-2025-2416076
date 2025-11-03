@@ -16,9 +16,27 @@
 #include "../Item/ItemManager.h"
 
 Player::Player(ItemManager* item, BlockManager* block)
+	:
+	item_(item),
+	block_(block),
+	animController_(nullptr),
+	hpManager_(nullptr),
+	useWeapon_(nullptr),
+	weaponPunch_(nullptr),
+	angles_(Utility::VECTOR_ZERO),
+	cntKnockBack_(0),
+	collisionRadius_(0.0f),
+	hp_(0),
+	invincibleTimeCount_(0),
+	knockBackDir_(Utility::VECTOR_ZERO),
+	localAngles_(Utility::VECTOR_ZERO),
+	modelId_(-1),
+	moveDir_(Utility::VECTOR_ZERO),
+	pos_(Utility::VECTOR_ZERO),
+	scales_(Utility::VECTOR_ZERO),
+	speed_(0),
+	state_(STATE::NONE)
 {
-	item_ = item;
-	block_ = block;
 }
 
 Player::~Player(void)
@@ -204,6 +222,11 @@ Player::SurroundingHits Player::CheckCollision(void)
 	BlockManager::CollisionResult hitForward = block_->CheckCollisionLine(startPos, forwardEndPos);
 	hitsResult.hitForward = hitForward.hit;
 
+	if (forwardEndPos.z <= 0)
+	{
+		hitsResult.hitForward = true;
+	}
+
 	// 後方
 	VECTOR backwardDir = VScale(dir, -1.0f);
 	VECTOR backwardEndPos = VAdd(playerPos, VScale(backwardDir, COLLISION_OFFSET));
@@ -314,7 +337,8 @@ void Player::Damage(int damage)
 
 	hpManager_->SetHp(hp_);
 
-	if (hp_ < 0)
+	// 0以下なら、0にする
+	if (hp_ <= 0)
 	{
 		hp_ = 0;
 	}
@@ -342,7 +366,6 @@ bool Player::IsInvincible(void)
 	if (invincibleTimeCount_ > 0)
 	{
 		ret = true;
-		return ret;
 	}
 
 	return ret;
@@ -428,6 +451,14 @@ void Player::ProcessMove(void)
 			if (ins.IsDash())
 			{
 				speed_ = Player::DASH_SPEED;
+
+				// アニメーション　ダッシュ時
+				animController_->Play(static_cast<int>(ANIM_TYPE::RUN));
+			}
+			else
+			{
+				// アニメーション　通常移動時
+				animController_->Play(static_cast<int>(ANIM_TYPE::WALK));
 			}
 		}
 
@@ -443,19 +474,6 @@ void Player::ProcessMove(void)
 		{
 			speed_ = 0.0f;
 		}
-
-		// アニメーションの切り替え
-		if (speed_ >= Player::DASH_SPEED)
-		{
-			// ダッシュ時
-			animController_->Play(static_cast<int>(ANIM_TYPE::RUN));
-		}
-		else
-		{
-			// 通常移動時
-			animController_->Play(static_cast<int>(ANIM_TYPE::WALK));
-		}
-
 	}
 	else
 	{

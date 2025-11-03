@@ -12,7 +12,7 @@ ItemManager::~ItemManager(void)
 
 void ItemManager::Init(void)
 {
-	// リストをクリアし、初期化
+	// リストをクリア
 	droppedItems_.clear();
 }
 

@@ -7,10 +7,13 @@
 #include "EnemyManager.h"
 
 EnemyManager::EnemyManager(Player* player, ItemManager* item, BlockManager* block)
+	:
+	player_(player),
+	item_(item),
+	block_(block),
+	cntSpawn_(0),
+	nextPatternIndex_(0)
 {
-	player_ = player;
-	item_ = item;
-	block_ = block;
 }
 
 EnemyManager::~EnemyManager()
