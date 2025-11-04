@@ -2,8 +2,7 @@
 
 #include "EnemySlime.h"
 
-EnemySlime::EnemySlime(BlockManager* block)
-	: EnemyBase(block)
+EnemySlime::EnemySlime(void)
 {
 }
 
@@ -21,6 +20,8 @@ void EnemySlime::SetParam(void)
 	hp_ = MAX_HP;
 	spawnRange_ = 1.0f;
 	collisionRadius_ = COLLISION_RADIUS;
+	startCapsulePos_ = { 0.0f,70,0.0f };
+	endCapsulePos_ = { 0.0f,70.0f,0.0f };
 	isAlive_ = true;
 
 }

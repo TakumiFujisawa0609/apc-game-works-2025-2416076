@@ -4,7 +4,6 @@
 class EnemyBase;
 class Player;
 class ItemManager;
-class BlockManager;
 
 class EnemyManager
 {
@@ -15,7 +14,7 @@ public:
 	// “G‚ÌÅ‘å”
 	static constexpr int MAX_ENEMYS = 5;
 
-	EnemyManager(Player* player, ItemManager* item, BlockManager* block);
+	EnemyManager(Player* player, ItemManager* item);
 	~EnemyManager();
 
 	void Init(void);
@@ -36,7 +35,6 @@ private:
 
 	Player* player_;
 	ItemManager* item_;
-	BlockManager* block_;
 
 	int cntSpawn_;
 };

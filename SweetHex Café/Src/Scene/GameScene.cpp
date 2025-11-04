@@ -51,8 +51,8 @@ void GameScene::Init(void)
 	player_ = new Player(item_);
 	player_->Init();
 
-	//enemyManager_ = new EnemyManager(player_, item_, blockManager_);
-	//enemyManager_->Init();
+	enemyManager_ = new EnemyManager(player_, item_);
+	enemyManager_->Init();
 
 	ChangeState(STATE::GAME);
 
@@ -76,7 +76,7 @@ void GameScene::Draw(void)
 	grid_->Draw();
 	//blockManager_->Draw();
 	stage_->Draw();
-	//enemyManager_->Draw();
+	enemyManager_->Draw();
 	player_->Draw();
 	timer_->Draw();
 
@@ -107,8 +107,8 @@ void GameScene::Release(void)
 	player_->Release();
 	delete player_;
 
-	//enemyManager_->Release();
-	//delete enemyManager_;
+	enemyManager_->Release();
+	delete enemyManager_;
 
 	pause_->Release();
 	delete pause_;
@@ -138,14 +138,14 @@ void GameScene::UpdateGame(void)
 	timer_->Update();
 
 	// 当たり判定
-	//CollisionEnemy();
-	//CollisionWeapon();
-	//CollisionEnemy2Enemy();
+	CollisionEnemy();
+	CollisionWeapon();
+	CollisionEnemy2Enemy();
 
 	CollisionFloor();
 	CollisionWall();
 
-	//enemyManager_->Update();
+	enemyManager_->Update();
 	player_->Update();
 
 	CollisionWall();
@@ -200,27 +200,13 @@ void GameScene::CollisionEnemy(void)
 		if (Utility::IsHitSpheres(playerPos, Player::COLLISION_RADIUS,
 			enemyPos, enemy->GetRadius()))
 		{
-			bool isMoveEnemy = !enemy->IsCollisionStage();
-			bool isMovePlayer = !player_->IsCollisionStage();
-
-			// 両方ともステージと衝突している場合は、押し出し処理をスキップ
-			if (!isMoveEnemy && !isMovePlayer)
-			{
-				continue;
-			}
 
 			Utility::AdjustPositionCollision(playerPos, Player::COLLISION_RADIUS,
 				enemyPos, enemy->GetRadius());
 
-			if (isMoveEnemy)
-			{
-				enemy->SetPos(enemyPos);
-			}
+			enemy->SetPos(enemyPos);
 
-			if (isMovePlayer)
-			{
-				player_->SetPos(playerPos);
-			}
+			player_->SetPos(playerPos);
 
 			if (enemy->GetState() == EnemyBase::STATE::ATTACK)
 			{
@@ -292,15 +278,6 @@ void GameScene::CollisionEnemy2Enemy(void)
 				enemyB->GetPos(), enemyB->GetRadius()))
 			{
 
-				bool isMovableA = !enemyA->IsCollisionStage();
-				bool isMovableB = !enemyB->IsCollisionStage();
-
-				// 両方ともステージと衝突している場合は、押し出し処理をスキップ
-				if (!isMovableA && !isMovableB)
-				{
-					continue;
-				}
-
 				// 敵の位置を一時的に格納
 				VECTOR tempPosA = enemyA->GetPos();
 				VECTOR tempPosB = enemyB->GetPos();
@@ -309,16 +286,9 @@ void GameScene::CollisionEnemy2Enemy(void)
 				Utility::AdjustPositionCollision(tempPosA, enemyA->GetRadius(),
 					tempPosB, enemyB->GetRadius());
 
-				// 補正された位置を各オブジェクトに反映
-				if (isMovableA) 
-				{
-					enemyA->SetPos(tempPosA);
-				}
+				enemyA->SetPos(tempPosA);
 
-				if (isMovableB)
-				{
-					enemyB->SetPos(tempPosB);
-				}
+				enemyB->SetPos(tempPosB);
 			}
 		}
 	}
@@ -326,6 +296,7 @@ void GameScene::CollisionEnemy2Enemy(void)
 
 void GameScene::CollisionWall(void)
 {
+#pragma region プレイヤー
 	// プレイヤー
 	VECTOR playerPos = player_->GetPos();
 
@@ -386,7 +357,7 @@ void GameScene::CollisionWall(void)
 				{
 					normal = VScale(normal, -1.0f);
 				}
-				
+
 				// 上下方向の衝突は無視
 				if (fabsf(normal.y) > 0.5f)
 				{
@@ -411,10 +382,107 @@ void GameScene::CollisionWall(void)
 	MV1CollResultPolyDimTerminate(hits);
 
 	player_->SetPos(playerPos);
+#pragma endregion
+
+
+#pragma region エネミー
+	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+	for (EnemyBase* enemy : enemys)
+	{
+
+		// エネミー
+		VECTOR enemyPos = enemy->GetPos();
+
+		// カプセルの座標
+		VECTOR capStartPos = VAdd(enemyPos, enemy->GetStartCapsulePos());
+		VECTOR capEndPos = VAdd(enemyPos, enemy->GetEndCapsulePos());
+
+		// カプセルとの当たり判定
+		auto hits = MV1CollCheck_Capsule
+		(
+			stage_->GetModelId(),			// ステージのモデルID
+			-1,								// ステージ全てのポリゴンを指定
+			capStartPos,					// カプセルの上
+			capEndPos,						// カプセルの下
+			enemy->GetCapsuleRadius()		// カプセルの半径
+		);
+
+		// 衝突したポリゴン全ての検索
+		for (int i = 0; i < hits.HitNum; i++)
+		{
+			// ポリゴンを1枚に分割
+			auto hit = hits.Dim[i];
+
+			// ポリゴン検索を制限
+			for (int tryCnt = 0; tryCnt < 10; tryCnt++)
+			{
+				// 最初の衝突判定で検出した衝突ポリゴン1枚と衝突判定
+				int pHit = HitCheck_Capsule_Triangle
+				(
+					capStartPos,					// カプセルの上
+					capEndPos,						// カプセルの下
+					enemy->GetCapsuleRadius(),		// カプセルの半径
+					hit.Position[0],				// ポリゴン1
+					hit.Position[1],				// ポリゴン2
+					hit.Position[2]					// ポリゴン3
+				);
+
+				// カプセルとポリゴンが当たっていたら
+				if (pHit)
+				{
+					VECTOR normal = hit.Normal;
+
+					// ポリゴンの中心
+					VECTOR polyCenter = {
+						  (hit.Position[0].x + hit.Position[1].x + hit.Position[2].x) / 3.0f,
+						  (hit.Position[0].y + hit.Position[1].y + hit.Position[2].y) / 3.0f,
+							(hit.Position[0].z + hit.Position[1].z + hit.Position[2].z) / 3.0f
+					};
+
+					// カプセルからポリゴンへ向かうベクトル
+					VECTOR toPoly = VSub(polyCenter, enemyPos);
+
+					// 内積で裏から当たっているかを確認
+					float dot = VDot(normal, toPoly);
+
+					// 裏から当たっていたら法線を反転
+					if (dot > 0)
+					{
+						normal = VScale(normal, -1.0f);
+					}
+
+					// 上下方向の衝突は無視
+					if (fabsf(normal.y) > 0.5f)
+					{
+						continue;
+					}
+
+					const float pushBack = 0.1f;
+					// 座標をポリゴンの法線方向に移動
+					enemyPos = VAdd(enemyPos, VScale(normal, pushBack));
+					// 球体の座標も移動
+					capStartPos = VAdd(capStartPos, VScale(normal, pushBack));
+					capEndPos = VAdd(capEndPos, VScale(normal, pushBack));
+
+
+					// 複数当たっている可能性があるので再検索
+					continue;
+				}
+
+			}
+
+		}
+		// 検出したポリゴン情報の後始末
+		MV1CollResultPolyDimTerminate(hits);
+
+		enemy->SetPos(enemyPos);
+	}
+#pragma endregion
 }
 
 void GameScene::CollisionFloor(void)
 {
+#pragma region プレイヤー
 	// ステージとアクターの衝突
 	VECTOR playerPos = player_->GetPos();
 
@@ -438,4 +506,36 @@ void GameScene::CollisionFloor(void)
 	{
 		player_->CollisionStage(res.HitPosition);
 	}
+#pragma endregion
+
+#pragma region エネミー
+	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+	for (EnemyBase* enemy : enemys)
+	{
+		// ステージとアクターの衝突
+		VECTOR enemyPos = enemy->GetPos();
+
+		// 線分の上座標
+		VECTOR topPos = enemyPos;
+		topPos.y = enemyPos.y + 100.0f;
+
+		// 線分の下座標
+		VECTOR downPos = enemyPos;
+		downPos.y = enemyPos.y - 100.0f;
+
+		// ステージのモデルID
+		int modelId = stage_->GetModelId();
+
+		// 線分とモデルの衝突判定
+		MV1_COLL_RESULT_POLY res =
+			MV1CollCheck_Line(modelId, -1, topPos, downPos);
+
+		// モデルと衝突しているか
+		if (res.HitFlag)
+		{
+			enemy->CollisionStage(res.HitPosition);
+		}
+	}
+#pragma endregion
+
 }

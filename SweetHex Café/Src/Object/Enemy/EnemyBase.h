@@ -5,7 +5,6 @@
 
 class Player;
 class AnimationController;
-class BlockManager;
 class HpManager;
 
 class EnemyBase
@@ -82,14 +81,6 @@ public:
 		}
 	};
 
-	// 4方向の衝突情報
-	struct SurroundingHits
-	{
-		bool hitForward;
-		bool hitBack;
-		bool hitRight;
-		bool hitLeft;
-	};
 
 	// アニメーション種別
 	enum class ANIM_TYPE
@@ -122,7 +113,7 @@ public:
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	// コンストラクタ・デストラクタ
-	EnemyBase(BlockManager* block);
+	EnemyBase(void);
 	~EnemyBase(void);
 
 	void Init(TYPE type, int baseModelId, Player* player, PATTERN pattern);
@@ -144,16 +135,21 @@ public:
 	PATTERN GetPattern(void)const;
 	bool IsNotice(void)const;
 
+	// ステージとの衝突
+	void CollisionStage(const VECTOR& pos);
+
+	const VECTOR& GetStartCapsulePos(void) const { return startCapsulePos_; }
+	const VECTOR& GetEndCapsulePos(void) const { return endCapsulePos_; }
+	const float& GetCapsuleRadius(void) const { return collisionRadius_; }
+
 	// ダメージを与える
 	void Damage(int damage);
 
 	// 衝突判定が有効な状態
 	bool IsCollisionState(void)const;
-	bool IsCollisionStage(void)const;
 
 protected:
 	Player* player_;
-	BlockManager* block_;
 	HpManager* hpManager_;
 
 	int modelId_;
@@ -183,15 +179,20 @@ protected:
 
 	STATE state_;
 
+	// ジャンプ力
+	float jumpPow_;
+
 	int cntAttack_;
 
 	// 検知フラグ
 	bool isNotice_;
 
-	SurroundingHits hitsResult = { false, false, false, false };
-
 	// 衝突判定用半径
 	float collisionRadius_;
+
+	// カプセルの当たり判定座標
+	VECTOR startCapsulePos_;
+	VECTOR endCapsulePos_;
 
 	bool isAlive_;
 
@@ -233,6 +234,4 @@ protected:
 	virtual void DrawHit(void);
 	virtual void DrawDead(void);
 	virtual void DrawEnd(void);
-
-	SurroundingHits CheckCollision(void);
 };

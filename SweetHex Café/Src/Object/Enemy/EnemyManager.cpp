@@ -6,11 +6,10 @@
 
 #include "EnemyManager.h"
 
-EnemyManager::EnemyManager(Player* player, ItemManager* item, BlockManager* block)
+EnemyManager::EnemyManager(Player* player, ItemManager* item)
 	:
 	player_(player),
 	item_(item),
-	block_(block),
 	cntSpawn_(0),
 	nextPatternIndex_(0)
 {
@@ -79,7 +78,7 @@ void EnemyManager::Update(void)
 				pattern = EnemyBase::PATTERN::PATTERN_1;
 			}
 
-			EnemyBase* newEnemy = new EnemySlime(block_);
+			EnemyBase* newEnemy = new EnemySlime();
 
 
 			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, pattern);

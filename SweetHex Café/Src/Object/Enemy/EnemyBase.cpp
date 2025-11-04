@@ -5,14 +5,37 @@
 #include "../../Utility/Utility.h"
 #include "../../Utility/MatrixUtility.h"
 
-#include "../Stage/BlockManager.h"
 #include "../Common/AnimationController.h"
 #include "../Common/HP/HpManager.h"
 #include "../Player/Player.h"
 
-EnemyBase::EnemyBase(BlockManager* block)
+EnemyBase::EnemyBase(void)
+	:
+	animController_(nullptr),
+	hpManager_(nullptr),
+	player_(nullptr),
+	pos_(Utility::VECTOR_ZERO),
+	angles_(Utility::VECTOR_ZERO),
+	cntAttack_(0),
+	collisionRadius_(0.0f),
+	currentPattern_(PATTERN::MAX),
+	currentTargetIndex_(0),
+	endCapsulePos_(Utility::VECTOR_ZERO),
+	hp_(0),
+	isAlive_(false),
+	isNotice_(false),
+	isReturn_(false),
+	jumpPow_(0.0f),
+	modelId_(-1),
+	moveDir_(Utility::VECTOR_ZERO),
+	reactCnt_(0),
+	scales_(Utility::VECTOR_ZERO),
+	spawnRange_(0.0f),
+	speed_(0.0f),
+	startCapsulePos_(Utility::VECTOR_ZERO),
+	state_(STATE::NONE),
+	type_(TYPE::MAX)
 {
-	block_ = block;
 }
 
 EnemyBase::~EnemyBase(void)
@@ -95,9 +118,6 @@ void EnemyBase::Update(void)
 		UpdateEnd();
 		break;
 	}
-
-	// ステージとの当たり判定
-	CheckCollision();
 
 	hpManager_->Update();
 
@@ -205,52 +225,6 @@ void EnemyBase::SetAlive(bool isAlive)
 	isAlive_ = isAlive;
 }
 
-EnemyBase::SurroundingHits EnemyBase::CheckCollision(void)
-{
-	VECTOR enemyPos = pos_;
-	VECTOR dir = moveDir_;
-
-	const float COLLISION_OFFSET = 70.0f;   // 前方距離
-	const float COLLISION_HEIGHT = 10.0f;   // 高さ
-	const float HALF_PI = DX_PI_F / 2.0f;   // 90度（ラジアン）
-
-	VECTOR startPos = enemyPos;
-	startPos.y = COLLISION_HEIGHT;
-
-	// 前方
-	VECTOR forwardEndPos = VAdd(enemyPos, VScale(dir, COLLISION_OFFSET));
-	forwardEndPos.y = COLLISION_HEIGHT;
-
-	BlockManager::CollisionResult hitForward = block_->CheckCollisionLine(startPos, forwardEndPos);
-	hitsResult.hitForward = hitForward.hit;
-
-	// 後方
-	VECTOR backwardDir = VScale(dir, -1.0f);
-	VECTOR backwardEndPos = VAdd(enemyPos, VScale(backwardDir, COLLISION_OFFSET));
-	backwardEndPos.y = COLLISION_HEIGHT;
-
-	BlockManager::CollisionResult hitBack = block_->CheckCollisionLine(startPos, backwardEndPos);
-	hitsResult.hitBack = hitBack.hit;
-
-	// 右側
-	VECTOR rightDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, HALF_PI);
-	VECTOR rightEndPos = VAdd(enemyPos, VScale(rightDir, COLLISION_OFFSET));
-	rightEndPos.y = COLLISION_HEIGHT;
-
-	BlockManager::CollisionResult hitRight = block_->CheckCollisionLine(startPos, rightEndPos);
-	hitsResult.hitRight = hitRight.hit;
-
-	// 左側
-	VECTOR leftDir = Utility::RotXZPos(Utility::VECTOR_ZERO, dir, -HALF_PI);
-	VECTOR leftEndPos = VAdd(enemyPos, VScale(leftDir, COLLISION_OFFSET));
-	leftEndPos.y = COLLISION_HEIGHT;
-
-	BlockManager::CollisionResult hitLeft = block_->CheckCollisionLine(startPos, leftEndPos);
-	hitsResult.hitLeft = hitLeft.hit;
-
-	return hitsResult;	// 当たってなければ進める
-}
-
 EnemyBase::PATTERN EnemyBase::GetPattern(void) const
 {
 	return currentPattern_;
@@ -293,22 +267,6 @@ bool EnemyBase::IsCollisionState(void)const
 		|| state_ == STATE::ATTACK;
 }
 
-bool EnemyBase::IsCollisionStage(void) const
-{
-	bool ret = false;
-
-	// どこかが当たってたら
-	if (hitsResult.hitForward ||
-		hitsResult.hitBack ||
-		hitsResult.hitLeft ||
-		hitsResult.hitRight)
-	{
-		ret = true;
-	}
-
-	return ret;
-}
-
 void EnemyBase::LookPlayer(void)
 {
 	// プレイヤー（相手）の座標を取得
@@ -336,32 +294,20 @@ void EnemyBase::LookPlayer(void)
 
 void EnemyBase::Move(void)
 {
-	// 障害物があるか確認
-	if (!hitsResult.hitForward)
-	{
-		// 移動量を計算する
-		VECTOR movePow = VScale(moveDir_, speed_);
-		// 移動量処理
-		pos_ = VAdd(pos_, movePow);
-	}
+	// 移動量を計算する
+	VECTOR movePow = VScale(moveDir_, speed_);
+	// 移動量処理
+	pos_ = VAdd(pos_, movePow);
 
 	// 移動制限処理
-	if (pos_.x < 0.0f)
+	if (pos_.x <= 0.0f)
 	{
 		pos_.x = 0.0f;
 	}
-	if (pos_.x > BlockManager::WORLD_SIZE)
-	{
-		pos_.x = BlockManager::WORLD_SIZE;
-	}
 
-	if (pos_.z < 0.0f)
+	if (pos_.z <= 0.0f)
 	{
 		pos_.z = 0.0f;
-	}
-	if (pos_.z > BlockManager::WORLD_SIZE)
-	{
-		pos_.z = BlockManager::WORLD_SIZE;
 	}
 
 	// モデルに座標を設定
@@ -393,10 +339,10 @@ void EnemyBase::Search(void)
 	// 視野内にいるか確認
 	if (angle <= viweRad && colPos <= VIEW_RANGE * VIEW_RANGE)
 	{
-		BlockManager::CollisionResult hit = block_->CheckCollisionLine(pos_, playerPos);
+		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(modelId_, -1, pos_, playerPos);
 
 		// 視野内でもプレイヤーと敵の間に壁があるなら
-		if (hit.tag == "WALL")
+		if (hit.HitFlag)
 		{
 			// 検知しない
 			isNotice_ = false;
@@ -569,6 +515,14 @@ void EnemyBase::UpdateStandby(void)
 
 	MovePattern();
 
+	// 重力処理
+	jumpPow_ -= 9.8f;
+
+	// プレイヤーの座標に移動量を加算
+	pos_.y += jumpPow_;
+
+	MV1SetPosition(modelId_, pos_);
+
 	// 索敵
 	Search();
 }
@@ -645,4 +599,11 @@ void EnemyBase::DrawDead(void)
 
 void EnemyBase::DrawEnd(void)
 {
+}
+
+void EnemyBase::CollisionStage(const VECTOR& pos)
+{
+	// 衝突判定に指定座標を押し戻す
+	pos_ = pos;
+	jumpPow_ = 0.0f;
 }

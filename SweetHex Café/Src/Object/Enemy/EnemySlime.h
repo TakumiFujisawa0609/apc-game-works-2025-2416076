@@ -9,7 +9,7 @@ public:
 	static constexpr float COLLISION_RADIUS = 50.0f;
 
 	// コンストラクタ
-	EnemySlime(BlockManager* block);
+	EnemySlime(void);
 
 	// デストラクタ
 	~EnemySlime(void);
