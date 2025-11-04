@@ -16,6 +16,7 @@
 #include "../Object/Enemy/EnemyBase.h"
 #include "../Object/Weapon/WeaponBase.h"
 #include "../Object/Item/ItemManager.h"
+#include "../Object/Stage/Stage.h"
 
 #include "GameScene.h"
 
@@ -32,8 +33,11 @@ void GameScene::Init(void)
 	grid_ = new Grid();
 	grid_->Init();
 
-	blockManager_ = new BlockManager();
-	blockManager_->Init();
+	//blockManager_ = new BlockManager();
+	//blockManager_->Init();
+
+	stage_ = new Stage();
+	stage_->Init();
 
 	pause_ = new Pause();
 	pause_->Init();
@@ -44,11 +48,11 @@ void GameScene::Init(void)
 	item_ = new ItemManager();
 	item_->Init();
 
-	player_ = new Player(item_, blockManager_);
+	player_ = new Player(item_);
 	player_->Init();
 
-	enemyManager_ = new EnemyManager(player_, item_, blockManager_);
-	enemyManager_->Init();
+	//enemyManager_ = new EnemyManager(player_, item_, blockManager_);
+	//enemyManager_->Init();
 
 	ChangeState(STATE::GAME);
 
@@ -70,9 +74,10 @@ void GameScene::Update(void)
 void GameScene::Draw(void)
 {
 	grid_->Draw();
-	blockManager_->Draw();
-	enemyManager_->Draw();
-	player_->Draw(blockManager_);
+	//blockManager_->Draw();
+	stage_->Draw();
+	//enemyManager_->Draw();
+	player_->Draw();
 	timer_->Draw();
 
 	if (item_ != nullptr)
@@ -96,14 +101,14 @@ void GameScene::Release(void)
 	grid_->Release();
 	delete grid_;
 
-	blockManager_->Release();
-	delete blockManager_;
+	//blockManager_->Release();
+	//delete blockManager_;
 
 	player_->Release();
 	delete player_;
 
-	enemyManager_->Release();
-	delete enemyManager_;
+	//enemyManager_->Release();
+	//delete enemyManager_;
 
 	pause_->Release();
 	delete pause_;
@@ -113,6 +118,9 @@ void GameScene::Release(void)
 
 	item_->Release();
 	delete item_;
+
+	stage_->Release();
+	delete stage_;
 }
 
 void GameScene::ChangeState(STATE state)
@@ -124,17 +132,23 @@ void GameScene::UpdateGame(void)
 {
 	InputController& ins = InputController::GetInstance();
 
-	blockManager_->Update();
+	//blockManager_->Update();
+	stage_->Update();
 	grid_->Update();
 	timer_->Update();
 
 	// 当たり判定
-	CollisionEnemy();
-	CollisionWeapon();
-	CollisionEnemy2Enemy();
+	//CollisionEnemy();
+	//CollisionWeapon();
+	//CollisionEnemy2Enemy();
 
-	enemyManager_->Update();
+	CollisionFloor();
+	CollisionWall();
+
+	//enemyManager_->Update();
 	player_->Update();
+
+	CollisionWall();
 
 	// ポーズメニューへ
 	if (ins.IsPause())
@@ -256,7 +270,7 @@ void GameScene::CollisionWeapon(void)
 		}
 
 		// 武器とブロックの当たり判定
-		player_->CollisionWeapon(blockManager_);
+		//player_->CollisionWeapon(blockManager_);
 	}
 }
 
@@ -307,5 +321,121 @@ void GameScene::CollisionEnemy2Enemy(void)
 				}
 			}
 		}
+	}
+}
+
+void GameScene::CollisionWall(void)
+{
+	// プレイヤー
+	VECTOR playerPos = player_->GetPos();
+
+	// カプセルの座標
+	VECTOR capStartPos = VAdd(playerPos, player_->GetStartCapsulePos());
+	VECTOR capEndPos = VAdd(playerPos, player_->GetEndCapsulePos());
+
+	// カプセルとの当たり判定
+	auto hits = MV1CollCheck_Capsule
+	(
+		stage_->GetModelId(),			// ステージのモデルID
+		-1,								// ステージ全てのポリゴンを指定
+		capStartPos,					// カプセルの上
+		capEndPos,						// カプセルの下
+		player_->GetCapsuleRadius()		// カプセルの半径
+	);
+
+	// 衝突したポリゴン全ての検索
+	for (int i = 0; i < hits.HitNum; i++)
+	{
+		// ポリゴンを1枚に分割
+		auto hit = hits.Dim[i];
+
+		// ポリゴン検索を制限
+		for (int tryCnt = 0; tryCnt < 10; tryCnt++)
+		{
+			// 最初の衝突判定で検出した衝突ポリゴン1枚と衝突判定
+			int pHit = HitCheck_Capsule_Triangle
+			(
+				capStartPos,					// カプセルの上
+				capEndPos,						// カプセルの下
+				player_->GetCapsuleRadius(),		// カプセルの半径
+				hit.Position[0],				// ポリゴン1
+				hit.Position[1],				// ポリゴン2
+				hit.Position[2]					// ポリゴン3
+			);
+
+			// カプセルとポリゴンが当たっていたら
+			if (pHit)
+			{
+				VECTOR normal = hit.Normal;
+
+				// ポリゴンの中心
+				VECTOR polyCenter = {
+					  (hit.Position[0].x + hit.Position[1].x + hit.Position[2].x) / 3.0f,
+					  (hit.Position[0].y + hit.Position[1].y + hit.Position[2].y) / 3.0f,
+						(hit.Position[0].z + hit.Position[1].z + hit.Position[2].z) / 3.0f
+				};
+
+				// カプセルからポリゴンへ向かうベクトル
+				VECTOR toPoly = VSub(polyCenter, playerPos);
+
+				// 内積で裏から当たっているかを確認
+				float dot = VDot(normal, toPoly);
+
+				// 裏から当たっていたら法線を反転
+				if (dot > 0)
+				{
+					normal = VScale(normal, -1.0f);
+				}
+				
+				// 上下方向の衝突は無視
+				if (fabsf(normal.y) > 0.5f)
+				{
+					continue;
+				}
+
+				const float pushBack = 0.1f;
+				// 座標をポリゴンの法線方向に移動
+				playerPos = VAdd(playerPos, VScale(normal, pushBack));
+				// 球体の座標も移動
+				capStartPos = VAdd(capStartPos, VScale(normal, pushBack));
+				capEndPos = VAdd(capEndPos, VScale(normal, pushBack));
+
+
+				// 複数当たっている可能性があるので再検索
+				continue;
+			}
+
+		}
+	}
+	// 検出したポリゴン情報の後始末
+	MV1CollResultPolyDimTerminate(hits);
+
+	player_->SetPos(playerPos);
+}
+
+void GameScene::CollisionFloor(void)
+{
+	// ステージとアクターの衝突
+	VECTOR playerPos = player_->GetPos();
+
+	// 線分の上座標
+	VECTOR topPos = playerPos;
+	topPos.y = playerPos.y + 20.0f;
+
+	// 線分の下座標
+	VECTOR downPos = playerPos;
+	downPos.y = playerPos.y - 20.0f;
+
+	// ステージのモデルID
+	int modelId = stage_->GetModelId();
+
+	// 線分とモデルの衝突判定
+	MV1_COLL_RESULT_POLY res =
+		MV1CollCheck_Line(modelId, -1, topPos, downPos);
+
+	// モデルと衝突しているか
+	if (res.HitFlag)
+	{
+		player_->CollisionStage(res.HitPosition);
 	}
 }

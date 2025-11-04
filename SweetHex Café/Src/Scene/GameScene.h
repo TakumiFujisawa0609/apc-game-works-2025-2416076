@@ -7,6 +7,7 @@ class BlockManager;
 class Player;
 class Pause;
 class Timer;
+class Stage;
 class EnemyManager;
 class ItemManager;
 
@@ -38,12 +39,13 @@ private:
 
 	// 各オブジェクト
 	Grid* grid_;
-	BlockManager* blockManager_;
+	//BlockManager* blockManager_;
 	Player* player_;
 	Pause* pause_;
 	Timer* timer_;
 	EnemyManager* enemyManager_;
 	ItemManager* item_;
+	Stage* stage_;
 
 
 	// 状態変更
@@ -56,4 +58,7 @@ private:
 	void CollisionEnemy(void);
 	void CollisionWeapon(void);
 	void CollisionEnemy2Enemy(void);
+
+	void CollisionWall(void);
+	void CollisionFloor(void);
 };

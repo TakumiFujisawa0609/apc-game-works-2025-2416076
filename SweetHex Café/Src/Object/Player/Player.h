@@ -4,7 +4,6 @@
 #include "../../Application.h"
 
 class AnimationController;
-class BlockManager;
 class WeaponBase;
 class WeaponPunch;
 class ItemManager;
@@ -47,19 +46,6 @@ public:
 		DEAD,
 	};
 
-	// 4方向の衝突情報
-	struct SurroundingHits
-	{
-		bool hitForward;
-		bool hitBack;
-		bool hitRight;
-		bool hitLeft;
-		bool hitForwardRight;
-		bool hitForwardLeft;
-		bool hitBackRight;
-		bool hitBackLeft;
-	};
-
 	// モデルの大きさ
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 
@@ -93,7 +79,7 @@ public:
 	static constexpr float COL_RANGE = 20.0f;
 
 	// 衝突判定用半径
-	static constexpr float COLLISION_RADIUS = 50.0f;
+	static constexpr float COLLISION_RADIUS = 60.0f;
 
 	// 無敵時間
 	static constexpr int INVINCIBLE_TIME = 60;
@@ -103,19 +89,20 @@ public:
 
 public:
 
-	Player(ItemManager* item, BlockManager* block);
+	Player(ItemManager* item);
 	~Player(void);
 
 	void Init(void);
 	void Update(void);
-	void Draw(BlockManager* block);
+	void Draw(void);
 	void Release(void);
 
 	VECTOR GetPos(void)const;
 	void SetPos(VECTOR pos);
 
-	SurroundingHits CheckCollision(void);
-	void CollisionWeapon(BlockManager* block);
+	const VECTOR& GetStartCapsulePos(void) const { return startCapsulePos_; }
+	const VECTOR& GetEndCapsulePos(void) const { return endCapsulePos_; }
+	const float& GetCapsuleRadius(void) const { return collisionRadius_; }
 
 	// 状態の変更
 	void ChangeState(STATE state);
@@ -130,6 +117,9 @@ public:
 	bool IsCollisionStage(void)const;
 	bool IsCollisionState(void)const;
 
+	// ステージとの衝突
+	void CollisionStage(const VECTOR& pos);
+
 private:
 	// アニメーション
 	AnimationController* animController_;
@@ -141,8 +131,6 @@ private:
 	ItemManager* item_;
 
 	HpManager* hpManager_;
-
-	BlockManager* block_;
 
 	// モデルのハンドルID
 	int modelId_;
@@ -156,7 +144,12 @@ private:
 
 	float speed_;
 
-	SurroundingHits hitsResult = { false, false, false, false };
+	// カプセルの当たり判定座標
+	VECTOR startCapsulePos_;
+	VECTOR endCapsulePos_;
+
+	// ジャンプ力
+	float jumpPow_;
 
 	// ノックバック方向
 	VECTOR knockBackDir_;
