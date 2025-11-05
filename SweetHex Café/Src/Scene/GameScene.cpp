@@ -9,7 +9,6 @@
 #include "../Manager/Pause.h"
 
 #include "../Object/Grid.h"
-#include "../Object/Stage/BlockManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Timer.h"
 #include "../Object/Enemy/EnemyManager.h"
@@ -32,9 +31,6 @@ void GameScene::Init(void)
 {
 	grid_ = new Grid();
 	grid_->Init();
-
-	//blockManager_ = new BlockManager();
-	//blockManager_->Init();
 
 	stage_ = new Stage();
 	stage_->Init();
@@ -74,7 +70,6 @@ void GameScene::Update(void)
 void GameScene::Draw(void)
 {
 	grid_->Draw();
-	//blockManager_->Draw();
 	stage_->Draw();
 	enemyManager_->Draw();
 	player_->Draw();
@@ -100,9 +95,6 @@ void GameScene::Release(void)
 {
 	grid_->Release();
 	delete grid_;
-
-	//blockManager_->Release();
-	//delete blockManager_;
 
 	player_->Release();
 	delete player_;
@@ -132,7 +124,6 @@ void GameScene::UpdateGame(void)
 {
 	InputController& ins = InputController::GetInstance();
 
-	//blockManager_->Update();
 	stage_->Update();
 	grid_->Update();
 	timer_->Update();
@@ -488,11 +479,11 @@ void GameScene::CollisionFloor(void)
 
 	// 線分の上座標
 	VECTOR topPos = playerPos;
-	topPos.y = playerPos.y + 20.0f;
+	topPos.y = playerPos.y + 50.0f;
 
 	// 線分の下座標
 	VECTOR downPos = playerPos;
-	downPos.y = playerPos.y - 20.0f;
+	downPos.y = playerPos.y - 50.0f;
 
 	// ステージのモデルID
 	int modelId = stage_->GetModelId();
@@ -537,5 +528,4 @@ void GameScene::CollisionFloor(void)
 		}
 	}
 #pragma endregion
-
 }

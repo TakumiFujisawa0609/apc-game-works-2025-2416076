@@ -3,7 +3,6 @@
 
 class SceneManager;
 class Grid;
-class BlockManager;
 class Player;
 class Pause;
 class Timer;
@@ -39,7 +38,6 @@ private:
 
 	// 各オブジェクト
 	Grid* grid_;
-	//BlockManager* blockManager_;
 	Player* player_;
 	Pause* pause_;
 	Timer* timer_;
