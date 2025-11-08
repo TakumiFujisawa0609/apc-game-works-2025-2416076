@@ -18,15 +18,14 @@ void ItemManager::Init(void)
 
 void ItemManager::Update(void)
 {
-
 }
 
 void ItemManager::Draw(void)
 {
     // リストに登録された全てのアイテムを描画
-    for (const VECTOR& pos : droppedItems_)
+    for (const DATA& item : droppedItems_)
     {
-        DrawSphere3D(pos, ITEM_RADIUS, 16, GetColor(0, 255, 0), GetColor(0, 255, 0), false);
+        DrawSphere3D(item.pos, ITEM_RADIUS, 16, GetColor(0, 255, 0), GetColor(0, 255, 0), false);
     }
 
     DrawFormatString(10, 80, 0x000000, "score : %d", SystemManager::GetInstance().GetScore());
@@ -38,24 +37,23 @@ void ItemManager::Release(void)
     droppedItems_.clear();
 }
 
-const std::vector<VECTOR>& ItemManager::GetDroppedItems(void) const
+const std::vector<ItemManager::DATA>& ItemManager::GetDroppedItems(void) const
 {
     return droppedItems_;
 }
 
-void ItemManager::CreateItem(int itemId_, const VECTOR& pos_)
+void ItemManager::CreateItem(int modelId, const VECTOR& pos)
 {
-
-    // 敵の座標 (pos_) をそのままリストに追加
-    droppedItems_.emplace_back(pos_);
+    // 敵の座標をそのままリストに追加
+    droppedItems_.emplace_back(DATA{ modelId, pos });
 }
 
-void ItemManager::RemoveItem(size_t index_)
+void ItemManager::RemoveItem(size_t index)
 {
-    if (index_ < droppedItems_.size())
+    if (index < droppedItems_.size())
     {
         // 指定されたインデックスの要素をリストから削除
-        droppedItems_.erase(droppedItems_.begin() + index_);
+        droppedItems_.erase(droppedItems_.begin() + index);
 
         // デバッグ
         SystemManager::GetInstance().SetScore(1);

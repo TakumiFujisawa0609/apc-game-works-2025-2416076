@@ -10,7 +10,7 @@ public:
 	{
 		int modelId;
 		VECTOR pos;
-		float radius;
+		bool isHoldItem;
 	};
 
 	// アイテムの半径
@@ -26,17 +26,17 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	const std::vector<VECTOR>& GetDroppedItems(void) const;
+	const std::vector<DATA>& GetDroppedItems(void) const;
 
 	// アイテム生成
-	void CreateItem(int itemId_, const VECTOR& pos_);
+	void CreateItem(int modelId, const VECTOR& pos);
 
 	// 削除
-	void RemoveItem(size_t index_);
+	void RemoveItem(size_t index);
 
 private:
 	// ドロップされた複数のアイテムの位置情報を管理するリスト
-	std::vector<VECTOR> droppedItems_;
+	std::vector<DATA> droppedItems_;
 
 };
 

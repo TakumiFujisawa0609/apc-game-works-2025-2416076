@@ -518,8 +518,14 @@ void EnemyBase::UpdateStandby(void)
 	// 重力処理
 	jumpPow_ -= 9.8f;
 
-	// プレイヤーの座標に移動量を加算
+	// エネミーの座標に移動量を加算
 	pos_.y += jumpPow_;
+
+	// エネミーのY座標制限
+	if (pos_.y < -9.8f)
+	{
+		pos_.y = -9.8f;
+	}
 
 	MV1SetPosition(modelId_, pos_);
 

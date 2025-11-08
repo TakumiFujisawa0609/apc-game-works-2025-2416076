@@ -128,10 +128,10 @@ void Player::Draw(void)
 #ifdef _DEBUG
 
 	//DrawSphere3D(pos_, collisionRadius_, 10, 0xff0000, 0xff0000, false);
-	VECTOR start = VAdd(pos_, startCapsulePos_);
-	VECTOR end = VAdd(pos_, endCapsulePos_);
+	//VECTOR start = VAdd(pos_, startCapsulePos_);
+	//VECTOR end = VAdd(pos_, endCapsulePos_);
 
-	DrawCapsule3D(start, end, collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	//DrawCapsule3D(start, end, collisionRadius_, 10, 0xff0000, 0xff0000, false);
 
 	DrawFormatString(0, 20, 0x000000, " %.2f,%.2f,%.2f", pos_.x, pos_.y, pos_.z);
 #endif // _DEBUG
@@ -339,12 +339,12 @@ void Player::ProcessPickup(void)
 {
 	auto& ins = InputController::GetInstance();
 
-	const std::vector<VECTOR>& drop = item_->GetDroppedItems();
+	const std::vector<ItemManager::DATA>& drop = item_->GetDroppedItems();
 
 		// リストの後ろからチェックする
 	for (int i = static_cast<int>(drop.size()) - 1; i >= 0; i--)
 	{
-		const VECTOR& itemPos = drop[i];
+		const VECTOR& itemPos = drop[i].pos;
 
 		// プレイヤーとアイテムの中心間の距離を計算
 		VECTOR direction = VSub(pos_, itemPos);
@@ -361,7 +361,6 @@ void Player::ProcessPickup(void)
 			if (ins.IsUse())
 			{
 				// アイテム取得処理
-				// ItemManagerにアイテム削除
 				item_->RemoveItem(i);
 				SoundManager::GetInstance()->Play(SoundManager::SE::PICKUP);
 
@@ -423,6 +422,12 @@ void Player::UpdateStandby(void)
 
 	// プレイヤーの座標に移動量を加算
 	pos_.y += jumpPow_;
+
+	// プレイヤーのY座標制限
+	if (pos_.y < -9.8f)
+	{
+		pos_.y = -9.8f;
+	}
 
 	MV1SetPosition(modelId_, pos_);
 

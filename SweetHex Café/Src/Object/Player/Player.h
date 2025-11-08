@@ -169,8 +169,6 @@ private:
 
 	int itemModelId_;
 
-	bool isHoldItem_;
-
 private:
 
 	void ProcessAttack(void);
