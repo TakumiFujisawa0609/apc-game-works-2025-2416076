@@ -12,7 +12,7 @@ EnemySlime::~EnemySlime(void)
 
 void EnemySlime::SetParam(void)
 {
-	pos_ = { 132.0f, 10.0f, 168.0f };
+	pos_ = { 15.0f, 10.0f, 225.0f };
 	angles_ = { 0.0f, Utility::Deg2RadF(90.0f), 0.0f };
 	scales_ = { 60.0f, 60.0f, 60.0f };
 	speed_ = 2.0f;

@@ -1,7 +1,5 @@
 #include "ItemManager.h"
 
-#include "../../Manager/SystemManager.h"
-
 ItemManager::ItemManager(void)
 {
 }
@@ -27,8 +25,6 @@ void ItemManager::Draw(void)
     {
         DrawSphere3D(item.pos, ITEM_RADIUS, 16, GetColor(0, 255, 0), GetColor(0, 255, 0), false);
     }
-
-    DrawFormatString(10, 80, 0x000000, "score : %d", SystemManager::GetInstance().GetScore());
 }
 
 void ItemManager::Release(void)
@@ -54,8 +50,5 @@ void ItemManager::RemoveItem(size_t index)
     {
         // 指定されたインデックスの要素をリストから削除
         droppedItems_.erase(droppedItems_.begin() + index);
-
-        // デバッグ
-        SystemManager::GetInstance().SetScore(1);
     }
 }

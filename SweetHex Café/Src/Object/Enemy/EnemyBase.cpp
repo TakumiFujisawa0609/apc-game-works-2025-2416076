@@ -415,14 +415,8 @@ void EnemyBase::MovePattern(void)
 		return;
 	}
 
-	if (currentRoute_.size() <= 1)
-	{
-		// 1点しか目標がない場合は移動しない
-		return;
-	}
-
 	// 目標地点を取得
-	const VECTOR& targetPos = currentRoute_[currentTargetIndex_];
+	VECTOR targetPos = currentRoute_[currentTargetIndex_];
 
 	// 目標地点への方向ベクトルを計算し、モデルの向きを設定
 	VECTOR diff = VSub(targetPos, pos_);
@@ -434,6 +428,13 @@ void EnemyBase::MovePattern(void)
 	{
 		// 到達判定
 		SetPos(targetPos); // 正確に目標地点へ移動
+
+		// パターンがレジなら往復しない
+		if (currentPattern_ == PATTERN::REGISTER)
+		{
+			SetRegister(true);
+			return;
+		}
 
 		if (isReturn_)
 		{
@@ -577,6 +578,7 @@ void EnemyBase::UpdateEnd(void)
 {
 }
 
+
 void EnemyBase::DrawStandby(void)
 {
 	MV1DrawModel(modelId_);
@@ -605,6 +607,14 @@ void EnemyBase::DrawDead(void)
 
 void EnemyBase::DrawEnd(void)
 {
+}
+
+void EnemyBase::SetPattern(PATTERN pattern)
+{
+	currentPattern_ = pattern;
+	currentRoute_ = ENEMY_MOVE_ROUTES.at(currentPattern_);
+	currentTargetIndex_ = 0;
+	isReturn_ = false;
 }
 
 void EnemyBase::CollisionStage(const VECTOR& pos)

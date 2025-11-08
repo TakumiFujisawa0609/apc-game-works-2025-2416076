@@ -39,6 +39,9 @@ public:
 	// 90度（ラジアン）
 	const float HALF_PI = DX_PI_F / 2.0f;
 
+	// 注文場所
+	static constexpr VECTOR REGISTER_POS = { 1440.0f, 10.0f, 1390.0f };
+
 	// エネミー種別
 	enum class TYPE
 	{
@@ -49,6 +52,7 @@ public:
 	// 行動パターン
 	enum class PATTERN
 	{
+		REGISTER,
 		PATTERN_1,
 		PATTERN_2,
 		PATTERN_3,
@@ -60,24 +64,28 @@ public:
 	const std::map<PATTERN, std::vector<VECTOR>> ENEMY_MOVE_ROUTES =
 	{
 
+		{ PATTERN::REGISTER,
+		   { { 1440, 10, 1390 } }
+		},
+
 		{ PATTERN::PATTERN_1,
-		   { { 200, 10, 300 }, { 200, 10, 1250 }, { 960, 10, 1250 } } 
+		   { { 960, 10, 1250 }, { 200, 10, 1250 }, { 200, 10, 300 } }
 		},
 
 		{ PATTERN::PATTERN_2,
-			{ { 300, 10, 120 }, { 1450, 10, 120 }, { 1450, 10, 450 } }
+			{ { 1450, 10, 450 }, { 1450, 10, 120 }, { 300, 10, 120 }  }
 		},
 
 		{ PATTERN::PATTERN_3,
-			{ { 510, 10, 500 }, {1290, 10, 500} }
+			{ {1290, 10, 500}, { 510, 10, 500 } }
 		},
 
 		{ PATTERN::PATTERN_4,
-			{ { 1840, 10, 660 }, { 1840, 10, 1580 }, { 2400,10, 1580 } }
+			{ { 1840, 10, 342 }, { 1840, 10, 1580 }, { 2400,10, 1580 } }
 		},
 		
 		{ PATTERN::PATTERN_5,
-			{ { 1840, 10, 534 }, { 1840, 10, 84}, {2460, 10, 84}, {2460, 10, 700}}
+			{ { 1840, 10, 400 }, { 1840, 10, 84}, {2460, 10, 84}, {2460, 10, 700}}
 		}
 	};
 
@@ -134,6 +142,10 @@ public:
 	void SetAlive(bool isAlive);
 	PATTERN GetPattern(void)const;
 	bool IsNotice(void)const;
+	void SetRegister(bool isRegisger) { isRegister_ = isRegisger; }
+	bool IsRegister(void)const { return isRegister_; }
+
+	void SetPattern(PATTERN pattern);
 
 	// ステージとの衝突
 	void CollisionStage(const VECTOR& pos);
@@ -186,6 +198,8 @@ protected:
 
 	// 検知フラグ
 	bool isNotice_;
+
+	bool isRegister_;
 
 	// 衝突判定用半径
 	float collisionRadius_;

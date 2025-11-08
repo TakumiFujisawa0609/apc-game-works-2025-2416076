@@ -13,14 +13,16 @@
 #include "../Common/HP/HpManager.h"
 #include "../Weapon/WeaponPunch.h"
 #include "../Item/ItemManager.h"
+#include "Inventory.h"
 
 Player::Player(ItemManager* item)
 	:
 	item_(item),
-	animController_(nullptr),
+	animationController_(nullptr),
 	hpManager_(nullptr),
 	useWeapon_(nullptr),
 	weaponPunch_(nullptr),
+	inventory_(nullptr),
 	angles_(Utility::VECTOR_ZERO),
 	cntKnockBack_(0),
 	collisionRadius_(0.0f),
@@ -62,14 +64,14 @@ void Player::Init(void)
 
 	InitTransformPost();
 
-	animController_ = new AnimationController(modelId_);
+	animationController_ = new AnimationController(modelId_);
 
 	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
 	{
-		animController_->AddInFbx(i, 30.0f, i);
+		animationController_->AddInFbx(i, 30.0f, i);
 	}
 
-	animController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 
 	SceneManager::GetInstance().GetCamera()->SetFollow(this);
 
@@ -83,6 +85,10 @@ void Player::Init(void)
 	// 武器の初期化
 	weaponPunch_ = new WeaponPunch();
 	weaponPunch_->Init(WeaponBase::TYPE::PUNCH);
+
+	// 手持ちアイテム情報初期化
+	inventory_ = new Inventory();
+	inventory_->Init();
 
 	// 初期武器はパンチ
 	useWeapon_ = weaponPunch_;
@@ -113,7 +119,7 @@ void Player::Update(void)
 
 	hpManager_->Update();
 
-	animController_->Update();
+	animationController_->Update();
 
 }
 
@@ -124,6 +130,8 @@ void Player::Draw(void)
 	useWeapon_->Draw();
 
 	hpManager_->Draw();
+
+	inventory_->Draw();
 
 #ifdef _DEBUG
 
@@ -142,8 +150,8 @@ void Player::Release(void)
 {
 	MV1DeleteModel(modelId_);
 
-	animController_->Release();
-	delete animController_;
+	animationController_->Release();
+	delete animationController_;
 
 	weaponPunch_->Release();
 	delete weaponPunch_;
@@ -152,6 +160,9 @@ void Player::Release(void)
 
 	hpManager_->Release();
 	delete hpManager_;
+
+	inventory_->Release();
+	delete inventory_;
 }
 
 VECTOR Player::GetPos(void) const
@@ -309,12 +320,12 @@ void Player::ProcessMove(void)
 				speed_ = Player::DASH_SPEED;
 
 				// アニメーション　ダッシュ時
-				animController_->Play(static_cast<int>(ANIM_TYPE::RUN));
+				animationController_->Play(static_cast<int>(ANIM_TYPE::RUN));
 			}
 			else
 			{
 				// アニメーション　通常移動時
-				animController_->Play(static_cast<int>(ANIM_TYPE::WALK));
+				animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
 			}
 
 			if (pos_.z <= 0.0f)
@@ -329,7 +340,7 @@ void Player::ProcessMove(void)
 	}
 	else
 	{
-		animController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+		animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 	}
 
 	MV1SetPosition(modelId_, pos_);
@@ -362,6 +373,7 @@ void Player::ProcessPickup(void)
 			{
 				// アイテム取得処理
 				item_->RemoveItem(i);
+				inventory_->AddItem(1);
 				SoundManager::GetInstance()->Play(SoundManager::SE::PICKUP);
 
 				break;
@@ -384,12 +396,12 @@ void Player::ProcessAttack(void)
 
 void Player::ChangeStandby(void)
 {
-	animController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 }
 
 void Player::ChangeKnockback(void)
 {
-	animController_->Play(static_cast<int>(ANIM_TYPE::RECIEVE_HIT), false);
+	animationController_->Play(static_cast<int>(ANIM_TYPE::RECIEVE_HIT), false);
 	
 	// 無敵時間の設定
 	invincibleTimeCount_ = INVINCIBLE_TIME;
@@ -399,12 +411,12 @@ void Player::ChangeAttack(void)
 {
 	useWeapon_->Use(pos_, moveDir_);
 
-	animController_->Play(static_cast<int>(ANIM_TYPE::PUNCH), false);
+	animationController_->Play(static_cast<int>(ANIM_TYPE::PUNCH), false);
 }
 
 void Player::ChangeDead(void)
 {
-	animController_->Play(static_cast<int>(ANIM_TYPE::DEATH), false);
+	animationController_->Play(static_cast<int>(ANIM_TYPE::DEATH), false);
 }
 
 void Player::UpdateStandby(void)
@@ -456,7 +468,7 @@ void Player::UpdateKnockback(void)
 	}
 
 	// アニメーションが終わったら、エンド状態にする
-	if (animController_->IsEnd())
+	if (animationController_->IsEnd())
 	{
 		ChangeState(STATE::STANDBY);
 		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
@@ -466,7 +478,7 @@ void Player::UpdateKnockback(void)
 void Player::UpdateAttack(void)
 {
 	// アニメーションが終わったら、エンド状態にする
-	if (animController_->IsEnd())
+	if (animationController_->IsEnd())
 	{
 		ChangeState(STATE::STANDBY);
 	}
@@ -475,7 +487,7 @@ void Player::UpdateAttack(void)
 void Player::UpdateDead(void)
 {
 	// アニメーションが終わったら、エンド状態にする
-	if (animController_->IsEnd())
+	if (animationController_->IsEnd())
 	{
 		SceneManager::GetInstance().ChangeScene(
 			SceneManager::SCENE_ID::GAMEOVER);

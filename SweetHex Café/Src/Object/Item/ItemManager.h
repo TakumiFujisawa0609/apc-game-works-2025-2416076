@@ -10,7 +10,6 @@ public:
 	{
 		int modelId;
 		VECTOR pos;
-		bool isHoldItem;
 	};
 
 	// アイテムの半径
@@ -35,7 +34,7 @@ public:
 	void RemoveItem(size_t index);
 
 private:
-	// ドロップされた複数のアイテムの位置情報を管理するリスト
+	// ドロップした複数のアイテムの位置情報を管理する
 	std::vector<DATA> droppedItems_;
 
 };

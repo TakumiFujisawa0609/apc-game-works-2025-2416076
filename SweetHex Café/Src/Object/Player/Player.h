@@ -8,6 +8,7 @@ class WeaponBase;
 class WeaponPunch;
 class ItemManager;
 class HpManager;
+class Inventory;
 
 class Player
 {
@@ -122,17 +123,22 @@ public:
 
 private:
 	// アニメーション
-	AnimationController* animController_;
+	AnimationController* animationController_;
 
 	// 武器
 	WeaponBase* useWeapon_;
 	WeaponPunch* weaponPunch_;
 
+	// アイテム
 	ItemManager* item_;
 
+	// HP
 	HpManager* hpManager_;
 
-	// モデルのハンドルID
+	// 手持ちアイテム情報
+	Inventory* inventory_;
+
+	// モデル情報
 	int modelId_;
 	VECTOR pos_;
 	VECTOR angles_;

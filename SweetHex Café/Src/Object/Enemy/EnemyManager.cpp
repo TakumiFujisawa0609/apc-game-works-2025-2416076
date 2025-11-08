@@ -39,6 +39,22 @@ void EnemyManager::Update(void)
 
 		if (cntSpawn_ >= SPAWN_INTERVEL_SLIME)
 		{
+			EnemyBase* newEnemy = new EnemySlime();
+
+			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, EnemyBase::PATTERN::REGISTER);
+
+			// リストに追加
+			enemys_.emplace_back(newEnemy);
+
+			// カウンターをリセット
+			cntSpawn_ = 0;
+		}
+	}
+
+	for (auto enemy : enemys_)
+	{
+		if (enemy->IsRegister() && enemy->GetPattern() == EnemyBase::PATTERN::REGISTER)
+		{
 			// パターン総数を定義
 			const int MAX_PATTERN_COUNT = static_cast<int>(EnemyBase::PATTERN::MAX);
 
@@ -51,14 +67,14 @@ void EnemyManager::Update(void)
 				int patternIndex = static_cast<int>(enemy->GetPattern());
 
 				// パターンインデックスが有効範囲内であることを確認
-				if (patternIndex >= 0 && patternIndex < MAX_PATTERN_COUNT)
+				if (patternIndex > 0 && patternIndex < MAX_PATTERN_COUNT)
 				{
 					isPatternUsed[patternIndex] = true;
 				}
 			}
 
 			// PATTERN_1 のインデックスから順にチェックし、未使用のパターンを見つける
-			EnemyBase::PATTERN pattern = EnemyBase::PATTERN::PATTERN_1; // 初期値
+			EnemyBase::PATTERN pattern = EnemyBase::PATTERN::PATTERN_1;
 			bool foundUnused = false;
 
 			for (int i = static_cast<int>(EnemyBase::PATTERN::PATTERN_1); i < MAX_PATTERN_COUNT; ++i)
@@ -72,24 +88,15 @@ void EnemyManager::Update(void)
 				}
 			}
 
-			// 敵の数が5体の場合、全てのパターンが使用中となるため PATTERN_1 に戻す
 			if (!foundUnused)
 			{
-				pattern = EnemyBase::PATTERN::PATTERN_1;
+				pattern = EnemyBase::PATTERN::MAX;
 			}
 
-			EnemyBase* newEnemy = new EnemySlime();
-
-
-			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, pattern);
-
-			// リストに追加
-			enemys_.emplace_back(newEnemy);
-
-			// カウンターをリセット
-			cntSpawn_ = 0;
+			enemy->SetPattern(pattern);
 		}
 	}
+
 
 	// イテレータを取得
 	auto it = enemys_.begin();
