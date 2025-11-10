@@ -95,6 +95,7 @@ void TitleScene::UpdateStart(void)
 	// スペースキーでゲーム開始
 	if (ins.IsDecide())
 	{
+		SoundManager::GetInstance()->Play(SoundManager::SE::ENTRY);
 		SceneManager::GetInstance().ChangeScene(
 			SceneManager::SCENE_ID::GAME);
 	}

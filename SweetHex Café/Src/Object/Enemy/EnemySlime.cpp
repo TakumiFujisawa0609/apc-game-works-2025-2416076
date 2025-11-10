@@ -17,7 +17,7 @@ void EnemySlime::SetParam(void)
 	scales_ = { 60.0f, 60.0f, 60.0f };
 	speed_ = 2.0f;
 	reactCnt_ = 0;
-	hp_ = MAX_HP;
+	hp_ = maxHp_ = MAX_HP;
 	spawnRange_ = 1.0f;
 	collisionRadius_ = COLLISION_RADIUS;
 	startCapsulePos_ = { 0.0f,70,0.0f };

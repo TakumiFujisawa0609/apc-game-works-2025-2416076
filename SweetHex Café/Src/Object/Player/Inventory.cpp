@@ -20,11 +20,7 @@ void Inventory::Init(void)
 
 void Inventory::Draw(void)
 {
-#ifdef _DEBUG
-
     DrawFormatString(DEFAULT_POS_X, DEFAULT_POS_Y, 0x000000, "è‚¿ƒAƒCƒeƒ€” ~ %d", itemCount_);
-
-#endif //_DEBUG
 }
 
 void Inventory::Release(void)

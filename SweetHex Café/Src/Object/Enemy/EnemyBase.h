@@ -6,7 +6,6 @@
 class Player;
 class Stage;
 class AnimationController;
-class HpManager;
 
 class EnemyBase
 {
@@ -42,6 +41,9 @@ public:
 
 	// 注文場所
 	static constexpr VECTOR REGISTER_POS = { 1440.0f, 10.0f, 1390.0f };
+
+	// 最大提供時間(約20秒)
+	static constexpr float SERVE_MAX_TIME = 60.0f * 60.0f;
 
 	// エネミー種別
 	enum class TYPE
@@ -145,6 +147,13 @@ public:
 	bool IsNotice(void)const;
 	void SetRegister(bool isRegisger) { isRegister_ = isRegisger; }
 	bool IsRegister(void)const { return isRegister_; }
+	float GetServeTime(void) const { return serveTime_; }
+	int GetOrderId(void) const { return orderId_; }
+	void SetOrderId(int id) { orderId_ = id; }
+	int GetHp(void)const { return hp_; }
+	int GetMaxHp(void)const { return maxHp_; }
+	bool IsOrderAdded(void) const { return isOrderAdded_; }
+	void SetOrderAdded(bool added) { isOrderAdded_ = added; }
 
 	void SetPattern(PATTERN pattern);
 
@@ -164,7 +173,6 @@ public:
 protected:
 	Player* player_;
 	Stage* stage_;
-	HpManager* hpManager_;
 
 	int modelId_;
 	VECTOR pos_;
@@ -187,7 +195,11 @@ protected:
 
 	int reactCnt_;
 
+	// HP情報
+	int maxHp_;
 	int hp_;
+
+	bool isOrderAdded_;
 
 	float spawnRange_;
 
@@ -201,7 +213,14 @@ protected:
 	// 検知フラグ
 	bool isNotice_;
 
+	// レジの場所についたかどうか
 	bool isRegister_;
+
+	// 提供時間
+	float serveTime_;
+
+	// 注文番号
+	int orderId_;
 
 	// 衝突判定用半径
 	float collisionRadius_;

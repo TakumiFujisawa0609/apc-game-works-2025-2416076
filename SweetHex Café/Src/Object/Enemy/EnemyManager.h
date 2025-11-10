@@ -5,6 +5,7 @@ class EnemyBase;
 class Player;
 class ItemManager;
 class Stage;
+class OrderManager;
 
 class EnemyManager
 {
@@ -15,7 +16,7 @@ public:
 	// 敵の最大数
 	static constexpr int MAX_ENEMYS = 5;
 
-	EnemyManager(Player* player, ItemManager* item, Stage* stage);
+	EnemyManager(Player* player, ItemManager* item, Stage* stage, OrderManager* order);
 	~EnemyManager();
 
 	void Init(void);
@@ -32,11 +33,15 @@ private:
 	// エネミー
 	std::vector<EnemyBase*> enemys_;
 
-	int nextPatternIndex_;
-
 	Player* player_;
 	Stage* stage_;
 	ItemManager* item_;
+	OrderManager* order_;
 
 	int cntSpawn_;
+
+	int nextPatternIndex_;
+
+	// 注文番号
+	int orderCounter_;
 };

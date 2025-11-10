@@ -10,12 +10,13 @@
 
 #include "../Object/Grid.h"
 #include "../Object/Player/Player.h"
-#include "../Object/Timer.h"
+#include "../Object/Timer/Timer.h"
 #include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Enemy/EnemyBase.h"
 #include "../Object/Weapon/WeaponBase.h"
 #include "../Object/Item/ItemManager.h"
 #include "../Object/Stage/Stage.h"
+#include "../Object/Order/OrderManager.h"
 
 #include "GameScene.h"
 
@@ -47,7 +48,10 @@ void GameScene::Init(void)
 	player_ = new Player(item_);
 	player_->Init();
 
-	enemyManager_ = new EnemyManager(player_, item_, stage_);
+	orderManager_ = new OrderManager();
+	orderManager_->Init();
+
+	enemyManager_ = new EnemyManager(player_, item_, stage_, orderManager_);
 	enemyManager_->Init();
 
 	ChangeState(STATE::GAME);
@@ -74,6 +78,7 @@ void GameScene::Draw(void)
 	enemyManager_->Draw();
 	player_->Draw();
 	timer_->Draw();
+	orderManager_->Draw();
 
 	if (item_ != nullptr)
 	{
@@ -113,6 +118,9 @@ void GameScene::Release(void)
 
 	stage_->Release();
 	delete stage_;
+
+	orderManager_->Release();
+	delete orderManager_;
 }
 
 void GameScene::ChangeState(STATE state)
@@ -137,6 +145,7 @@ void GameScene::UpdateGame(void)
 	CollisionWall();
 
 	enemyManager_->Update();
+	orderManager_->Update();
 	player_->Update();
 
 	CollisionWall();

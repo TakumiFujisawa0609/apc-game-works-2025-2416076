@@ -9,6 +9,7 @@ class Timer;
 class Stage;
 class EnemyManager;
 class ItemManager;
+class OrderManager;
 
 class GameScene : public SceneBase
 {
@@ -44,6 +45,7 @@ private:
 	EnemyManager* enemyManager_;
 	ItemManager* item_;
 	Stage* stage_;
+	OrderManager* orderManager_;
 
 
 	// ó‘Ô•ÏX

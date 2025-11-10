@@ -1,18 +1,23 @@
 #include "../../Application.h"
 
+#include "../../Manager/SoundManager/SoundManager.h"
+
 #include "EnemyBase.h"
 #include "EnemySlime.h"
 #include "../Item/ItemManager.h"
+#include "../Order/OrderManager.h"
 
 #include "EnemyManager.h"
 
-EnemyManager::EnemyManager(Player* player, ItemManager* item, Stage* stage)
+EnemyManager::EnemyManager(Player* player, ItemManager* item, Stage* stage, OrderManager* order)
 	:
 	player_(player),
 	stage_(stage),
 	item_(item),
+	order_(order),
 	cntSpawn_(0),
-	nextPatternIndex_(0)
+	nextPatternIndex_(0),
+	orderCounter_(0)
 {
 }
 
@@ -23,6 +28,7 @@ EnemyManager::~EnemyManager()
 void EnemyManager::Init(void)
 {
 	cntSpawn_ = 0;
+	orderCounter_ = 0;
 
 	enemyModelIds_.emplace_back(
 		MV1LoadModel((Application::PATH_MODEL + "Enemy/Slime.mv1").c_str()));
@@ -44,6 +50,10 @@ void EnemyManager::Update(void)
 
 			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, EnemyBase::PATTERN::REGISTER,stage_);
 
+			// 注文番号を付与
+			orderCounter_++;
+			newEnemy->SetOrderId(orderCounter_);
+
 			// リストに追加
 			enemys_.emplace_back(newEnemy);
 
@@ -54,8 +64,16 @@ void EnemyManager::Update(void)
 
 	for (auto enemy : enemys_)
 	{
+		// レジに到着したら
 		if (enemy->IsRegister() && enemy->GetPattern() == EnemyBase::PATTERN::REGISTER)
 		{
+			if (!enemy->IsOrderAdded())
+			{
+				SoundManager::GetInstance()->Play(SoundManager::SE::REGISTER);
+				order_->AddOrder(enemy);
+				enemy->SetOrderAdded(true);
+			}
+
 			// パターン総数を定義
 			const int MAX_PATTERN_COUNT = static_cast<int>(EnemyBase::PATTERN::MAX);
 

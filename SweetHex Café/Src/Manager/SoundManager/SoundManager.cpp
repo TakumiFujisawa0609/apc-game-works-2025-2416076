@@ -23,6 +23,9 @@ void SoundManager::Init(void)
 	seHandles_.emplace_back(
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_850615_キャッチ／捕まえる／ぴょこっ.mp3").c_str()));
 
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_63312_レジの音_チーン_03.mp3").c_str()));
+
 }
 
 void SoundManager::Delete(void)

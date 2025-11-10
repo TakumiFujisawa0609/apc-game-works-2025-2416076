@@ -1,12 +1,12 @@
 #pragma once
 #include <DxLib.h>
-#include "../Application.h"
+#include "../../Application.h"
 
 class Timer
 {
 public:
 	// 時間
-	static constexpr float COUNTDOWN_TIME = 60.0f * 1000.0f;
+	static constexpr float COUNTDOWN_TIME = 180.0f * 1000.0f;
 
 	// タイマーの位置
 	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 60;

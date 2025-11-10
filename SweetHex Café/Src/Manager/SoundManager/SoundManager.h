@@ -17,6 +17,7 @@ public:
 		PUNCH, 
 		ENTRY,
 		PICKUP,
+		REGISTER,
 		MAX,
 	};
 
