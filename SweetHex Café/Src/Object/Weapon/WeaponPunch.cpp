@@ -35,8 +35,6 @@ void WeaponPunch::Use(VECTOR pos, VECTOR dir)
 	moveDir_ = dir;
 
 	isAlive_ = true;
-
-	cntAnimation_ = 0;
 }
 
 void WeaponPunch::Load(void)
@@ -57,9 +55,6 @@ void WeaponPunch::SetParam(void)
 
 	// 使用時の位置調整
 	localPos_ = { 0.0f, 40.0f, 0.0f };
-
-	// アニメーショカウンタ初期化
-	cntAnimation_ = 0;
 
 	cntAlive_ = 0;
 }
