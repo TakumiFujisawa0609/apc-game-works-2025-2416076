@@ -4,6 +4,7 @@
 #include <DxLib.h>
 
 class Player;
+class Stage;
 class AnimationController;
 class HpManager;
 
@@ -124,7 +125,7 @@ public:
 	EnemyBase(void);
 	~EnemyBase(void);
 
-	void Init(TYPE type, int baseModelId, Player* player, PATTERN pattern);
+	void Init(TYPE type, int baseModelId, Player* player, PATTERN pattern, Stage* stage);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
@@ -162,6 +163,7 @@ public:
 
 protected:
 	Player* player_;
+	Stage* stage_;
 	HpManager* hpManager_;
 
 	int modelId_;

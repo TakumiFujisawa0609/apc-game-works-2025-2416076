@@ -6,9 +6,10 @@
 
 #include "EnemyManager.h"
 
-EnemyManager::EnemyManager(Player* player, ItemManager* item)
+EnemyManager::EnemyManager(Player* player, ItemManager* item, Stage* stage)
 	:
 	player_(player),
+	stage_(stage),
 	item_(item),
 	cntSpawn_(0),
 	nextPatternIndex_(0)
@@ -41,7 +42,7 @@ void EnemyManager::Update(void)
 		{
 			EnemyBase* newEnemy = new EnemySlime();
 
-			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, EnemyBase::PATTERN::REGISTER);
+			newEnemy->Init(EnemyBase::TYPE::SLIME, enemyModelIds_[0], player_, EnemyBase::PATTERN::REGISTER,stage_);
 
 			// ƒŠƒXƒg‚É’Ç‰Á
 			enemys_.emplace_back(newEnemy);

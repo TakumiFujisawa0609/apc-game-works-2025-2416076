@@ -8,12 +8,14 @@
 #include "../Common/AnimationController.h"
 #include "../Common/HP/HpManager.h"
 #include "../Player/Player.h"
+#include "../Stage/Stage.h"
 
 EnemyBase::EnemyBase(void)
 	:
 	animController_(nullptr),
 	hpManager_(nullptr),
 	player_(nullptr),
+	stage_(nullptr),
 	pos_(Utility::VECTOR_ZERO),
 	angles_(Utility::VECTOR_ZERO),
 	cntAttack_(0),
@@ -42,11 +44,13 @@ EnemyBase::~EnemyBase(void)
 {
 }
 
-void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern)
+void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern, Stage* stage)
 {
 	type_ = type;
 
 	player_ = player;
+
+	stage_ = stage;
 
 	modelId_ = MV1DuplicateModel(baseModelId);
 
@@ -318,6 +322,9 @@ void EnemyBase::Search(void)
 {
 #pragma region 視野
 	VECTOR playerPos = player_->GetPos();
+	VECTOR enemyPos = pos_;
+
+	playerPos.y = enemyPos.y = 100.0f;
 
 	VECTOR dirEnemy = VNorm(moveDir_);
 
@@ -339,7 +346,7 @@ void EnemyBase::Search(void)
 	// 視野内にいるか確認
 	if (angle <= viweRad && colPos <= VIEW_RANGE * VIEW_RANGE)
 	{
-		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(modelId_, -1, pos_, playerPos);
+		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stage_->GetModelId(), -1, enemyPos, playerPos);
 
 		// 視野内でもプレイヤーと敵の間に壁があるなら
 		if (hit.HitFlag)

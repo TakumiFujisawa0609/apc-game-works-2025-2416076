@@ -47,7 +47,7 @@ void GameScene::Init(void)
 	player_ = new Player(item_);
 	player_->Init();
 
-	enemyManager_ = new EnemyManager(player_, item_);
+	enemyManager_ = new EnemyManager(player_, item_, stage_);
 	enemyManager_->Init();
 
 	ChangeState(STATE::GAME);
