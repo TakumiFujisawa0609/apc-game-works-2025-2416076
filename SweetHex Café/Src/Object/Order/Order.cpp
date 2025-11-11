@@ -40,7 +40,7 @@ void Order::Draw(VECTOR pos)
 	if (!enemy_) return;
 
 	// ’•¶”Ô†
-	DrawFormatString(pos.x + 10, pos.y, 0x000000, "’•¶”Ô†F%d", enemy_->GetOrderId());
+	DrawFormatString(pos.x + 10, pos.y, 0x000000, "#%d ƒ[ƒŠ[~1", enemy_->GetOrderId());
 
 	// HP
 	hpManager_->SetPos(VGet((float)(pos.x + 15), (float)(pos.y + 30), 0.0f));

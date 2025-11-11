@@ -149,6 +149,19 @@ void EnemyBase::Draw(void)
 		break;
 	}
 
+	VECTOR drawPos = pos_;
+
+	VECTOR screen = ConvWorldPosToScreenPos(pos_);
+
+	drawPos = screen;
+
+	drawPos.x -= 10.0f;
+	drawPos.y -= 35.0f;
+
+	DrawFormatString(static_cast<int>(drawPos.x), static_cast<int>(drawPos.y), 0x000000, "#%d", orderId_);
+
+
+
 #ifdef _DEBUG
 	//DrawSphere3D(pos_, collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
 #endif // _DEBUG
