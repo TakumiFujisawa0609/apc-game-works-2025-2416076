@@ -5,11 +5,13 @@
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
 #include "../Manager/InputController.h"
+#include "../Manager/SystemManager.h"
 #include "../Manager/SoundManager/SoundManager.h"
 #include "../Manager/Pause.h"
 
 #include "../Object/Grid.h"
 #include "../Object/Player/Player.h"
+#include "../Object/Player/Inventory.h"
 #include "../Object/Timer/Timer.h"
 #include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Enemy/EnemyBase.h"
@@ -17,6 +19,8 @@
 #include "../Object/Item/ItemManager.h"
 #include "../Object/Stage/Stage.h"
 #include "../Object/Order/OrderManager.h"
+#include "../Object/Counter/Counter.h"
+
 
 #include "GameScene.h"
 
@@ -54,6 +58,9 @@ void GameScene::Init(void)
 	enemyManager_ = new EnemyManager(player_, item_, stage_, orderManager_);
 	enemyManager_->Init();
 
+	counter_ = new Counter();
+	counter_->Init();
+
 	ChangeState(STATE::GAME);
 
 }
@@ -79,6 +86,7 @@ void GameScene::Draw(void)
 	player_->Draw();
 	timer_->Draw();
 	orderManager_->Draw();
+	counter_->DrawDebug();
 
 	if (item_ != nullptr)
 	{
@@ -89,10 +97,6 @@ void GameScene::Draw(void)
 	{
 		pause_->Draw();
 	}
-
-#ifdef _DEBUG
-	DrawString(0, 0, "GameScene", 0xffffff);
-#endif // _DEBUG
 
 }
 
@@ -140,6 +144,7 @@ void GameScene::UpdateGame(void)
 	CollisionEnemy();
 	CollisionWeapon();
 	CollisionEnemy2Enemy();
+	CollisionCounter();
 
 	CollisionFloor();
 	CollisionWall();
@@ -289,6 +294,32 @@ void GameScene::CollisionEnemy2Enemy(void)
 				enemyA->SetPos(tempPosA);
 
 				enemyB->SetPos(tempPosB);
+			}
+		}
+	}
+}
+
+void GameScene::CollisionCounter(void)
+{
+	// プレイヤーの情報
+	VECTOR playerPos = player_->GetPos();
+	float playerRadius = player_->GetCapsuleRadius();
+
+	// カウンターの情報
+	VECTOR counterStartCapsulePos = counter_->GetStartCapsulePos();
+	VECTOR counterEndCapsulePos = counter_->GetEndCapsulePos();
+	float counterRadius = counter_->GetRadius();
+
+	Inventory* inventory = player_->GetInventory();
+
+	if (Utility::IsHitSphereCapsule(playerPos, playerRadius,
+		counterStartCapsulePos, counterEndCapsulePos, counterRadius))
+	{
+		if (InputController::GetInstance().IsUse())
+		{
+			if (inventory->UseItem())
+			{
+				SystemManager::GetInstance().SetScore(200);
 			}
 		}
 	}

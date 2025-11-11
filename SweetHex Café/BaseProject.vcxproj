@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Counter\Counter.cpp" />
     <ClCompile Include="Src\Object\Order\OrderManager.cpp" />
     <ClCompile Include="Src\Object\Order\Order.cpp" />
     <ClCompile Include="Src\Object\Player\Inventory.cpp" />
@@ -56,6 +57,7 @@
     <ClCompile Include="Src\Object\Weapon\WeaponPunch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Counter\Counter.h" />
     <ClInclude Include="Src\Object\Order\OrderManager.h" />
     <ClInclude Include="Src\Object\Order\Order.h" />
     <ClInclude Include="Src\Object\Player\Inventory.h" />

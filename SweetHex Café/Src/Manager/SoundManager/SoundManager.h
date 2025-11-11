@@ -18,6 +18,8 @@ public:
 		ENTRY,
 		PICKUP,
 		REGISTER,
+		UP,
+		DOWN,
 		MAX,
 	};
 

@@ -38,6 +38,7 @@ bool Inventory::UseItem(void)
     if (itemCount_ > 0)
     {
         // Žg‚¦‚é
+        itemCount_--;
         return true;
     }
     // Žg‚¦‚È‚¢

@@ -10,6 +10,7 @@ class Stage;
 class EnemyManager;
 class ItemManager;
 class OrderManager;
+class Counter;
 
 class GameScene : public SceneBase
 {
@@ -46,6 +47,7 @@ private:
 	ItemManager* item_;
 	Stage* stage_;
 	OrderManager* orderManager_;
+	Counter* counter_;
 
 
 	// ó‘Ô•ÏX
@@ -58,6 +60,7 @@ private:
 	void CollisionEnemy(void);
 	void CollisionWeapon(void);
 	void CollisionEnemy2Enemy(void);
+	void CollisionCounter(void);
 
 	void CollisionWall(void);
 	void CollisionFloor(void);

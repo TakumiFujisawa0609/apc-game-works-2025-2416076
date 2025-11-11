@@ -13,6 +13,8 @@ void SoundManager::Init(void)
 	bgmHandles_.emplace_back(
 		LoadSoundMem((Application::PATH_DATA + "Sound/BGM/AS_815874_お昼時のカフェをイメージしたBossa.mp3").c_str()));
 
+
+
 	// SE
 	seHandles_.emplace_back(
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1424156_かわいい系モンスターのパンチ音.mp3").c_str()));
@@ -25,6 +27,12 @@ void SoundManager::Init(void)
 
 	seHandles_.emplace_back(
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_63312_レジの音_チーン_03.mp3").c_str()));
+
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_850615_キャッチ／捕まえる／ぴょこっ.mp3").c_str()));
+
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1465120_デバフ.mp3").c_str()));
 
 }
 

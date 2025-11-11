@@ -6,6 +6,7 @@
 #include "../../Manager/InputManager.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputController.h"
+#include "../../Manager/SystemManager.h"
 #include "../../Manager/SoundManager/SoundManager.h"
 #include "../../Manager/Camera.h"
 
@@ -132,6 +133,8 @@ void Player::Draw(void)
 	hpManager_->Draw();
 
 	inventory_->Draw();
+
+	DrawFormatString(DEFAULT_POS_X, DEFAULT_POS_Y, 0x000000, "ã‡äzÅF %d", SystemManager::GetInstance().GetScore());
 
 #ifdef _DEBUG
 
