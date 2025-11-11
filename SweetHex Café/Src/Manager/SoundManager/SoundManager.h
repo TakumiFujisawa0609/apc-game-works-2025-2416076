@@ -37,8 +37,8 @@ public:
 	void Delete(void);
 
 	//çƒê∂
-	void Play(BGM bgm,bool loop = true);
-	void Play(SE se);
+	void Play(BGM bgm,bool topPosFlag = true);
+	void Play(SE se, bool topPosFlag = true);
 	
 	//í‚é~
 	void StopSound(void);

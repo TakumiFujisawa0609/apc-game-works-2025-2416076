@@ -558,6 +558,7 @@ void EnemyBase::MovePattern(void)
 			if (pos_.x == COUNTER_POS.x &&
 				pos_.z == COUNTER_POS.z)
 			{
+				SoundManager::GetInstance()->Play(SoundManager::SE::UP);
 				SystemManager::GetInstance().SetScore(200);
 			}
 

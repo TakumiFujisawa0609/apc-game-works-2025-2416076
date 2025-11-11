@@ -108,6 +108,7 @@ void EnemyManager::Update(void)
 			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
 				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
 			{
+				SoundManager::GetInstance()->Play(SoundManager::SE::DOWN);
 				SystemManager::GetInstance().SetScore(-20);
 			}
 

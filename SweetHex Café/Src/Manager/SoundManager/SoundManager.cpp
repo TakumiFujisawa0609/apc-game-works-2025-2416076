@@ -26,10 +26,10 @@ void SoundManager::Init(void)
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_850615_キャッチ／捕まえる／ぴょこっ.mp3").c_str()));
 
 	seHandles_.emplace_back(
-		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_63312_レジの音_チーン_03.mp3").c_str()));
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_828976_【ぴょこ】可愛い生き物が顔を出す時の音.mp3").c_str()));
 
 	seHandles_.emplace_back(
-		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_850615_キャッチ／捕まえる／ぴょこっ.mp3").c_str()));
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_63312_レジの音_チーン_03.mp3").c_str()));
 
 	seHandles_.emplace_back(
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1465120_デバフ.mp3").c_str()));
@@ -52,7 +52,7 @@ void SoundManager::Delete(void)
 	seHandles_.clear();
 }
 
-void SoundManager::Play(BGM bgm, bool loop)
+void SoundManager::Play(BGM bgm, bool topPosFlag)
 {
 	if (bgmHandles_.empty()) return;
 
@@ -62,11 +62,11 @@ void SoundManager::Play(BGM bgm, bool loop)
 		return;
 	}
 
-	PlaySoundMem(bgmHandles_[static_cast<int>(bgm)], DX_PLAYTYPE_LOOP, loop);
+	PlaySoundMem(bgmHandles_[static_cast<int>(bgm)], DX_PLAYTYPE_LOOP, static_cast<int>(topPosFlag));
 	ChangeVolumeSoundMem(255 * BGM_VOLUME / 100, bgmHandles_[static_cast<int>(bgm)]);
 }
 
-void SoundManager::Play(SE se)
+void SoundManager::Play(SE se, bool topPosFlag)
 {
 	if (seHandles_.empty()) return;
 
@@ -76,7 +76,7 @@ void SoundManager::Play(SE se)
 		return;
 	}
 
-	PlaySoundMem(seHandles_[static_cast<int>(se)], DX_PLAYTYPE_BACK);
+	PlaySoundMem(seHandles_[static_cast<int>(se)], DX_PLAYTYPE_BACK,static_cast<int>(topPosFlag));
 	ChangeVolumeSoundMem(255 * SE_VOLUME / 100, seHandles_[static_cast<int>(se)]);
 }
 

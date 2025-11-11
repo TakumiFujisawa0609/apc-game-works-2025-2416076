@@ -158,6 +158,7 @@ void GameScene::UpdateGame(void)
 	// ポーズメニューへ
 	if (ins.IsPause())
 	{
+		SoundManager::GetInstance()->StopSound();
 		pause_->SetPause(true);
 		ChangeState(STATE::PAUSE);
 	}
@@ -176,6 +177,7 @@ void GameScene::UpdatePause(void)
 
 	if (!pause_->IsPause())
 	{
+		SoundManager::GetInstance()->Play(SoundManager::BGM::GAME, false);
 		ChangeState(STATE::GAME);
 	}
 }
