@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 
-class EnemyBase;
+#include "EnemyBase.h"
+
 class Player;
 class ItemManager;
 class Stage;
@@ -44,4 +45,6 @@ private:
 
 	// íçï∂î‘çÜ
 	int orderCounter_;
+
+	EnemyBase::PATTERN UnusedPattern(void);
 };

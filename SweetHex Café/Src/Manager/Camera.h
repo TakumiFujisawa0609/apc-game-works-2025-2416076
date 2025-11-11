@@ -15,7 +15,7 @@ public:
 	{ 45.0f * DX_PI_F / 180.0f, 0.0f, 0.0f };
 
 	// カメラクリップ：NEAR
-	static constexpr float CAMERA_NEAR = 3.0f;
+	static constexpr float CAMERA_NEAR = 50.0f;
 
 	// カメラクリップ：FAR
 	static constexpr float CAMERA_FAR = 5000.0f;

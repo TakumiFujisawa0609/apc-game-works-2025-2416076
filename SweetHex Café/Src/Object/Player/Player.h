@@ -88,7 +88,7 @@ public:
 	// HP•`‰æˆÊ’u
 	static constexpr VECTOR HP_DRAW_POS = { Application::SCREEN_SIZE_X - 80, 30.0f, 0.0f };
 
-	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 90;
+	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 100;
 	static constexpr int DEFAULT_POS_Y = 90;
 public:
 

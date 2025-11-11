@@ -2,6 +2,7 @@
 
 #include "../../Application.h"
 #include "../../Manager/SoundManager/SoundManager.h"
+#include "../../Manager/SystemManager.h"
 #include "../../Utility/Utility.h"
 #include "../../Utility/MatrixUtility.h"
 
@@ -39,7 +40,10 @@ EnemyBase::EnemyBase(void)
 	isRegister_(false),
 	serveTime_(0.0f),
 	orderId_(-1),
-	isOrderAdded_(false)
+	isOrderAdded_(false),
+	isServed_(false),
+	hasExecuted_(false),
+	isDoor_(false)
 {
 }
 
@@ -100,6 +104,12 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player, PATTERN pattern
 
 	// 提供時間
 	serveTime_ = SERVE_MAX_TIME;
+
+	isServed_ = false;
+
+	hasExecuted_ = false;
+
+	isDoor_ = false;
 
 	SoundManager::GetInstance()->Play(SoundManager::SE::ENTRY);
 }
@@ -420,6 +430,55 @@ void EnemyBase::DrawViewRange(void)
 #pragma endregion
 }
 
+void EnemyBase::ReturnDoor(void)
+{
+	if (hasExecuted_)
+	{	
+		//提供済みの場合
+		if (isServed_)
+		{
+			// パターンが1～3の場合
+			if (currentPattern_ == PATTERN::PATTERN_1 ||
+				currentPattern_ == PATTERN::PATTERN_2 ||
+				currentPattern_ == PATTERN::PATTERN_3)
+			{
+				currentPattern_ = PATTERN::COUNTER2DOOR_1;
+			}
+			// パターンが4～5の場合
+			else if (currentPattern_ == PATTERN::PATTERN_4 ||
+				currentPattern_ == PATTERN::PATTERN_5)
+			{
+				currentPattern_ = PATTERN::COUNTER2DOOR_2;
+			}
+
+			currentTargetIndex_ = 0;
+			SetPattern(currentPattern_);
+			hasExecuted_ = false;
+		}
+		// 提供失敗（制限時間オーバーした場合）
+		else if (serveTime_ <= 0)
+		{
+			// パターンが1～3の場合
+			if (currentPattern_ == PATTERN::PATTERN_1 ||
+				currentPattern_ == PATTERN::PATTERN_2 ||
+				currentPattern_ == PATTERN::PATTERN_3)
+			{
+				currentPattern_ = PATTERN::DOOR_1;
+			}
+			// パターンが4～5の場合
+			else if (currentPattern_ == PATTERN::PATTERN_4 ||
+				currentPattern_ == PATTERN::PATTERN_5)
+			{
+				currentPattern_ = PATTERN::DOOR_2;
+			}
+
+			currentTargetIndex_ = 0;
+			SetPattern(currentPattern_);
+			hasExecuted_ = false;
+		}
+	}
+}
+
 void EnemyBase::MovePattern(void)
 {
 	if (currentRoute_.empty())
@@ -442,40 +501,69 @@ void EnemyBase::MovePattern(void)
 		// 到達判定
 		SetPos(targetPos); // 正確に目標地点へ移動
 
-		// パターンがレジなら往復しない
+		// パターンがレジだったら
 		if (currentPattern_ == PATTERN::REGISTER)
 		{
 			SetRegister(true);
 			return;
 		}
 
-		if (isReturn_)
+		if (currentPattern_ == PATTERN::PATTERN_1 ||
+			currentPattern_ == PATTERN::PATTERN_2 ||
+			currentPattern_ == PATTERN::PATTERN_3 ||
+			currentPattern_ == PATTERN::PATTERN_4 ||
+			currentPattern_ == PATTERN::PATTERN_5)
 		{
-			currentTargetIndex_--;
-
-			if (currentTargetIndex_ < 0)
+			if (isReturn_)
 			{
-				currentTargetIndex_ = 1;
-				isReturn_ = false;
+				currentTargetIndex_--;
+
+				if (currentTargetIndex_ < 0)
+				{
+					currentTargetIndex_ = 1;
+					isReturn_ = false;
+				}
+			}
+			else
+			{
+				currentTargetIndex_++;
+
+				if (currentTargetIndex_ >= currentRoute_.size())
+				{
+					currentTargetIndex_ = static_cast<int>(currentRoute_.size()) - 2;
+
+					if (currentTargetIndex_ < 0)
+					{
+						currentTargetIndex_ = 0;
+						isReturn_ = false;
+					}
+
+					isReturn_ = true;
+				}
 			}
 		}
 		else
 		{
-			currentTargetIndex_++;
-
-			if (currentTargetIndex_ >= currentRoute_.size())
+			// 行きたい場所がルートの最後の場所なら
+			if (currentTargetIndex_ >= (currentRoute_.size() -1))
 			{
-				currentTargetIndex_ = static_cast<int>(currentRoute_.size()) - 2;
-
-				if (currentTargetIndex_ < 0)
+				if (pos_.x == DOOR_POS.x &&
+					pos_.z == DOOR_POS.z)
 				{
-					currentTargetIndex_ = 0;
-					isReturn_ = false;
+					isDoor_ = true;
 				}
-
-				isReturn_ = true;
+				return;
 			}
+
+			if (pos_.x == COUNTER_POS.x &&
+				pos_.z == COUNTER_POS.z)
+			{
+				SystemManager::GetInstance().SetScore(200);
+			}
+
+			currentTargetIndex_++;
 		}
+	
 	}
 	else
 	{
@@ -530,9 +618,20 @@ void EnemyBase::UpdateStandby(void)
 	// 注文を受けたら
 	if (isRegister_)
 	{
-		serveTime_ -= 1.0f;
+		if (currentPattern_ == PATTERN::PATTERN_1 ||
+			currentPattern_ == PATTERN::PATTERN_2 ||
+			currentPattern_ == PATTERN::PATTERN_3 ||
+			currentPattern_ == PATTERN::PATTERN_4 ||
+			currentPattern_ == PATTERN::PATTERN_5)
+		{
+			serveTime_ -= 1.0f;
+		}
 
-		if (serveTime_ < 0.0f) serveTime_ = 0.0f;
+		if (serveTime_ < 0.0f)
+		{
+			serveTime_ = 0.0f;
+			hasExecuted_ = true;
+		}
 	}
 
 	MovePattern();
@@ -553,6 +652,8 @@ void EnemyBase::UpdateStandby(void)
 
 	// 索敵
 	Search();
+
+	ReturnDoor();
 }
 
 void EnemyBase::UpdateAttack(void)
@@ -628,6 +729,12 @@ void EnemyBase::DrawDead(void)
 
 void EnemyBase::DrawEnd(void)
 {
+}
+
+void EnemyBase::SetServed(bool isServed)
+{
+	isServed_ = isServed;
+	hasExecuted_ = true;
 }
 
 void EnemyBase::SetPattern(PATTERN pattern)

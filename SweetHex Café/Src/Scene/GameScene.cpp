@@ -317,9 +317,25 @@ void GameScene::CollisionCounter(void)
 	{
 		if (InputController::GetInstance().IsUse())
 		{
-			if (inventory->UseItem())
+
+			// “G‚Ìî•ñ‚ğæ“¾
+			std::vector<EnemyBase*> enemies = enemyManager_->GetEnemys();
+
+			if (!enemies.empty())
 			{
-				SystemManager::GetInstance().SetScore(200);
+				for (auto& enemy : enemies)
+				{
+					if (!enemy->IsServed() && enemy->GetPattern() != EnemyBase::PATTERN::REGISTER)
+					{
+						if (inventory->UseItem())
+						{
+							//ˆê”ÔŒÃ‚¢“G‚É’ñ‹Ÿ‚·‚é
+							enemy->SetServed(true);
+							break;
+						}
+					}
+
+				}
 			}
 		}
 	}

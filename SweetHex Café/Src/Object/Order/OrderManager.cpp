@@ -25,7 +25,7 @@ void OrderManager::Update(void)
 	{
 		EnemyBase* enemy = it->GetEnemy();
 
-		if (enemy == nullptr || enemy->GetHp() <= 0)
+		if (enemy == nullptr || enemy->GetHp() <= 0 || enemy->IsDoor())
 		{
 			it = orders_.erase(it);
 		}

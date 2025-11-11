@@ -42,6 +42,12 @@ public:
 	// 注文場所
 	static constexpr VECTOR REGISTER_POS = { 1440.0f, 10.0f, 1390.0f };
 
+	// 提供カウンターの場所
+	static constexpr VECTOR COUNTER_POS = { 490.0f, 10.0f, 1404.0f };
+
+	// ドアの場所
+	static constexpr VECTOR DOOR_POS = { 16.0f, 10.0f, 316.0f };
+
 	// 最大提供時間(約20秒)
 	static constexpr float SERVE_MAX_TIME = 60.0f * 60.0f;
 
@@ -56,6 +62,10 @@ public:
 	enum class PATTERN
 	{
 		REGISTER,
+		COUNTER2DOOR_1,
+		COUNTER2DOOR_2,
+		DOOR_1,
+		DOOR_2,
 		PATTERN_1,
 		PATTERN_2,
 		PATTERN_3,
@@ -69,6 +79,22 @@ public:
 
 		{ PATTERN::REGISTER,
 		   { { 1440, 10, 1390 } }
+		},
+
+		{ PATTERN::COUNTER2DOOR_1,
+		   { { COUNTER_POS }, { DOOR_POS }}
+		},
+
+		{ PATTERN::COUNTER2DOOR_2,
+		   { { 1711, 10, 536 }, { COUNTER_POS }, { DOOR_POS }}
+		},
+
+		{ PATTERN::DOOR_1,
+		   { { DOOR_POS } }
+		},
+
+		{ PATTERN::DOOR_2,
+		   { {  1711, 10, 536 }, { DOOR_POS }}
 		},
 
 		{ PATTERN::PATTERN_1,
@@ -138,15 +164,21 @@ public:
 	// ゲッター・セッター
 	VECTOR GetPos(void)const;
 	void SetPos(VECTOR pos);
+
 	float GetRadius(void)const;
+
 	VECTOR GetDir(void)const;
+
 	STATE GetState(void)const;
+
 	bool IsAlive(void)const;
 	void SetAlive(bool isAlive);
-	PATTERN GetPattern(void)const;
+
 	bool IsNotice(void)const;
+
 	void SetRegister(bool isRegisger) { isRegister_ = isRegisger; }
 	bool IsRegister(void)const { return isRegister_; }
+
 	float GetServeTime(void) const { return serveTime_; }
 	int GetOrderId(void) const { return orderId_; }
 	void SetOrderId(int id) { orderId_ = id; }
@@ -155,7 +187,13 @@ public:
 	bool IsOrderAdded(void) const { return isOrderAdded_; }
 	void SetOrderAdded(bool added) { isOrderAdded_ = added; }
 
+	bool IsServed(void)const { return isServed_; }
+	void SetServed(bool isServed);
+
+	PATTERN GetPattern(void)const;
 	void SetPattern(PATTERN pattern);
+
+	bool IsDoor(void)const { return isDoor_; }
 
 	// ステージとの衝突
 	void CollisionStage(const VECTOR& pos);
@@ -219,6 +257,12 @@ protected:
 	// 提供時間
 	float serveTime_;
 
+	// 提供済みかどうか
+	bool isServed_;
+
+	// 一度だけ処理する
+	bool hasExecuted_;
+
 	// 注文番号
 	int orderId_;
 
@@ -229,7 +273,10 @@ protected:
 	VECTOR startCapsulePos_;
 	VECTOR endCapsulePos_;
 
+	// 生存フラグ
 	bool isAlive_;
+
+	bool isDoor_;
 
 	// コピーコンストラクタ
 	EnemyBase(const EnemyBase& instance) = default;
@@ -245,6 +292,8 @@ protected:
 
 	// 視野描画
 	void DrawViewRange(void);
+
+	void ReturnDoor(void);
 
 	// パラメータ設定(純粋仮想関数)
 	virtual void SetParam(void) = 0;
