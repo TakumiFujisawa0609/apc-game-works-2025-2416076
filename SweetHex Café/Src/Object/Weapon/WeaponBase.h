@@ -11,7 +11,7 @@ public:
 		MAX,
 	};
 
-	static constexpr int COUNT_INTERVAL = 20;
+	static constexpr int COUNT_INTERVAL = 30;
 
 	// コンストラクタ
 	WeaponBase(void);

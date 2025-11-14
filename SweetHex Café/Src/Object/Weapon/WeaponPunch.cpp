@@ -54,7 +54,7 @@ void WeaponPunch::SetParam(void)
 	collisionRadius_ = 50.0f;
 
 	// égópéûÇÃà íuí≤êÆ
-	localPos_ = { 0.0f, 40.0f, 0.0f };
+	localPos_ = { 0.0f, 65.0f, 0.0f };
 
 	cntAlive_ = 0;
 }

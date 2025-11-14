@@ -250,6 +250,7 @@ void GameScene::CollisionWeapon(void)
 				enemy->GetPos(), enemy->GetRadius()))
 			{
 				enemy->Damage(1);
+				useWeapon->SetAlive(false);
 
 				for (EnemyBase* enemy : enemyManager_->GetEnemys())
 				{
@@ -262,8 +263,19 @@ void GameScene::CollisionWeapon(void)
 			}
 		}
 
-		// 武器とブロックの当たり判定
-		//player_->CollisionWeapon(blockManager_);
+		// 武器とステージのの当たり判定
+		MV1_COLL_RESULT_POLY_DIM hits = MV1CollCheck_Sphere
+		(
+			stage_->GetModelId(),
+			-1,
+			useWeapon->GetPos(),
+			useWeapon->GetCollisionRadius()
+		);
+
+		if (hits.HitNum > 0)
+		{
+			useWeapon->SetAlive(false);
+		}
 	}
 }
 
@@ -354,7 +366,7 @@ void GameScene::CollisionWall(void)
 	VECTOR capEndPos = VAdd(playerPos, player_->GetEndCapsulePos());
 
 	// カプセルとの当たり判定
-	auto hits = MV1CollCheck_Capsule
+	MV1_COLL_RESULT_POLY_DIM hits = MV1CollCheck_Capsule
 	(
 		stage_->GetModelId(),			// ステージのモデルID
 		-1,								// ステージ全てのポリゴンを指定
@@ -377,7 +389,7 @@ void GameScene::CollisionWall(void)
 			(
 				capStartPos,					// カプセルの上
 				capEndPos,						// カプセルの下
-				player_->GetCapsuleRadius(),		// カプセルの半径
+				player_->GetCapsuleRadius(),	// カプセルの半径
 				hit.Position[0],				// ポリゴン1
 				hit.Position[1],				// ポリゴン2
 				hit.Position[2]					// ポリゴン3
@@ -392,7 +404,7 @@ void GameScene::CollisionWall(void)
 				VECTOR polyCenter = {
 					  (hit.Position[0].x + hit.Position[1].x + hit.Position[2].x) / 3.0f,
 					  (hit.Position[0].y + hit.Position[1].y + hit.Position[2].y) / 3.0f,
-						(hit.Position[0].z + hit.Position[1].z + hit.Position[2].z) / 3.0f
+					  (hit.Position[0].z + hit.Position[1].z + hit.Position[2].z) / 3.0f
 				};
 
 				// カプセルからポリゴンへ向かうベクトル
