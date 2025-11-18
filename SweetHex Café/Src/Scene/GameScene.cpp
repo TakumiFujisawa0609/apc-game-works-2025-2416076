@@ -339,15 +339,23 @@ void GameScene::CollisionCounter(void)
 			{
 				for (auto& enemy : enemies)
 				{
-					if (!enemy->IsServed() && enemy->GetPattern() != EnemyBase::PATTERN::REGISTER)
+					if (!enemy->IsServed())
 					{
-						if (inventory->UseItem())
+						if (enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_1 ||
+							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_2 ||
+							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_3 ||
+							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_4 || 
+							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_5)
 						{
-							//ˆê”ÔŒÃ‚¢“G‚É’ñ‹Ÿ‚·‚é
-							enemy->SetServed(true);
+							if (inventory->UseItem())
+							{
+								//ˆê”ÔŒÃ‚¢“G‚É’ñ‹Ÿ‚·‚é
+								enemy->SetServed(true);
 
-							break;
+								break;
+							}
 						}
+
 					}
 
 				}
