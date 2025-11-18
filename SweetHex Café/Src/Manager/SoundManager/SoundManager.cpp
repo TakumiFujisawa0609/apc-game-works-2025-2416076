@@ -34,6 +34,9 @@ void SoundManager::Init(void)
 	seHandles_.emplace_back(
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1465120_デバフ.mp3").c_str()));
 
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1399231_ピコーン.mp3").c_str()));
+
 }
 
 void SoundManager::Delete(void)

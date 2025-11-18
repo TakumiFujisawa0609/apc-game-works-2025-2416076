@@ -345,6 +345,7 @@ void GameScene::CollisionCounter(void)
 						{
 							//ˆê”ÔŒÃ‚¢“G‚É’ñ‹Ÿ‚·‚é
 							enemy->SetServed(true);
+
 							break;
 						}
 					}

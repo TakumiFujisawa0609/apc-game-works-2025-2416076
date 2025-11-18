@@ -20,6 +20,7 @@ public:
 		REGISTER,
 		UP,
 		DOWN,
+		SERVED,
 		MAX,
 	};
 
