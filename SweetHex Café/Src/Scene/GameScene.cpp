@@ -344,16 +344,22 @@ void GameScene::CollisionCounter(void)
 						if (enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_1 ||
 							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_2 ||
 							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_3 ||
-							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_4 || 
+							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_4 ||
 							enemy->GetPattern() == EnemyBase::PATTERN::PATTERN_5)
 						{
 							if (inventory->UseItem())
 							{
+								SoundManager::GetInstance()->Play(SoundManager::SE::SERVED);
 								//ˆê”ÔŒÃ‚¢“G‚É’ñ‹Ÿ‚·‚é
 								enemy->SetServed(true);
 
 								break;
 							}
+						}
+						else
+						{
+							SoundManager::GetInstance()->Play(SoundManager::SE::NO_SERVED);
+
 						}
 
 					}

@@ -35,8 +35,10 @@ void SoundManager::Init(void)
 		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1465120_デバフ.mp3").c_str()));
 
 	seHandles_.emplace_back(
-		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_1399231_ピコーン.mp3").c_str()));
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_857138_成功／キラキラ／調合.mp3").c_str()));
 
+	seHandles_.emplace_back(
+		LoadSoundMem((Application::PATH_DATA + "Sound/SE/AS_372505_少し強めのボタンSE、キャンセルなどに.mp3").c_str()));
 }
 
 void SoundManager::Delete(void)

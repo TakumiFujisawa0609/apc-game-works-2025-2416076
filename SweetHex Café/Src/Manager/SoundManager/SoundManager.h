@@ -21,6 +21,7 @@ public:
 		UP,
 		DOWN,
 		SERVED,
+		NO_SERVED,
 		MAX,
 	};
 

@@ -34,10 +34,7 @@ public:
 	static constexpr float VIEW_RANGE = 600.0f;
 
 	// 視野角
-	static constexpr float VIEW_ANGLE = 30.0f;
-
-	// 90度（ラジアン）
-	const float HALF_PI = DX_PI_F / 2.0f;
+	static constexpr float VIEW_ANGLE = 40.0f;
 
 	// 注文場所
 	static constexpr VECTOR REGISTER_POS = { 1440.0f, 10.0f, 1390.0f };
