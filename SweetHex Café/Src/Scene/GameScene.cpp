@@ -61,6 +61,10 @@ void GameScene::Init(void)
 	counter_ = new Counter();
 	counter_->Init();
 
+	isWarning_ = false;
+	warningPos_ = { 320.0f, 0.0f, 1600.0f };
+	speed_ = 2.0f;
+
 	ChangeState(STATE::GAME);
 
 }
@@ -91,6 +95,13 @@ void GameScene::Draw(void)
 	if (item_ != nullptr)
 	{
 		item_->Draw();
+	}
+
+	VECTOR screen = ConvWorldPosToScreenPos(warningPos_);
+
+	if (isWarning_)
+	{
+		DrawString(screen.x, screen.y, "提供できないよ！", 0xff0000);
 	}
 
 	if (state_ == STATE::PAUSE)
@@ -155,6 +166,19 @@ void GameScene::UpdateGame(void)
 
 	CollisionWall();
 
+	if (isWarning_)
+	{
+		if (warningPos_.z < WARNING_MAX_POS)
+		{
+			warningPos_.z += speed_;
+		}
+		else
+		{
+			warningPos_.z = 1600.0f;
+			isWarning_ = false;
+		}
+	}
+
 	// ポーズメニューへ
 	if (ins.IsPause())
 	{
@@ -167,7 +191,7 @@ void GameScene::UpdateGame(void)
 	if (timer_->GetIsTimeUp())
 	{
 		SceneManager::GetInstance().ChangeScene(
-			SceneManager::SCENE_ID::RESULT);
+					SceneManager::SCENE_ID::RESULT);
 	}
 }
 
@@ -331,7 +355,6 @@ void GameScene::CollisionCounter(void)
 	{
 		if (InputController::GetInstance().IsUse())
 		{
-
 			// 敵の情報を取得
 			std::vector<EnemyBase*> enemies = enemyManager_->GetEnemys();
 
@@ -355,15 +378,18 @@ void GameScene::CollisionCounter(void)
 
 								break;
 							}
+							else
+							{
+								isWarning_ = true;
+								SoundManager::GetInstance()->Play(SoundManager::SE::NO_SERVED);
+							}
 						}
 						else
 						{
+							isWarning_ = true;
 							SoundManager::GetInstance()->Play(SoundManager::SE::NO_SERVED);
-
 						}
-
 					}
-
 				}
 			}
 		}

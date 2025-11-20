@@ -35,6 +35,9 @@ public:
 	void Release(void) override;
 
 private:
+
+	static constexpr float WARNING_MAX_POS = 1700.0f;
+
 	// ƒQ[ƒ€‚Ìó‘Ô
 	STATE state_;
 
@@ -49,6 +52,9 @@ private:
 	OrderManager* orderManager_;
 	Counter* counter_;
 
+	float speed_;
+	VECTOR warningPos_;
+	bool isWarning_;
 
 	// ó‘Ô•ÏX
 	void ChangeState(STATE state);

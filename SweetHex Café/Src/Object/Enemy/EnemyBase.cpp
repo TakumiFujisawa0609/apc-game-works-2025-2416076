@@ -611,9 +611,18 @@ void EnemyBase::ChangeEnd(void)
 
 void EnemyBase::UpdateStandby(void)
 {
+	// HPがMAXより小さくなったら
 	if (hp_ < MAX_HP)
 	{
 		ChangeState(STATE::ATTACK);
+	}
+
+	// 提供できずに敵が帰ろうとしていたら、
+	if (currentPattern_ == PATTERN::DOOR_1 || currentPattern_ == PATTERN::DOOR_2)
+	{
+		// 敵の見た目を怒っている状態にする（赤）
+		MV1SetMaterialEmiColor(modelId_, 0, COLOR_DIF_BLINK);
+
 	}
 
 	// 注文を受けたら

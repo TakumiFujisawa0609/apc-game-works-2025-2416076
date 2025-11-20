@@ -5,10 +5,6 @@ class Inventory
 {
 public:
 
-	// 手持ちアイテム表示位置
-	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 200;
-	static constexpr int DEFAULT_POS_Y = 70;
-
 	Inventory(void);
 	~Inventory(void);
 
@@ -23,6 +19,10 @@ public:
 	bool UseItem(void);
 
 private:
+
+	// 手持ちアイテム表示位置
+	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 200;
+	static constexpr int DEFAULT_POS_Y = 70;
 
 	int inventoryImage_;
 	int itemCount_;

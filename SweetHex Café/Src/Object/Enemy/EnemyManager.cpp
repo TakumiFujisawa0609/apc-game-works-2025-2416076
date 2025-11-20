@@ -1,6 +1,7 @@
 #include "../../Application.h"
 
 #include "../../Manager/SoundManager/SoundManager.h"
+#include "../../Manager/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 
 #include "EnemySlime.h"
@@ -108,8 +109,8 @@ void EnemyManager::Update(void)
 			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
 				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
 			{
-				SoundManager::GetInstance()->Play(SoundManager::SE::DOWN);
-				SystemManager::GetInstance().SetScore(-20);
+				// 提供できずに敵が帰ったら、ゲームオーバー
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
 			}
 
 			// 敵のRelease処理を呼び出す
