@@ -31,6 +31,11 @@ private:
 	// ポーズ中かどうか
 	bool isPause_;
 
+	// 画像
+	int imgContinue_;
+	int imgReturn_;
+	int imgQuit_;
+
 	// ポーズメニューの状態変更
 	void ChangePause(PAUSE pause);
 

@@ -29,6 +29,8 @@ private:
 
 	// ‰æ‘œ
 	int imgTitle_;
+	int imgStart_;
+	int imgQuit_;
 
 	// ó‘Ô
 	STATE state_;

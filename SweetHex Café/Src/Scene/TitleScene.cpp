@@ -15,6 +15,7 @@
 TitleScene::TitleScene(void)
 {
 	imgTitle_ = -1;
+	imgStart_ = -1;
 }
 
 TitleScene::~TitleScene(void)
@@ -24,6 +25,8 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
+	imgStart_ = LoadGraph((Application::PATH_IMAGE + "start.png").c_str());
+	imgQuit_ = LoadGraph((Application::PATH_IMAGE + "quit.png").c_str());
 
 	SystemManager::GetInstance().ResetGame();
 
@@ -53,8 +56,8 @@ void TitleScene::Draw(void)
 {
 	DrawRotaGraph(
 		Application::SCREEN_SIZE_X / 2,
-		Application::SCREEN_SIZE_Y / 2,
-		1.0f, 0.0, imgTitle_, true);
+		Application::SCREEN_SIZE_Y / 2 - 50,
+		1.0, 0.0, imgTitle_, true);
 
 	// èÛë‘Ç≤Ç∆ÇÃï`âÊ
 	switch (state_)
@@ -67,20 +70,13 @@ void TitleScene::Draw(void)
 		break;
 	}
 
-	DrawString(
-		Application::SCREEN_SIZE_X / 2 - 80,
-		Application::SCREEN_SIZE_Y / 2,
-		"SweetHex Cafe", 0x000000);
-
-#ifdef _DEBUG
-	DrawString(0, 0, "TitleScene", 0xffffff);
-#endif // _DEBUG
-
 }
 
 void TitleScene::Release(void)
 {
 	DeleteGraph(imgTitle_);
+	DeleteGraph(imgStart_);
+	DeleteGraph(imgQuit_);
 }
 
 void TitleScene::ChangeState(STATE state)
@@ -114,14 +110,28 @@ void TitleScene::UpdateExit(void)
 
 void TitleScene::DrawStart(void)
 {
-	DrawString(450, 500, "NEW GAME", 0x00ff00);
-	DrawString(450, 520, "QUIT GAME", 0xffffff);
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 150,
+		1.0, 0.0, imgStart_, true);
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 200,
+		0.5, 0.0, imgQuit_, true);
 }
 
 void TitleScene::DrawExit(void)
 {
-	DrawString(450, 500, "NEW GAME", 0xffffff);
-	DrawString(450, 520, "QUIT GAME", 0x00ff00);
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 150,
+		0.5, 0.0, imgStart_, true);
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 200,
+		1.0, 0.0, imgQuit_, true);
 }
 
 void TitleScene::SelectTitleMenu(void)

@@ -12,6 +12,10 @@
 #include "Pause.h"
 
 Pause::Pause(void)
+	:
+	imgContinue_(-1),
+	imgReturn_(-1),
+	imgQuit_(-1)
 {
 }
 
@@ -23,6 +27,10 @@ void Pause::Init(void)
 {
 	isPause_ = false;
 	ChangePause(PAUSE::CONTINUE);
+
+	imgContinue_ = LoadGraph((Application::PATH_IMAGE + "continue.png").c_str());
+	imgReturn_ = LoadGraph((Application::PATH_IMAGE + "returnTitle.png").c_str());
+	imgQuit_ = LoadGraph((Application::PATH_IMAGE + "quit.png").c_str());
 }
 
 void Pause::Update(void)
@@ -69,6 +77,9 @@ void Pause::Draw(void)
 
 void Pause::Release(void)
 {
+	DeleteGraph(imgContinue_);
+	DeleteGraph(imgReturn_);
+	DeleteGraph(imgQuit_);
 }
 
 bool Pause::IsPause(void)
@@ -203,22 +214,54 @@ void Pause::UpdateExit(void)
 
 void Pause::DrawContinue(void)
 {
-	DrawString(450, 300, "CONTINUE", 0x00ff00);
-	DrawString(450, 320, "RETURN TITLE", 0xffffff);
-	DrawString(450, 340, "QUIT GAME", 0xffffff);
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 - 50,
+		1.0, 0.0, imgContinue_, true);
 
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2,
+		0.5, 0.0, imgReturn_, true);
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 50,
+		0.5, 0.0, imgQuit_, true);
 }
 
 void Pause::DrawReturnTitle(void)
 {
-	DrawString(450, 300, "CONTINUE", 0xffffff);
-	DrawString(450, 320, "RETURN TITLE", 0x00ff00);
-	DrawString(450, 340, "QUIT GAME", 0xffffff);
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 - 50,
+		0.5, 0.0, imgContinue_, true);
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2,
+		1.0, 0.0, imgReturn_, true);
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 50,
+		0.5, 0.0, imgQuit_, true);
 }
 
 void Pause::DrawExit(void)
 {
-	DrawString(450, 300, "CONTINUE", 0xffffff);
-	DrawString(450, 320, "RETURN TITLE", 0xffffff);
-	DrawString(450, 340, "QUIT GAME", 0x00ff00);
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 - 50,
+		0.5, 0.0, imgContinue_, true);
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2,
+		0.5, 0.0, imgReturn_, true);
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y / 2 + 50,
+		1.0, 0.0, imgQuit_, true);
 }

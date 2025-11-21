@@ -40,7 +40,7 @@ void EnemyManager::Init(void)
 
 void EnemyManager::Update(void)
 {
-	if (enemys_.size() < MAX_ENEMYS)
+	if (enemies_.size() < MAX_ENEMYS)
 	{
 		// 出現カウンタ
 		cntSpawn_++;
@@ -56,14 +56,14 @@ void EnemyManager::Update(void)
 			newEnemy->SetOrderId(orderCounter_);
 
 			// リストに追加
-			enemys_.emplace_back(newEnemy);
+			enemies_.emplace_back(newEnemy);
 
 			// カウンターをリセット
 			cntSpawn_ = 0;
 		}
 	}
 
-	for (auto enemy : enemys_)
+	for (auto enemy : enemies_)
 	{
 		// レジに到着したら
 		if (enemy->IsRegister() && enemy->GetPattern() == EnemyBase::PATTERN::REGISTER)
@@ -83,10 +83,10 @@ void EnemyManager::Update(void)
 	}
 
 	// イテレータを取得
-	auto it = enemys_.begin();
+	auto it = enemies_.begin();
 
 	// リストの最後までループ
-	while (it != enemys_.end())
+	while (it != enemies_.end())
 	{
 		EnemyBase* enemy = *it;
 
@@ -122,7 +122,7 @@ void EnemyManager::Update(void)
 			delete enemy;
 
 			// リストから要素を削除し、次の要素のイテレータを取得
-			it = enemys_.erase(it);
+			it = enemies_.erase(it);
 		}
 		else
 		{
@@ -136,7 +136,7 @@ void EnemyManager::Update(void)
 
 void EnemyManager::Draw(void)
 {
-	for (EnemyBase* enemy : enemys_)
+	for (EnemyBase* enemy : enemies_)
 	{
 		enemy->Draw();
 	}
@@ -144,7 +144,7 @@ void EnemyManager::Draw(void)
 
 void EnemyManager::Release(void)
 {
-	for (EnemyBase* enemy : enemys_)
+	for (EnemyBase* enemy : enemies_)
 	{
 		enemy->Release();
 		delete enemy;
@@ -158,7 +158,7 @@ void EnemyManager::Release(void)
 
 std::vector<EnemyBase*> EnemyManager::GetEnemies(void)
 {
-	return enemys_;
+	return enemies_;
 }
 
 EnemyBase::PATTERN EnemyManager::UnusedPattern(void)
@@ -171,7 +171,7 @@ EnemyBase::PATTERN EnemyManager::UnusedPattern(void)
 	std::vector<bool> isPatternUsed(MAX_PATTERN_COUNT, false);
 
 	// フィールドにいる全ての敵が使っているパターンにフラグを立てる
-	for (EnemyBase* enemy : enemys_)
+	for (EnemyBase* enemy : enemies_)
 	{
 		int patternIndex = static_cast<int>(enemy->GetPattern());
 
