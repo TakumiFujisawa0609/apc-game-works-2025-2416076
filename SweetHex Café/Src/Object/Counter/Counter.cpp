@@ -23,15 +23,4 @@ void Counter::Init(void)
 
 void Counter::DrawDebug(void)
 {
-#ifdef _DEBUG
-
-	DrawCapsule3D(startCapsulePos_, endCapsulePos_, collisionRadius_,
-		DIV_NUM, 0x00ff00, 0x00ff00, false);
-
-	//if (isHit_)
-	//{
-	//	DrawString(0, 500, "カウンターと当たっている", 0x000000);
-	//}
-
-#endif //_DEBUG
 }

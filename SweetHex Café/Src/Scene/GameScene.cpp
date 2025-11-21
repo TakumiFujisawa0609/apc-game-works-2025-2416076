@@ -25,6 +25,20 @@
 #include "GameScene.h"
 
 GameScene::GameScene(void)
+	:
+	grid_(nullptr),
+	player_(nullptr),
+	timer_(nullptr),
+	enemyManager_(nullptr),
+	item_(nullptr),
+	stage_(nullptr),
+	orderManager_(nullptr),
+	counter_(nullptr),
+	pause_(nullptr),
+	state_(STATE::MAX),
+	speed_(0.0f),
+	warningPos_(VGet(0.0f, 0.0f, 0.0f)),
+	isWarning_(false)
 {
 }
 
@@ -211,7 +225,7 @@ void GameScene::CollisionEnemy(void)
 	// エネミーとプレイヤーの衝突判定
 	VECTOR playerPos = player_->GetPos();
 	// 敵の情報を取得
-	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
 	for (EnemyBase* enemy : enemys)
 	{
 		if (!enemy->IsCollisionState())
@@ -261,7 +275,7 @@ void GameScene::CollisionWeapon(void)
 	if (useWeapon->IsAlive())
 	{
 		// 敵の情報を取得
-		std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+		std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
 		for (EnemyBase* enemy : enemys)
 		{
 			if (!enemy->IsCollisionState())
@@ -276,7 +290,7 @@ void GameScene::CollisionWeapon(void)
 				enemy->Damage(1);
 				useWeapon->SetAlive(false);
 
-				for (EnemyBase* enemy : enemyManager_->GetEnemys())
+				for (EnemyBase* enemy : enemyManager_->GetEnemies())
 				{
 					// 警戒状態で攻撃されていない子なら、追跡・攻撃処理へ
 					if (enemy->IsNotice() && enemy->GetState() == EnemyBase::STATE::STANDBY)
@@ -306,7 +320,7 @@ void GameScene::CollisionWeapon(void)
 void GameScene::CollisionEnemy2Enemy(void)
 {
 	// 敵の情報を取得
-	std::vector<EnemyBase*> enemies = enemyManager_->GetEnemys();
+	std::vector<EnemyBase*> enemies = enemyManager_->GetEnemies();
 
 	// 敵同士の総当たり衝突判定と押し出し処理
 	for (size_t i = 0; i < enemies.size(); ++i)
@@ -356,7 +370,7 @@ void GameScene::CollisionCounter(void)
 		if (InputController::GetInstance().IsUse())
 		{
 			// 敵の情報を取得
-			std::vector<EnemyBase*> enemies = enemyManager_->GetEnemys();
+			std::vector<EnemyBase*> enemies = enemyManager_->GetEnemies();
 
 			if (!enemies.empty())
 			{
@@ -488,7 +502,7 @@ void GameScene::CollisionWall(void)
 
 
 #pragma region エネミー
-	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
 	for (EnemyBase* enemy : enemys)
 	{
 
@@ -611,7 +625,7 @@ void GameScene::CollisionFloor(void)
 #pragma endregion
 
 #pragma region エネミー
-	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemys();
+	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
 	for (EnemyBase* enemy : enemys)
 	{
 		// ステージとアクターの衝突

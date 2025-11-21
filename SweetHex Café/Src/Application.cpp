@@ -117,7 +117,6 @@ void Application::Destroy(void)
 	// システム管理解放
 	SystemManager::GetInstance().Destroy();
 
-
 	SoundManager::GetInstance()->Delete();
 
 	//フレームレート解放

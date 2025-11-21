@@ -21,6 +21,15 @@ void Inventory::Init(void)
 void Inventory::Draw(void)
 {
     DrawFormatString(DEFAULT_POS_X, DEFAULT_POS_Y, 0x000000, "手持ちアイテム数 × %d", itemCount_);
+
+    if (itemCount_ > 0)
+    {
+        DrawString(TARGET_POS_X, TARGET_POS_Y, "アイテムを提供しよう！", 0x000000);
+    }
+    else
+    {
+        DrawString(TARGET_POS_X, TARGET_POS_Y, "敵を殺してアイテムを拾おう！", 0x000000);
+    }
 }
 
 void Inventory::Release(void)

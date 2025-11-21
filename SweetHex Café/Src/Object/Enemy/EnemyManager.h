@@ -12,7 +12,7 @@ class EnemyManager
 {
 public:
 
-	static constexpr int SPAWN_INTERVEL_SLIME = 180;
+	static constexpr int SPAWN_INTERVEL_SLIME = 120;
 
 	// 敵の最大数
 	static constexpr int MAX_ENEMYS = 5;
@@ -25,14 +25,14 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	std::vector<EnemyBase*> GetEnemys(void);
+	std::vector<EnemyBase*> GetEnemies(void);
 
 private:
 	// エネミー用のモデルハンドルID
 	std::vector<int> enemyModelIds_;
 
 	// エネミー
-	std::vector<EnemyBase*> enemys_;
+	std::vector<EnemyBase*> enemies_;
 
 	Player* player_;
 	Stage* stage_;
