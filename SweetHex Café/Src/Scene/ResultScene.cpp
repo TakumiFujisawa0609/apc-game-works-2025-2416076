@@ -34,7 +34,7 @@ void ResultScene::Update(void)
 
 void ResultScene::Draw(void)
 {
-	DrawFormatString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0x000000, "score : %d", SystemManager::GetInstance().GetScore());
+	DrawFormatString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0x000000, "ã‡äz : %d", SystemManager::GetInstance().GetScore());
 
 	DrawString(0, 0, "ResultScene", 0xffffff);
 
