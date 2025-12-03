@@ -28,6 +28,10 @@ private:
 
 	// 画像ハンドル
 	int handle_;
+	int handle1_;
+	int handle2_;
+	int handle3_;
+	int nowHandle_;
 
 	// 座標
 	float posX_;		// X座標
