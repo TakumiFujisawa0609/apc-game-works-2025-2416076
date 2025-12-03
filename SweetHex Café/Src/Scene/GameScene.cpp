@@ -9,7 +9,6 @@
 #include "../Manager/SoundManager/SoundManager.h"
 #include "../Manager/Pause.h"
 
-#include "../Object/Grid.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Player/Inventory.h"
 #include "../Object/Timer/Timer.h"
@@ -26,7 +25,6 @@
 
 GameScene::GameScene(void)
 	:
-	grid_(nullptr),
 	player_(nullptr),
 	timer_(nullptr),
 	enemyManager_(nullptr),
@@ -48,31 +46,20 @@ GameScene::~GameScene(void)
 
 void GameScene::Init(void)
 {
-	grid_ = new Grid();
-	grid_->Init();
-
-	stage_ = new Stage();
 	stage_->Init();
 
-	pause_ = new Pause();
 	pause_->Init();
 
-	timer_ = new Timer();
 	timer_->Init();
 
-	item_ = new ItemManager();
 	item_->Init();
 
-	player_ = new Player(item_);
 	player_->Init();
 
-	orderManager_ = new OrderManager();
 	orderManager_->Init();
 
-	enemyManager_ = new EnemyManager(player_, item_, stage_, orderManager_);
 	enemyManager_->Init();
 
-	counter_ = new Counter();
 	counter_->Init();
 
 	isWarning_ = false;
@@ -81,6 +68,44 @@ void GameScene::Init(void)
 
 	ChangeState(STATE::GAME);
 
+}
+
+void GameScene::Load(void)
+{
+	// ¶¬ˆ—
+	stage_ = new Stage();
+	pause_ = new Pause();
+	timer_ = new Timer();
+	item_ = new ItemManager();
+	player_ = new Player(item_);
+	orderManager_ = new OrderManager();
+	enemyManager_ = new EnemyManager(player_, item_, stage_, orderManager_);
+	counter_ = new Counter();
+
+	stage_->Load();
+	pause_->Load();
+	timer_->Load();
+	item_->Load();
+	player_->Load();
+	orderManager_->Load();
+	enemyManager_->Load();
+}
+
+void GameScene::LoadEnd(void)
+{
+	stage_->LoadEnd();
+	pause_->LoadEnd();
+	timer_->LoadEnd();
+	item_->LoadEnd();
+	player_->LoadEnd();
+	orderManager_->LoadEnd();
+	enemyManager_->LoadEnd();
+
+	isWarning_ = false;
+	warningPos_ = { 320.0f, 0.0f, 1600.0f };
+	speed_ = 2.0f;
+
+	ChangeState(STATE::GAME);
 }
 
 void GameScene::Update(void)
@@ -98,7 +123,6 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
-	grid_->Draw();
 	stage_->Draw();
 	enemyManager_->Draw();
 	player_->Draw();
@@ -115,7 +139,7 @@ void GameScene::Draw(void)
 
 	if (isWarning_)
 	{
-		DrawString(screen.x, screen.y, "’ñ‹Ÿ‚Å‚«‚È‚¢‚æI", 0xff0000);
+		DrawString(static_cast<int>(screen.x), static_cast<int>(screen.y), "’ñ‹Ÿ‚Å‚«‚È‚¢‚æI", 0xff0000);
 	}
 
 	if (state_ == STATE::PAUSE)
@@ -127,9 +151,6 @@ void GameScene::Draw(void)
 
 void GameScene::Release(void)
 {
-	grid_->Release();
-	delete grid_;
-
 	player_->Release();
 	delete player_;
 
@@ -162,7 +183,6 @@ void GameScene::UpdateGame(void)
 	InputController& ins = InputController::GetInstance();
 
 	stage_->Update();
-	grid_->Update();
 	timer_->Update();
 
 	// “–‚½‚è”»’è

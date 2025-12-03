@@ -12,6 +12,14 @@ void SceneBase::Init(void)
 {
 }
 
+void SceneBase::Load(void)
+{
+}
+
+void SceneBase::LoadEnd(void)
+{
+}
+
 void SceneBase::Update(void)
 {
 }

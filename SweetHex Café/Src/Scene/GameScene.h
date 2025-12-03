@@ -2,7 +2,6 @@
 #include "SceneBase.h"
 
 class SceneManager;
-class Grid;
 class Player;
 class Pause;
 class Timer;
@@ -30,6 +29,8 @@ public:
 	~GameScene(void);
 
 	void Init(void) override;
+	void Load(void)	override;
+	void LoadEnd(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 	void Release(void) override;
@@ -42,7 +43,6 @@ private:
 	STATE state_;
 
 	// 各オブジェクト
-	Grid* grid_;
 	Player* player_;
 	Pause* pause_;
 	Timer* timer_;

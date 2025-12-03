@@ -24,15 +24,23 @@ TitleScene::~TitleScene(void)
 
 void TitleScene::Init(void)
 {
-	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
-	imgStart_ = LoadGraph((Application::PATH_IMAGE + "start.png").c_str());
-	imgQuit_ = LoadGraph((Application::PATH_IMAGE + "quit.png").c_str());
-
 	SystemManager::GetInstance().ResetGame();
 
 	ChangeState(STATE::START);
 
 	SoundManager::GetInstance()->Play(SoundManager::BGM::GAME);
+}
+
+void TitleScene::Load(void)
+{
+	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
+	imgStart_ = LoadGraph((Application::PATH_IMAGE + "start.png").c_str());
+	imgQuit_ = LoadGraph((Application::PATH_IMAGE + "quit.png").c_str());
+}
+
+void TitleScene::LoadEnd(void)
+{
+	Init();
 }
 
 void TitleScene::Update(void)

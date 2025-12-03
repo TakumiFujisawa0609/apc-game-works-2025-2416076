@@ -14,8 +14,6 @@ Stage::~Stage(void)
 
 void Stage::Init(void)
 {
-	modelId_ = MV1LoadModel("Data/Model/Stage/Stage.mv1");
-
 	pos_ = { 1238.0f, 0.0f, 1900.0f };
 	MV1SetPosition(modelId_, pos_);
 
@@ -27,6 +25,16 @@ void Stage::Init(void)
 
 	// è’ìÀîªíËèäñ@ÇÃç\íz
 	MV1SetupCollInfo(modelId_, -1);
+}
+
+void Stage::Load(void)
+{
+	modelId_ = MV1LoadModel("Data/Model/Stage/Stage.mv1");
+}
+
+void Stage::LoadEnd(void)
+{
+	Init();
 }
 
 void Stage::Update(void)

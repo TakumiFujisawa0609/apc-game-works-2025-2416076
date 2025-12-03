@@ -18,6 +18,15 @@ void GameOverScene::Init(void)
 {
 }
 
+void GameOverScene::Load(void)
+{
+}
+
+void GameOverScene::LoadEnd(void)
+{
+	Init();
+}
+
 void GameOverScene::Update(void)
 {
 	InputController& ins = InputController::GetInstance();

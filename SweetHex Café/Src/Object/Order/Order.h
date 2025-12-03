@@ -11,6 +11,8 @@ public:
 	~Order(void);
 	
 	void Init(void);
+	void Load(void);
+	void LoadEnd(void);
 	void Update(void);
 	void Draw(VECTOR pos);
 	void Release(void);

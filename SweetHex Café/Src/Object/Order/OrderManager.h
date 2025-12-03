@@ -10,6 +10,8 @@ public:
 	~OrderManager(void);
 
 	void Init(void);
+	void Load(void);
+	void LoadEnd(void);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
@@ -18,5 +20,5 @@ public:
 
 private:
 
-	std::vector<Order> orders_;
+	std::vector<Order*> orders_;
 };

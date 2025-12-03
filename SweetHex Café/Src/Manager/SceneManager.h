@@ -1,8 +1,8 @@
 #pragma once
 #include <chrono>
 class SceneBase;
-class Fader;
 class Camera;
+class Loading;
 
 class SceneManager
 {
@@ -55,10 +55,6 @@ private:
 	static SceneManager* instance_;
 
 	SCENE_ID sceneId_;
-	SCENE_ID waitSceneId_;
-
-	// フェード
-	Fader* fader_;
 
 	// カメラ
 	Camera* camera_;
@@ -66,8 +62,8 @@ private:
 	// 各種シーン
 	SceneBase* scene_;
 
-	// シーン遷移中判定
-	bool isSceneChanging_;
+	// ロード画面
+	Loading* load_;
 
 	// デルタタイム
 	std::chrono::system_clock::time_point preTime_;
@@ -85,12 +81,6 @@ private:
 
 	// デルタタイムをリセットする
 	void ResetDeltaTime(void);
-
-	// シーン遷移
-	void DoChangeScene(SCENE_ID sceneId);
-
-	// フェード
-	void Fade(void);
 
 	void Init3D(void);
 

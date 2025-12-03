@@ -22,7 +22,6 @@ Player::Player(ItemManager* item)
 	animationController_(nullptr),
 	hpManager_(nullptr),
 	useWeapon_(nullptr),
-	weaponPunch_(nullptr),
 	inventory_(nullptr),
 	angles_(Utility::VECTOR_ZERO),
 	cntKnockBack_(0),
@@ -46,9 +45,6 @@ Player::~Player(void)
 
 void Player::Init(void)
 {
-	// モデルのハンドルID
-	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Chef_Hat.mv1").c_str());
-
 	// 大きさ設定
 	scales_ = SCALES;
 
@@ -76,30 +72,44 @@ void Player::Init(void)
 
 	SceneManager::GetInstance().GetCamera()->SetFollow(this);
 
-	hp_ = MAX_HP;
-
-	hpManager_ = new HpManager(HP_DRAW_POS, hp_, MAX_HP, 0.5, 30, HpManager::TYPE::UI);
-	hpManager_->Init();
-
 	invincibleTimeCount_ = 0;
 
-	// 武器の初期化
-	weaponPunch_ = new WeaponPunch();
-	weaponPunch_->Init(WeaponBase::TYPE::PUNCH);
-
-	// 手持ちアイテム情報初期化
-	inventory_ = new Inventory();
-	inventory_->Init();
-
-	// 初期武器はパンチ
-	useWeapon_ = weaponPunch_;
-
 	ChangeState(STATE::STANDBY);
+}
+
+void Player::Load(void)
+{
+	hp_ = MAX_HP;
+	hpManager_ = new HpManager(HP_DRAW_POS, hp_, MAX_HP, 0.5, 30, HpManager::TYPE::UI);
+	useWeapon_ = new WeaponPunch();
+	inventory_ = new Inventory();
+	// モデルのハンドルID
+	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Chef_Hat.mv1").c_str());
+
+	hpManager_->Load();
+	inventory_->Load();
+}
+
+void Player::LoadEnd(void)
+{
+	Init();
+
+	hpManager_->LoadEnd();
+	inventory_->LoadEnd();
+
+	// 武器の初期化
+	useWeapon_->Init(WeaponBase::TYPE::PUNCH);
 }
 
 void Player::Update(void)
 {
 	DelayRotate();
+
+	useWeapon_->Update();
+
+	hpManager_->Update();
+
+	animationController_->Update();
 
 	switch (state_)
 	{
@@ -116,12 +126,6 @@ void Player::Update(void)
 		UpdateDead();
 		break;
 	}
-	useWeapon_->Update();
-
-	hpManager_->Update();
-
-	animationController_->Update();
-
 }
 
 void Player::Draw(void)
@@ -156,10 +160,8 @@ void Player::Release(void)
 	animationController_->Release();
 	delete animationController_;
 
-	weaponPunch_->Release();
-	delete weaponPunch_;
-
-	useWeapon_ = nullptr;
+	useWeapon_->Release();
+	delete useWeapon_;
 
 	hpManager_->Release();
 	delete hpManager_;

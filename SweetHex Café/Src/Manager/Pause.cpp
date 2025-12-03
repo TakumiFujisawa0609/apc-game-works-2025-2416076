@@ -27,10 +27,18 @@ void Pause::Init(void)
 {
 	isPause_ = false;
 	ChangePause(PAUSE::CONTINUE);
+}
 
+void Pause::Load(void)
+{
 	imgContinue_ = LoadGraph((Application::PATH_IMAGE + "continue.png").c_str());
 	imgReturn_ = LoadGraph((Application::PATH_IMAGE + "returnTitle.png").c_str());
 	imgQuit_ = LoadGraph((Application::PATH_IMAGE + "quit.png").c_str());
+}
+
+void Pause::LoadEnd(void)
+{
+	Init();
 }
 
 void Pause::Update(void)

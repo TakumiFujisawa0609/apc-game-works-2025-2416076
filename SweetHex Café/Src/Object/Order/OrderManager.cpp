@@ -14,6 +14,20 @@ OrderManager::~OrderManager(void)
 
 void OrderManager::Init(void)
 {
+	for (Order* order : orders_)
+	{
+		order->Init();
+	}
+}
+
+void OrderManager::Load(void)
+{
+
+}
+
+void OrderManager::LoadEnd(void)
+{
+	Init();
 }
 
 void OrderManager::Update(void)
@@ -23,15 +37,19 @@ void OrderManager::Update(void)
 
 	while (it != orders_.end())
 	{
-		EnemyBase* enemy = it->GetEnemy();
+		Order* order = *it;
+		EnemyBase* enemy = order->GetEnemy();
 
 		if (enemy == nullptr || enemy->GetHp() <= 0 || enemy->IsDoor())
 		{
+			order->Release();
+			delete order;
+
 			it = orders_.erase(it);
 		}
 		else
 		{
-			it->Update();
+			order->Update();
 			++it;
 		}
 	}
@@ -50,17 +68,25 @@ void OrderManager::Draw(void)
 
 		pos.y += (i * interval);
 
-		orders_[i].Draw(pos);
+		orders_[i]->Draw(pos);
 	}
 }
 
 void OrderManager::Release(void)
 {
+	for (Order* order : orders_)
+	{
+		delete order;
+	}
 	orders_.clear();
 }
 
 void OrderManager::AddOrder(EnemyBase* enemy)
 {
-	orders_.emplace_back(enemy);
-	orders_.back().Init();
+	Order* newOrder = new Order(enemy);
+
+	newOrder->Load();
+	newOrder->LoadEnd();
+
+	orders_.emplace_back(newOrder);
 }

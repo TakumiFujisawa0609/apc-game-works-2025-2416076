@@ -21,6 +21,8 @@ public:
 	~EnemyManager();
 
 	void Init(void);
+	void Load(void);
+	void LoadEnd(void);
 	void Update(void);
 	void Draw(void);
 	void Release(void);

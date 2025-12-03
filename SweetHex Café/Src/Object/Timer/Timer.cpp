@@ -17,6 +17,15 @@ void Timer::Init(void)
     CountStart();
 }
 
+void Timer::Load(void)
+{
+}
+
+void Timer::LoadEnd(void)
+{
+    Init();
+}
+
 void Timer::Update(void)
 {
 	//タイマーの更新

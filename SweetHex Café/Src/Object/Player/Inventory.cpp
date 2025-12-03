@@ -18,6 +18,15 @@ void Inventory::Init(void)
     itemCount_ = 0;
 }
 
+void Inventory::Load(void)
+{
+}
+
+void Inventory::LoadEnd(void)
+{
+    Init();
+}
+
 void Inventory::Draw(void)
 {
     DrawFormatString(DEFAULT_POS_X, DEFAULT_POS_Y, 0x000000, "è‚¿ƒAƒCƒeƒ€” ~ %d", itemCount_);

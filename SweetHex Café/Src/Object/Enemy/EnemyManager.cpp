@@ -31,11 +31,18 @@ void EnemyManager::Init(void)
 	cntSpawn_ = 0;
 	orderCounter_ = 0;
 
+	nextPatternIndex_ = static_cast<int>(EnemyBase::PATTERN::PATTERN_1);
+}
+
+void EnemyManager::Load(void)
+{
 	enemyModelIds_.emplace_back(
 		MV1LoadModel((Application::PATH_MODEL + "Enemy/Slime.mv1").c_str()));
+}
 
-	nextPatternIndex_ = static_cast<int>(EnemyBase::PATTERN::PATTERN_1);
-
+void EnemyManager::LoadEnd(void)
+{
+	Init();
 }
 
 void EnemyManager::Update(void)

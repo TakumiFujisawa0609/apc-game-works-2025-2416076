@@ -21,9 +21,22 @@ Order::~Order(void)
 
 void Order::Init(void)
 {
+	hpManager_->Init();
+}
+
+void Order::Load(void)
+{
 	VECTOR hpPos = VGet(0.0f, 0.0f, 0.0f);
 	hpManager_ = new HpManager(hpPos, enemy_->GetHp(), enemy_->GetMaxHp(), 0.3f, 30, HpManager::TYPE::UI);
-	hpManager_->Init();
+
+	hpManager_->Load();
+}
+
+void Order::LoadEnd(void)
+{
+	Init();
+
+	hpManager_->LoadEnd();
 }
 
 void Order::Update(void)

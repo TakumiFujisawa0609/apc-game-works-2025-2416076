@@ -20,6 +20,15 @@ void ResultScene::Init(void)
 {
 }
 
+void ResultScene::Load(void)
+{
+}
+
+void ResultScene::LoadEnd(void)
+{
+	Init();
+}
+
 void ResultScene::Update(void)
 {
 	InputController& ins = InputController::GetInstance();

@@ -20,6 +20,11 @@ HpManager::~HpManager(void)
 
 void HpManager::Init(void)
 {
+	InitHp();
+}
+
+void HpManager::Load(void)
+{
 	std::string path;
 
 	// ‚Q‚c‰æ‘œ‚Ìƒ[ƒh
@@ -28,8 +33,11 @@ void HpManager::Init(void)
 
 	path = Application::PATH_IMAGE + "HeartLost.png";
 	imgHeartLost_ = LoadGraph(path.c_str());
+}
 
-	InitHp();
+void HpManager::LoadEnd(void)
+{
+	Init();
 }
 
 void HpManager::Update(void)

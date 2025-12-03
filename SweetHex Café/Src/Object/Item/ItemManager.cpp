@@ -14,6 +14,15 @@ void ItemManager::Init(void)
 	droppedItems_.clear();
 }
 
+void ItemManager::Load(void)
+{
+}
+
+void ItemManager::LoadEnd(void)
+{
+    Init();
+}
+
 void ItemManager::Update(void)
 {
 }

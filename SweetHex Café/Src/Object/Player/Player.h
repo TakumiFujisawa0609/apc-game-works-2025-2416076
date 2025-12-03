@@ -97,6 +97,8 @@ public:
 	~Player(void);
 
 	void Init(void);
+	void Load(void);
+	void LoadEnd(void);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
@@ -131,7 +133,6 @@ private:
 
 	// •Ší
 	WeaponBase* useWeapon_;
-	WeaponPunch* weaponPunch_;
 
 	// ƒAƒCƒeƒ€
 	ItemManager* item_;
