@@ -100,27 +100,14 @@ void EnemyManager::Update(void)
 		enemy->Update();
 
 		// 死亡フラグをチェック
-		if (!enemy->IsAlive() || enemy->IsDoor())
+		if (!enemy->IsAlive())
 		{
 			VECTOR dropPos = enemy->GetPos();
 
 			if (item_ != nullptr)
 			{
-				if (!enemy->IsDoor())
-				{
-					// 敵が死んだときアイテムをドロップ
-					item_->CreateItem(ItemManager::ITEM_ID_DEFAULT, dropPos);
-				}
-			}
-
-			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
-				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
-			{
-				if (enemy->IsDoor())
-				{
-					// 提供できずに敵が帰ったら、ゲームオーバー
-					SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
-				}
+				// 敵が死んだときアイテムをドロップ
+				item_->CreateItem(ItemManager::ITEM_ID_DEFAULT, dropPos);
 			}
 
 			// 敵のRelease処理を呼び出す
@@ -130,6 +117,16 @@ void EnemyManager::Update(void)
 
 			// リストから要素を削除し、次の要素のイテレータを取得
 			it = enemies_.erase(it);
+		}
+		else if (enemy->IsDoor())
+		{
+			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
+				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
+			{
+				// 提供できずに敵が帰ったら、ゲームオーバー
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
+				break;
+			}
 		}
 		else
 		{
