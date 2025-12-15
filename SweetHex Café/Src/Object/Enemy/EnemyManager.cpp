@@ -124,7 +124,8 @@ void EnemyManager::Update(void)
 				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
 			{
 				// 提供できずに敵が帰ったら、通報され警察がプレイヤーを倒しに来る
-
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
+				break;
 			}
 		}
 		else
