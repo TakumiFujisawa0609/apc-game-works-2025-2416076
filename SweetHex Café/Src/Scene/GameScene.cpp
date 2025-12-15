@@ -152,11 +152,11 @@ void GameScene::Draw(void)
 
 void GameScene::Release(void)
 {
-	player_->Release();
-	delete player_;
-
 	enemyManager_->Release();
 	delete enemyManager_;
+
+	player_->Release();
+	delete player_;
 
 	pause_->Release();
 	delete pause_;
@@ -226,7 +226,20 @@ void GameScene::UpdateGame(void)
 	if (timer_->GetIsTimeUp())
 	{
 		SceneManager::GetInstance().ChangeScene(
-					SceneManager::SCENE_ID::RESULT);
+			SceneManager::SCENE_ID::RESULT);
+	}
+
+	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
+	for (EnemyBase* enemy : enemys)
+	{
+		if (enemy->IsDoor())
+		{
+			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
+				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
+			{
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
+			}
+		}
 	}
 }
 
@@ -282,7 +295,6 @@ void GameScene::CollisionEnemy(void)
 				}
 			}
 		}
-
 	}
 }
 

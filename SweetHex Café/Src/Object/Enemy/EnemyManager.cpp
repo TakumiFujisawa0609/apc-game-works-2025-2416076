@@ -120,12 +120,21 @@ void EnemyManager::Update(void)
 		}
 		else if (enemy->IsDoor())
 		{
-			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
+			if (enemy->GetPattern() == EnemyBase::PATTERN::COUNTER2DOOR_1 ||
+				enemy->GetPattern() == EnemyBase::PATTERN::COUNTER2DOOR_2)
+			{
+				// 敵のRelease処理を呼び出す
+				enemy->Release();
+				// メモリを解放
+				delete enemy;
+
+				// リストから要素を削除し、次の要素のイテレータを取得
+				it = enemies_.erase(it);
+			}
+			else if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
 				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
 			{
-				// 提供できずに敵が帰ったら、通報され警察がプレイヤーを倒しに来る
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
-				break;
+				return;
 			}
 		}
 		else
@@ -133,8 +142,6 @@ void EnemyManager::Update(void)
 			// 生存している場合は、次の要素に進む
 			++it;
 		}
-
-	
 	}
 }
 

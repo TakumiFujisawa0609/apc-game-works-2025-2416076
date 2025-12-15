@@ -37,7 +37,7 @@ void Inventory::Draw(void)
     }
     else
     {
-        DrawString(TARGET_POS_X, TARGET_POS_Y, "敵を殺してアイテムを拾おう！", 0x000000);
+        DrawString(TARGET_POS_X, TARGET_POS_Y, "敵を倒してアイテムを拾おう！", 0x000000);
     }
 }
 

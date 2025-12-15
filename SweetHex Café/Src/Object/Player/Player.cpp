@@ -105,9 +105,15 @@ void Player::Update(void)
 {
 	DelayRotate();
 
-	useWeapon_->Update();
+	if (useWeapon_ != nullptr)
+	{
+		useWeapon_->Update();
+	}
 
-	hpManager_->Update();
+	if (hpManager_ != nullptr)
+	{
+		hpManager_->Update();
+	}
 
 	animationController_->Update();
 
@@ -159,15 +165,19 @@ void Player::Release(void)
 
 	animationController_->Release();
 	delete animationController_;
+	animationController_ = nullptr;
 
 	useWeapon_->Release();
 	delete useWeapon_;
+	useWeapon_ = nullptr;
 
 	hpManager_->Release();
 	delete hpManager_;
+	hpManager_ = nullptr;
 
 	inventory_->Release();
 	delete inventory_;
+	inventory_ = nullptr;
 }
 
 VECTOR Player::GetPos(void) const
