@@ -123,9 +123,8 @@ void EnemyManager::Update(void)
 			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
 				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
 			{
-				// 提供できずに敵が帰ったら、ゲームオーバー
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
-				break;
+				// 提供できずに敵が帰ったら、通報され警察がプレイヤーを倒しに来る
+
 			}
 		}
 		else

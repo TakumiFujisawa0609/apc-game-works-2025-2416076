@@ -3,6 +3,8 @@
 #include "EnemySlime.h"
 
 EnemySlime::EnemySlime(void)
+	:
+	EnemyBase()
 {
 }
 

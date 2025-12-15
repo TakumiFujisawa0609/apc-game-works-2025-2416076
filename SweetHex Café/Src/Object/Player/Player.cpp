@@ -517,7 +517,7 @@ void Player::InitTransformPost(void)
 	MV1SetPosition(modelId_, pos_);
 
 	// “–‚½‚è”»’è‚ğì¬
-	startCapsulePos_ = { 0.0f,100,0.0f };
+	startCapsulePos_ = { 0.0f, 100.0f, 0.0f };
 	endCapsulePos_ = { 0.0f,70.0f,0.0f };
 }
 
