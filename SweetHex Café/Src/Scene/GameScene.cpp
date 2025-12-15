@@ -100,6 +100,7 @@ void GameScene::LoadEnd(void)
 	player_->LoadEnd();
 	orderManager_->LoadEnd();
 	enemyManager_->LoadEnd();
+	counter_->Init();
 
 	isWarning_ = false;
 	warningPos_ = { 320.0f, 0.0f, 1600.0f };
