@@ -4,7 +4,8 @@
 
 Inventory::Inventory(void)
     :
-    inventoryImage_(-1),
+    inventoryImage1_(-1),
+    inventoryImage2_(-1),
     itemCount_(0)
 {
 }
@@ -20,6 +21,8 @@ void Inventory::Init(void)
 
 void Inventory::Load(void)
 {
+    inventoryImage1_ = LoadGraph((Application::PATH_IMAGE + "goal1.png").c_str());
+    inventoryImage2_ = LoadGraph((Application::PATH_IMAGE + "goal2.png").c_str());
 }
 
 void Inventory::LoadEnd(void)
@@ -33,16 +36,18 @@ void Inventory::Draw(void)
 
     if (itemCount_ > 0)
     {
-        DrawString(TARGET_POS_X, TARGET_POS_Y, "アイテムを提供しよう！", 0x000000);
+        DrawRotaGraph(TARGET_POS_X, TARGET_POS_Y, 1.0, 0.0, inventoryImage2_, true);
     }
     else
     {
-        DrawString(TARGET_POS_X, TARGET_POS_Y, "敵を倒してアイテムを拾おう！", 0x000000);
+       DrawRotaGraph(TARGET_POS_X, TARGET_POS_Y, 1.0, 0.0, inventoryImage1_, true);
     }
 }
 
 void Inventory::Release(void)
 {
+    DeleteGraph(inventoryImage1_);
+	DeleteGraph(inventoryImage2_);
 }
 
 void Inventory::AddItem(int count)

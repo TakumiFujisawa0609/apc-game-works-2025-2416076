@@ -27,10 +27,11 @@ private:
 	static constexpr int DEFAULT_POS_Y = 70;
 
 	 // アナウンスの表示位置
-	static constexpr int TARGET_POS_X = Application::SCREEN_SIZE_X / 2 - 100;
-	static constexpr int TARGET_POS_Y = 10;
+	static constexpr int TARGET_POS_X = Application::SCREEN_SIZE_X / 2;
+	static constexpr int TARGET_POS_Y = 40;
 
-	int inventoryImage_;
+	int inventoryImage1_;
+	int inventoryImage2_;
 	int itemCount_;
 };
 
