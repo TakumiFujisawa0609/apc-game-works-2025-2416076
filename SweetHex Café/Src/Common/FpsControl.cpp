@@ -75,27 +75,27 @@ void FpsControl::CalcFrameRate(void)
 
 void FpsControl::DrawFrameRate(void)
 {
-	if (frameRate_ < 56.0f)
-	{
-		//フレームレートを表示
-		DrawFormatString(
-			Application::SCREEN_SIZE_X - 16 * 6,		//ｘ座標
-			Application::SCREEN_SIZE_Y - 16,			//ｙ座標
-			0xFF0000,									//文字の色
-			"FPS[%.2f}",
-			frameRate_
-		);
-	}
-	else
-	{
-		//フレームレートを表示
-		DrawFormatString(
-			Application::SCREEN_SIZE_X - 16 * 6,		//ｘ座標
-			Application::SCREEN_SIZE_Y - 16,			//ｙ座標
-			0x000000,									//文字の色
-			"FPS[%.2f}",
-			frameRate_
-		);
-	}
+	//if (frameRate_ < 56.0f)
+	//{
+	//	//フレームレートを表示
+	//	DrawFormatString(
+	//		Application::SCREEN_SIZE_X - 16 * 6,		//ｘ座標
+	//		Application::SCREEN_SIZE_Y - 16,			//ｙ座標
+	//		0xFF0000,									//文字の色
+	//		"FPS[%.2f}",
+	//		frameRate_
+	//	);
+	//}
+	//else
+	//{
+	//	//フレームレートを表示
+	//	DrawFormatString(
+	//		Application::SCREEN_SIZE_X - 16 * 6,		//ｘ座標
+	//		Application::SCREEN_SIZE_Y - 16,			//ｙ座標
+	//		0x000000,									//文字の色
+	//		"FPS[%.2f}",
+	//		frameRate_
+	//	);
+	//}
 
 }
