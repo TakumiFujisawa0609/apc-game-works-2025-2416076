@@ -1,5 +1,9 @@
 #pragma once
 #include "SceneBase.h"
+#include <DxLib.h>
+
+
+class AnimationController;
 
 class ResultScene : public SceneBase
 {
@@ -19,5 +23,13 @@ public:
 
 private:
 
+	AnimationController* animationController_;
+
+	int modelId_;
+
+	VECTOR pos_;
+	VECTOR scales_;
+	VECTOR angles_;
+	VECTOR localAngles_;
 };
 
