@@ -161,13 +161,17 @@ void EnemyManager::Release(void)
 		delete enemy;
 	}
 
+	enemies_.clear();
+
 	for (int id : enemyModelIds_)
 	{
 		MV1DeleteModel(id);
 	}
+
+	enemyModelIds_.clear();
 }
 
-std::vector<EnemyBase*> EnemyManager::GetEnemies(void)
+const std::vector<EnemyBase*>& EnemyManager::GetEnemies(void) const
 {
 	return enemies_;
 }

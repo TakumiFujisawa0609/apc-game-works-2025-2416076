@@ -57,7 +57,6 @@ void SceneManager::Update(void)
 		std::chrono::duration_cast<std::chrono::nanoseconds>(nowTime - preTime_).count() / 1000000000.0);
 	preTime_ = nowTime;
 
-
 	// カメラの更新
 	camera_->Update();
 
@@ -80,7 +79,6 @@ void SceneManager::Update(void)
 		// 各シーンの更新処理
 		scene_->Update();
 	}
-
 }
 
 void SceneManager::Draw(void)
@@ -105,6 +103,8 @@ void SceneManager::Draw(void)
 
 		// 各シーンの描画処理
 		scene_->Draw();
+
+		camera_->DrawDebug();
 	}
 }
 

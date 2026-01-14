@@ -27,7 +27,7 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	std::vector<EnemyBase*> GetEnemies(void);
+	const std::vector<EnemyBase*>& GetEnemies(void) const;
 
 private:
 	// エネミー用のモデルハンドルID

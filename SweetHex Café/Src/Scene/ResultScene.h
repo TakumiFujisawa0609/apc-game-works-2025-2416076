@@ -31,5 +31,12 @@ private:
 	VECTOR scales_;
 	VECTOR angles_;
 	VECTOR localAngles_;
+
+	int gameClearImg_;
+	int pushImg_;
+	int spaceKeyImg_;
+	int aButtonImg_;
+	float scale_;
+	bool isScale_;
 };
 

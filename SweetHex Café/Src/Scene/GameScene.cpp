@@ -154,24 +154,31 @@ void GameScene::Release(void)
 {
 	enemyManager_->Release();
 	delete enemyManager_;
+	enemyManager_ = nullptr;
 
 	player_->Release();
 	delete player_;
+	player_ = nullptr;
 
 	pause_->Release();
 	delete pause_;
+	pause_ = nullptr;
 
 	timer_->Release();
 	delete timer_;
+	timer_ = nullptr;
 
 	item_->Release();
 	delete item_;
+	item_ = nullptr;
 
 	stage_->Release();
 	delete stage_;
+	stage_ = nullptr;
 
 	orderManager_->Release();
 	delete orderManager_;
+	orderManager_ = nullptr;
 }
 
 void GameScene::ChangeState(STATE state)
@@ -227,9 +234,10 @@ void GameScene::UpdateGame(void)
 	{
 		SceneManager::GetInstance().ChangeScene(
 			SceneManager::SCENE_ID::RESULT);
+		return;
 	}
 
-	std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
+	const std::vector<EnemyBase*>& enemys = enemyManager_->GetEnemies();
 	for (EnemyBase* enemy : enemys)
 	{
 		if (enemy->IsDoor())
@@ -238,6 +246,7 @@ void GameScene::UpdateGame(void)
 				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
 			{
 				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
+				return;
 			}
 		}
 	}

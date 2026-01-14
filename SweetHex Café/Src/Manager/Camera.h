@@ -49,7 +49,6 @@ public:
 	void Release(void);
 
 	void SetFollow(Player* player);
-
 private:
 
 	// ƒJƒƒ‰‚ÌˆÊ’u

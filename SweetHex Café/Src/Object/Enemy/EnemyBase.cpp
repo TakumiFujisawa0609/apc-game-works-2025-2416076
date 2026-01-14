@@ -183,6 +183,8 @@ void EnemyBase::Release(void)
 
 	animController_->Release();
 	delete animController_;
+
+	currentRoute_.clear();
 }
 
 void EnemyBase::ChangeState(STATE state)

@@ -6,7 +6,7 @@ class Timer
 {
 public:
 	// 時間
-	static constexpr float COUNTDOWN_TIME = 180.0f * 1000.0f;
+	static constexpr float COUNTDOWN_TIME = 10.0f * 1000.0f;
 
 	// タイマーの位置
 	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 60;

@@ -21,7 +21,13 @@ ResultScene::ResultScene(void)
 	pos_{ 0.0f,0.0f,0.0f },
 	scales_{ 1.0f,1.0f,1.0f },
 	localAngles_{ 0.0f,0.0f,0.0f },
-	angles_{ 0.0f,0.0f,0.0f }
+	angles_{ 0.0f,0.0f,0.0f },
+	gameClearImg_(-1),
+	pushImg_(-1),
+	spaceKeyImg_(-1),
+	aButtonImg_(-1),
+	scale_(1.0f),
+	isScale_(false)
 {
 }
 
@@ -48,6 +54,9 @@ void ResultScene::Init(void)
 	animationController_->AddInFbx(14, 30.0f, 14);
 	animationController_->Play(14,true);
 
+	pushImg_ = spaceKeyImg_;
+
+	isScale_ = false;
 }
 
 void ResultScene::Load(void)
@@ -55,11 +64,24 @@ void ResultScene::Load(void)
 	// ƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹ID
 	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Chef_Hat.mv1").c_str());
 	animationController_ = new AnimationController(modelId_);
+
+	gameClearImg_= LoadGraph((Application::PATH_IMAGE + "gameClear.png").c_str());
+	spaceKeyImg_ = LoadGraph((Application::PATH_IMAGE + "spaceKey.png").c_str());
+	aButtonImg_ = LoadGraph((Application::PATH_IMAGE + "aButton.png").c_str());
 }
 
 void ResultScene::LoadEnd(void)
 {
 	Init();
+
+	if (GetJoypadNum() == 0)
+	{
+		pushImg_ = spaceKeyImg_;
+	}
+	else
+	{
+		pushImg_ = aButtonImg_;
+	}
 }
 
 void ResultScene::Update(void)
@@ -67,6 +89,34 @@ void ResultScene::Update(void)
 	InputController& ins = InputController::GetInstance();
 
 	animationController_->Update();
+
+	if (scale_ >= 1.5f)
+	{
+		isScale_ = true;
+	}
+	else if (scale_ <= 1.0f)
+	{
+		isScale_ = false;
+	}
+
+
+	if (isScale_)
+	{
+		scale_ -= 0.01f;
+	}
+	else
+	{
+		scale_ += 0.01f;
+	}
+
+	if (GetJoypadNum() == 0)
+	{
+		pushImg_ = spaceKeyImg_;
+	}
+	else
+	{
+		pushImg_ = aButtonImg_;
+	}
 
 	if (ins.IsDecide())
 	{
@@ -80,9 +130,19 @@ void ResultScene::Draw(void)
 {
 	MV1DrawModel(modelId_);
 
-	//DrawFormatString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0x000000, "‹àŠz : %d", SystemManager::GetInstance().GetScore());
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		100,
+		1.0, 0.0,
+		gameClearImg_, true);
 
-	//DrawString(450, 500, "PRESS SPACE KEY", 0xffffff);
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2,
+		Application::SCREEN_SIZE_Y - 100,
+		static_cast<double>(scale_), 0.0,
+		pushImg_, true);
+
+	//DrawFormatString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0x000000, "‹àŠz : %d", SystemManager::GetInstance().GetScore());
 }
 
 void ResultScene::Release(void)
@@ -92,6 +152,11 @@ void ResultScene::Release(void)
 	animationController_->Release();
 	delete animationController_;
 	animationController_ = nullptr;
+
+	DeleteGraph(gameClearImg_);
+	DeleteGraph(spaceKeyImg_);
+	DeleteGraph(aButtonImg_);
+	pushImg_ = -1;
 
 	SoundManager::GetInstance()->StopSound();
 }
