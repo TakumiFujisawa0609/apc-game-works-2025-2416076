@@ -35,7 +35,8 @@ Player::Player(ItemManager* item)
 	pos_(Utility::VECTOR_ZERO),
 	scales_(Utility::VECTOR_ZERO),
 	speed_(0),
-	state_(STATE::NONE)
+	state_(STATE::NONE),
+	isDeath_(false)
 {
 }
 
@@ -62,6 +63,8 @@ void Player::Init(void)
 	InitTransformPost();
 
 	animationController_ = new AnimationController(modelId_);
+
+	isDeath_ = false;
 
 	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
 	{
@@ -504,8 +507,7 @@ void Player::UpdateDead(void)
 	// アニメーションが終わったら、エンド状態にする
 	if (animationController_->IsEnd())
 	{
-		SceneManager::GetInstance().ChangeScene(
-			SceneManager::SCENE_ID::GAMEOVER);
+		isDeath_ = true;
 	}
 }
 

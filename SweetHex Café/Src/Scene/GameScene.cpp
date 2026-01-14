@@ -188,7 +188,35 @@ void GameScene::ChangeState(STATE state)
 
 void GameScene::UpdateGame(void)
 {
-	InputController& ins = InputController::GetInstance();
+
+	// タイマーが0になったらクリアに遷移
+	if (timer_->GetIsTimeUp())
+	{
+		SceneManager::GetInstance().ChangeScene(
+			SceneManager::SCENE_ID::RESULT);
+		return;
+	}
+
+	const std::vector<EnemyBase*>& enemys = enemyManager_->GetEnemies();
+	for (EnemyBase* enemy : enemys)
+	{
+		if (enemy->IsDoor())
+		{
+			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
+				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
+			{
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
+				return;
+			}
+		}
+	}
+
+	if (player_->IsDeath())
+	{
+		SceneManager::GetInstance().ChangeScene(
+			SceneManager::SCENE_ID::GAMEOVER);
+		return;
+	}
 
 	stage_->Update();
 	timer_->Update();
@@ -222,33 +250,11 @@ void GameScene::UpdateGame(void)
 	}
 
 	// ポーズメニューへ
-	if (ins.IsPause())
+	if (InputController::GetInstance().IsPause())
 	{
 		SoundManager::GetInstance()->StopSound();
 		pause_->SetPause(true);
 		ChangeState(STATE::PAUSE);
-	}
-
-	// タイマーが0になったらクリアに遷移
-	if (timer_->GetIsTimeUp())
-	{
-		SceneManager::GetInstance().ChangeScene(
-			SceneManager::SCENE_ID::RESULT);
-		return;
-	}
-
-	const std::vector<EnemyBase*>& enemys = enemyManager_->GetEnemies();
-	for (EnemyBase* enemy : enemys)
-	{
-		if (enemy->IsDoor())
-		{
-			if (enemy->GetPattern() == EnemyBase::PATTERN::DOOR_1 ||
-				enemy->GetPattern() == EnemyBase::PATTERN::DOOR_2)
-			{
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
-				return;
-			}
-		}
 	}
 }
 

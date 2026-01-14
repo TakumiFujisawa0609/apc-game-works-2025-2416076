@@ -127,6 +127,8 @@ public:
 	// ステージとの衝突
 	void CollisionStage(const VECTOR& pos);
 
+	bool IsDeath(void) const { return isDeath_; }
+
 private:
 	// アニメーション
 	AnimationController* animationController_;
@@ -174,6 +176,8 @@ private:
 	float collisionRadius_;
 
 	int hp_;
+
+	bool isDeath_;
 
 	// 現在の状態
 	STATE state_;
