@@ -26,6 +26,10 @@ void Camera::Update(void)
 		pos_.x = playerPos.x;
 		pos_.z = playerPos.z - 1000.0f;
 	}
+	else
+	{
+		pos_ = DEFAULT_POS;
+	}
 }
 
 void Camera::SetBeforeDraw(void)

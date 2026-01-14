@@ -37,7 +37,7 @@ ResultScene::~ResultScene(void)
 
 void ResultScene::Init(void)
 {
-	pos_ = { Application::SCREEN_SIZE_X / 2.0f - 100.0f, Application::SCREEN_SIZE_Y / 2.0f - 400.0f, -200.0f };
+	pos_ = { Application::SCREEN_SIZE_X / 2.0f, Application::SCREEN_SIZE_Y / 2.0f - 800.0f, 100.0f };
 	MV1SetPosition(modelId_, pos_);
 
 	scales_ = { 2.0f,2.0f,2.0f };

@@ -8,6 +8,7 @@
 #include "../Manager/SystemManager.h"
 #include "../Manager/SoundManager/SoundManager.h"
 #include "../Manager/Pause.h"
+#include "../Manager/Camera.h"
 
 #include "../Object/Player/Player.h"
 #include "../Object/Player/Inventory.h"
@@ -159,6 +160,7 @@ void GameScene::Release(void)
 	player_->Release();
 	delete player_;
 	player_ = nullptr;
+	SceneManager::GetInstance().GetCamera()->SetFollow(nullptr);
 
 	pause_->Release();
 	delete pause_;
