@@ -86,8 +86,6 @@ void ResultScene::LoadEnd(void)
 
 void ResultScene::Update(void)
 {
-	InputController& ins = InputController::GetInstance();
-
 	animationController_->Update();
 
 	if (scale_ >= 1.5f)
@@ -118,7 +116,7 @@ void ResultScene::Update(void)
 		pushImg_ = aButtonImg_;
 	}
 
-	if (ins.IsDecide())
+	if (InputController::GetInstance().IsDecide())
 	{
 		// シーンをタイトルに変更
 		SceneManager::GetInstance().ChangeScene(

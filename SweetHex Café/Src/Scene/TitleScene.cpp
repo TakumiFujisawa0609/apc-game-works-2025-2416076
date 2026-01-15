@@ -16,6 +16,7 @@ TitleScene::TitleScene(void)
 {
 	imgTitle_ = -1;
 	imgStart_ = -1;
+	imgBackground_ = -1;
 }
 
 TitleScene::~TitleScene(void)
@@ -28,6 +29,8 @@ void TitleScene::Init(void)
 
 	ChangeState(STATE::START);
 
+	backgroundSpeed_ = 0.5f;
+
 	SoundManager::GetInstance()->Play(SoundManager::BGM::GAME);
 }
 
@@ -36,15 +39,26 @@ void TitleScene::Load(void)
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
 	imgStart_ = LoadGraph((Application::PATH_IMAGE + "start.png").c_str());
 	imgQuit_ = LoadGraph((Application::PATH_IMAGE + "quit.png").c_str());
+	imgBackground_ = LoadGraph((Application::PATH_IMAGE + "background.png").c_str());
 }
 
 void TitleScene::LoadEnd(void)
 {
 	Init();
+
+	imgBackground2_ = imgBackground_;
 }
 
 void TitleScene::Update(void)
 {
+	backgroundPos_.x -= backgroundSpeed_;
+
+	if (backgroundPos_.x <= -Application::SCREEN_SIZE_X)
+	{
+		backgroundPos_.x = 0.0f;
+	}
+
+
 	// ó‘Ô‚²‚Æ‚ÌXV
 	switch (state_)
 	{
@@ -62,6 +76,9 @@ void TitleScene::Update(void)
 
 void TitleScene::Draw(void)
 {
+	DrawGraphF(backgroundPos_.x, 0.0f, imgBackground_, true);
+	DrawGraphF(backgroundPos_.x + 1020, 0.0f, imgBackground2_, true);
+
 	DrawRotaGraph(
 		Application::SCREEN_SIZE_X / 2,
 		Application::SCREEN_SIZE_Y / 2 - 50,
@@ -82,6 +99,7 @@ void TitleScene::Draw(void)
 
 void TitleScene::Release(void)
 {
+	DeleteGraph(imgBackground_);
 	DeleteGraph(imgTitle_);
 	DeleteGraph(imgStart_);
 	DeleteGraph(imgQuit_);

@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneBase.h"
+#include <DxLib.h>
 
 class GameOverScene : public SceneBase
 {
@@ -18,6 +19,15 @@ public:
 	void Release(void)override;
 
 private:
+
+	AnimationController* animationController_;
+
+	int modelId_;
+
+	VECTOR pos_;
+	VECTOR scales_;
+	VECTOR angles_;
+	VECTOR localAngles_;
 
 	int gameOverImg_;
 	int pushImg_;

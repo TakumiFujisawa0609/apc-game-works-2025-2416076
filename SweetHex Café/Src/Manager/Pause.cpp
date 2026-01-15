@@ -206,6 +206,7 @@ void Pause::UpdateReturnTitle(void)
 		// ƒ^ƒCƒgƒ‹‚É–ß‚é
 		SceneManager::GetInstance().ChangeScene(
 			SceneManager::SCENE_ID::TITLE);
+		return;
 	}
 }
 

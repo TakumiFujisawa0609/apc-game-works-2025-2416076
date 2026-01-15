@@ -221,7 +221,10 @@ void GameScene::UpdateGame(void)
 	}
 
 	stage_->Update();
-	timer_->Update();
+	if (!player_->IsDeath())
+	{
+		timer_->Update();
+	}
 
 	// “–‚½‚è”»’è
 	CollisionEnemy();
@@ -262,13 +265,14 @@ void GameScene::UpdateGame(void)
 
 void GameScene::UpdatePause(void)
 {
-	pause_->Update();
-
 	if (!pause_->IsPause())
 	{
 		SoundManager::GetInstance()->Play(SoundManager::BGM::GAME, false);
 		ChangeState(STATE::GAME);
+		return;
 	}
+
+	pause_->Update();
 }
 
 void GameScene::CollisionEnemy(void)

@@ -33,6 +33,10 @@ private:
 	int imgTitle_;
 	int imgStart_;
 	int imgQuit_;
+	int imgBackground_;
+	int imgBackground2_;
+	VECTOR backgroundPos_;
+	float backgroundSpeed_;
 
 	// ó‘Ô
 	STATE state_;
