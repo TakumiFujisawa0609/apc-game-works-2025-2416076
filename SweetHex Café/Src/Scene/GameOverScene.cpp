@@ -36,14 +36,14 @@ GameOverScene::~GameOverScene(void)
 
 void GameOverScene::Init(void)
 {
-	pos_ = { Application::SCREEN_SIZE_X / 2.0f - 500.0f , Application::SCREEN_SIZE_Y / 2.0f - 300.0f, 100.0f };
+	pos_ = { Application::SCREEN_SIZE_X / 2.0f - 500.0f, Application::SCREEN_SIZE_Y / 2.0f - 700.0f, 100.0f };
 	MV1SetPosition(modelId_, pos_);
 
-	scales_ = { 1.0f,1.0f,1.0f };
+	scales_ = { 2.0f,2.0f,2.0f };
 	MV1SetScale(modelId_, scales_);
 
 	angles_ = Utility::VECTOR_ZERO;
-	localAngles_ = { Utility::Deg2RadF(15.0f), Utility::Deg2RadF(0.0f), Utility::Deg2RadF(15.0f) };
+	localAngles_ = { Utility::Deg2RadF(45.0f), Utility::Deg2RadF(15.0f), Utility::Deg2RadF(15.0f) };
 	// 行列の合成(子, 親と指定すると親⇒子の順に適用される)
 	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
 
@@ -125,7 +125,7 @@ void GameOverScene::Update(void)
 
 void GameOverScene::Draw(void)
 {
-	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x050505, true);
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000b1c, true);
 
 	MV1DrawModel(modelId_);
 

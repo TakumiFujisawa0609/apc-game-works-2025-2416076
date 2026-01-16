@@ -23,8 +23,8 @@ public:
 private:
 
 	// 手持ちアイテム表示位置
-	static constexpr int DEFAULT_POS_X = Application::SCREEN_SIZE_X - 200;
-	static constexpr int DEFAULT_POS_Y = 70;
+	static constexpr int DEFAULT_POS_X = 50;
+	static constexpr int DEFAULT_POS_Y = 140;
 
 	 // アナウンスの表示位置
 	static constexpr int TARGET_POS_X = Application::SCREEN_SIZE_X / 2;
@@ -33,5 +33,6 @@ private:
 	int inventoryImage1_;
 	int inventoryImage2_;
 	int itemCount_;
+	int itemImg_;
 };
 

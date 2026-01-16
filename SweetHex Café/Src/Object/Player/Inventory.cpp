@@ -6,7 +6,8 @@ Inventory::Inventory(void)
     :
     inventoryImage1_(-1),
     inventoryImage2_(-1),
-    itemCount_(0)
+    itemCount_(0),
+    itemImg_(-1)
 {
 }
 
@@ -18,11 +19,12 @@ void Inventory::Init(void)
 {
     itemCount_ = 0;
 }
-
+ 
 void Inventory::Load(void)
 {
     inventoryImage1_ = LoadGraph((Application::PATH_IMAGE + "goal1.png").c_str());
     inventoryImage2_ = LoadGraph((Application::PATH_IMAGE + "goal2.png").c_str());
+	itemImg_ = LoadGraph((Application::PATH_IMAGE + "item.png").c_str());
 }
 
 void Inventory::LoadEnd(void)
@@ -32,7 +34,8 @@ void Inventory::LoadEnd(void)
 
 void Inventory::Draw(void)
 {
-    DrawFormatString(DEFAULT_POS_X, DEFAULT_POS_Y, 0x000000, "ŽèŽ‚¿ƒAƒCƒeƒ€” ~ %d", itemCount_);
+    DrawRotaGraph(Application::SCREEN_SIZE_X - DEFAULT_POS_X, DEFAULT_POS_Y, 0.7, 0.0, itemImg_, true);
+    DrawFormatString(Application::SCREEN_SIZE_X - 50, 165, 0x000000, "~%d", itemCount_);
 
     if (itemCount_ > 0)
     {
@@ -48,6 +51,7 @@ void Inventory::Release(void)
 {
     DeleteGraph(inventoryImage1_);
 	DeleteGraph(inventoryImage2_);
+    DeleteGraph(itemImg_);
 }
 
 void Inventory::AddItem(int count)
