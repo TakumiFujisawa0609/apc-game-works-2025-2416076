@@ -27,7 +27,11 @@ ResultScene::ResultScene(void)
 	spaceKeyImg_(-1),
 	aButtonImg_(-1),
 	scale_(1.0f),
-	isScale_(false)
+	isScale_(false),
+	scoreImg_(-1),
+	alpha_(0.0f),
+	fontHandle_(-1),
+	rank_("")
 {
 }
 
@@ -57,6 +61,12 @@ void ResultScene::Init(void)
 	pushImg_ = spaceKeyImg_;
 
 	isScale_ = false;
+
+	alpha_ = 0.0f;
+
+	rank_ = "";
+
+	SoundManager::GetInstance()->Play(SoundManager::SE::REGISTER);
 }
 
 void ResultScene::Load(void)
@@ -68,6 +78,10 @@ void ResultScene::Load(void)
 	gameClearImg_= LoadGraph((Application::PATH_IMAGE + "gameClear.png").c_str());
 	spaceKeyImg_ = LoadGraph((Application::PATH_IMAGE + "spaceKey.png").c_str());
 	aButtonImg_ = LoadGraph((Application::PATH_IMAGE + "aButton.png").c_str());
+
+	scoreImg_ = LoadGraph((Application::PATH_IMAGE + "clear.png").c_str());
+
+	fontHandle_ = CreateFontToHandle("HGSoeiKakupoptai", 24, -1);
 }
 
 void ResultScene::LoadEnd(void)
@@ -88,6 +102,17 @@ void ResultScene::Update(void)
 {
 	animationController_->Update();
 
+	// 入力デバイス判定
+	if (GetJoypadNum() == 0)
+	{
+		pushImg_ = spaceKeyImg_;
+	}
+	else
+	{
+		pushImg_ = aButtonImg_;
+	}
+
+	// アニメーション
 	if (scale_ >= 1.5f)
 	{
 		isScale_ = true;
@@ -97,7 +122,7 @@ void ResultScene::Update(void)
 		isScale_ = false;
 	}
 
-
+	// 拡大縮小処理
 	if (isScale_)
 	{
 		scale_ -= 0.01f;
@@ -107,13 +132,28 @@ void ResultScene::Update(void)
 		scale_ += 0.01f;
 	}
 
-	if (GetJoypadNum() == 0)
+	// フェイドイン処理
+	if (alpha_ < 255.0f)
 	{
-		pushImg_ = spaceKeyImg_;
+		alpha_ += 1.5f;
+	}
+
+	// ランク判定
+	if(SystemManager::GetInstance().GetScore() >= 2000)
+	{
+		rank_ = "S";
+	}
+	else if(SystemManager::GetInstance().GetScore() >= 1500)
+	{
+		rank_ = "A";
+	}
+	else if(SystemManager::GetInstance().GetScore() >= 1000)
+	{
+		rank_ = "B";
 	}
 	else
 	{
-		pushImg_ = aButtonImg_;
+		rank_ = "C";
 	}
 
 	if (InputController::GetInstance().IsDecide())
@@ -140,7 +180,26 @@ void ResultScene::Draw(void)
 		static_cast<double>(scale_), 0.0,
 		pushImg_, true);
 
-	//DrawFormatString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0x000000, "金額 : %d", SystemManager::GetInstance().GetScore());
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(alpha_));
+
+	DrawRotaGraph(
+		Application::SCREEN_SIZE_X / 2 - 200,
+		Application::SCREEN_SIZE_Y / 2,
+		1.0, 0.0,
+		scoreImg_, true);
+
+	DrawFormatStringToHandle(
+		Application::SCREEN_SIZE_X / 2 - 280,
+		Application::SCREEN_SIZE_Y / 2 - 40, 0x000000,
+		fontHandle_, "金額　：%d",SystemManager::GetInstance().GetScore());
+
+	DrawFormatStringToHandle(
+		Application::SCREEN_SIZE_X / 2 - 280,
+		Application::SCREEN_SIZE_Y / 2 + 20, 0x000000,
+		fontHandle_, "ランク：%s", rank_);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void ResultScene::Release(void)
@@ -155,6 +214,10 @@ void ResultScene::Release(void)
 	DeleteGraph(spaceKeyImg_);
 	DeleteGraph(aButtonImg_);
 	pushImg_ = -1;
+
+	DeleteGraph(scoreImg_);
+
+	DeleteFontToHandle(fontHandle_);
 
 	SoundManager::GetInstance()->StopSound();
 }

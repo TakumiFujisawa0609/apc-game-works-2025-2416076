@@ -125,6 +125,8 @@ void GameOverScene::Update(void)
 
 void GameOverScene::Draw(void)
 {
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x050505, true);
+
 	MV1DrawModel(modelId_);
 
 	DrawRotaGraph(

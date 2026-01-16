@@ -38,5 +38,9 @@ private:
 	int aButtonImg_;
 	float scale_;
 	bool isScale_;
+	int scoreImg_;
+	float alpha_;
+	int fontHandle_;
+	const char* rank_;
 };
 
