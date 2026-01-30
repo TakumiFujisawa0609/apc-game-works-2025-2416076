@@ -4,9 +4,9 @@
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 
-#include "EnemySlime.h"
 #include "../Item/ItemManager.h"
 #include "../Order/OrderManager.h"
+#include "EnemySlime.h"
 
 #include "EnemyManager.h"
 
@@ -47,6 +47,8 @@ void EnemyManager::LoadEnd(void)
 
 void EnemyManager::Update(void)
 {
+
+	// 敵の数が最大値未満なら出現させる
 	if (enemies_.size() < MAX_ENEMYS)
 	{
 		// 出現カウンタ

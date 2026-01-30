@@ -83,6 +83,7 @@ void GameScene::Load(void)
 	enemyManager_ = new EnemyManager(player_, item_, stage_, orderManager_);
 	counter_ = new Counter();
 
+
 	stage_->Load();
 	pause_->Load();
 	timer_->Load();
@@ -126,16 +127,16 @@ void GameScene::Update(void)
 void GameScene::Draw(void)
 {
 	stage_->Draw();
+	if (item_ != nullptr)
+	{
+		item_->Draw();
+	}
 	enemyManager_->Draw();
 	player_->Draw();
 	timer_->Draw();
 	orderManager_->Draw();
 	counter_->DrawDebug();
 
-	if (item_ != nullptr)
-	{
-		item_->Draw();
-	}
 
 	VECTOR screen = ConvWorldPosToScreenPos(warningPos_);
 
@@ -143,6 +144,7 @@ void GameScene::Draw(void)
 	{
 		DrawString(static_cast<int>(screen.x), static_cast<int>(screen.y), "íÒãüÇ≈Ç´Ç»Ç¢ÇÊÅI", 0xff0000);
 	}
+
 
 	if (state_ == STATE::PAUSE)
 	{
@@ -332,7 +334,7 @@ void GameScene::CollisionWeapon(void)
 		std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
 		for (EnemyBase* enemy : enemys)
 		{
-			if (!enemy->IsCollisionState())
+			if (!enemy->IsCollisionState() || !enemy->IsAlive())
 			{
 				continue;
 			}
@@ -344,13 +346,10 @@ void GameScene::CollisionWeapon(void)
 				enemy->Damage(1);
 				useWeapon->SetAlive(false);
 
-				for (EnemyBase* enemy : enemyManager_->GetEnemies())
+				// åxâ˙èÛë‘Ç≈çUåÇÇ≥ÇÍÇƒÇ¢Ç»Ç¢éqÇ»ÇÁÅAí«ê’ÅEçUåÇèàóùÇ÷
+				if (enemy->IsNotice() && enemy->GetState() == EnemyBase::STATE::STANDBY)
 				{
-					// åxâ˙èÛë‘Ç≈çUåÇÇ≥ÇÍÇƒÇ¢Ç»Ç¢éqÇ»ÇÁÅAí«ê’ÅEçUåÇèàóùÇ÷
-					if (enemy->IsNotice() && enemy->GetState() == EnemyBase::STATE::STANDBY)
-					{
-						enemy->ChangeState(EnemyBase::STATE::ATTACK);
-					}
+					enemy->ChangeState(EnemyBase::STATE::ATTACK);
 				}
 			}
 		}

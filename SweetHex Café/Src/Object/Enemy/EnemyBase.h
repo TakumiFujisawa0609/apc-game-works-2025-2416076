@@ -45,8 +45,8 @@ public:
 	// ドアの場所
 	static constexpr VECTOR DOOR_POS = { 16.0f, 10.0f, 316.0f };
 
-	// 最大提供時間(約20秒)
-	static constexpr float SERVE_MAX_TIME = 30.0f * 60.0f;
+	// 最大提供時間(約60秒)
+	static constexpr float SERVE_MAX_TIME = 60.0f * 60.0f;
 
 	// エネミー種別
 	enum class TYPE

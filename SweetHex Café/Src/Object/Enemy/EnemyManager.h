@@ -12,7 +12,7 @@ class EnemyManager
 {
 public:
 
-	static constexpr int SPAWN_INTERVEL_SLIME = 120;
+	static constexpr int SPAWN_INTERVEL_SLIME = 180;
 
 	// ìGÇÃç≈ëÂêî
 	static constexpr int MAX_ENEMYS = 5;
