@@ -66,7 +66,7 @@ void ResultScene::Init(void)
 
 	rank_ = "";
 
-	SoundManager::GetInstance()->Play(SoundManager::SE::REGISTER);
+	SoundManager::GetInstance()->Play(SoundManager::SE::UP);
 }
 
 void ResultScene::Load(void)

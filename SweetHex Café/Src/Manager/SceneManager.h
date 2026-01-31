@@ -18,6 +18,7 @@ public:
 		TUTORIAL,
 		RESULT,
 		GAMEOVER,
+		MOVIE,
 	};
 	
 	// インスタンスの生成

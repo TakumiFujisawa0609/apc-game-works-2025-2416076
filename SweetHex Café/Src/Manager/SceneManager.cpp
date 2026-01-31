@@ -6,6 +6,7 @@
 #include "../Scene/ResultScene.h"
 #include "../Scene/GameOverScene.h"
 #include "../Scene/Loading/Loading.h"
+#include "../Scene/MovieScene.h"
 
 #include "Camera.h"
 #include "SceneManager.h"
@@ -157,7 +158,9 @@ void SceneManager::ChangeScene(SCENE_ID nextId)
 	case SCENE_ID::GAMEOVER:
 		scene_ = new GameOverScene();
 		break;
-
+	case SCENE_ID::MOVIE:
+		scene_ = new MovieScene();
+		break;
 	}
 
 	// ì«Ç›çûÇ›

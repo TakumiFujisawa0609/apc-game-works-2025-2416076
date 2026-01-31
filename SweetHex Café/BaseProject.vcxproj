@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\MovieScene.cpp" />
+    <ClCompile Include="Src\Object\MoviePlayer\MoviePlayer.cpp" />
     <ClCompile Include="Src\Scene\Loading\Loading.cpp" />
     <ClCompile Include="Src\Object\Counter\Counter.cpp" />
     <ClCompile Include="Src\Object\Order\OrderManager.cpp" />
@@ -57,6 +59,8 @@
     <ClCompile Include="Src\Object\Weapon\WeaponPunch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\MovieScene.h" />
+    <ClInclude Include="Src\Object\MoviePlayer\MoviePlayer.h" />
     <ClInclude Include="Src\Scene\Loading\Loading.h" />
     <ClInclude Include="Src\Object\Counter\Counter.h" />
     <ClInclude Include="Src\Object\Order\OrderManager.h" />

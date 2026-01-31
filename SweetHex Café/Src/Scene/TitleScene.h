@@ -38,6 +38,9 @@ private:
 	VECTOR backgroundPos_;
 	float backgroundSpeed_;
 
+	// “®‰æŠÖ˜A
+	int idleFrameCount_;
+
 	// ó‘Ô
 	STATE state_;
 

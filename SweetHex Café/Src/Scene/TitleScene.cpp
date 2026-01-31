@@ -31,6 +31,9 @@ void TitleScene::Init(void)
 
 	backgroundSpeed_ = 0.5f;
 
+	idleFrameCount_ = 0;
+
+
 	SoundManager::GetInstance()->Play(SoundManager::BGM::GAME);
 }
 
@@ -51,6 +54,27 @@ void TitleScene::LoadEnd(void)
 
 void TitleScene::Update(void)
 {
+	bool hasInput = false;
+
+	if (CheckHitKeyAll() != 0)
+	{
+		hasInput = true;
+	}
+
+	if (hasInput)
+	{
+		idleFrameCount_ = 0;
+	}
+	else
+	{
+		idleFrameCount_++;
+	}
+
+	if (idleFrameCount_ > 60 * 30) {
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
+		return; // ‚±‚±‚Åˆ—‚ğ”²‚¯‚Ä“®‰æê—p‚ÌXV‚É‚·‚é
+	}
+
 	backgroundPos_.x -= backgroundSpeed_;
 
 	if (backgroundPos_.x <= -Application::SCREEN_SIZE_X)
@@ -119,7 +143,7 @@ void TitleScene::UpdateStart(void)
 	{
 		SoundManager::GetInstance()->Play(SoundManager::SE::ENTRY);
 		SceneManager::GetInstance().ChangeScene(
-			SceneManager::SCENE_ID::GAME);
+			SceneManager::SCENE_ID::RESULT);
 	}
 }
 
