@@ -346,10 +346,14 @@ void GameScene::CollisionWeapon(void)
 				enemy->Damage(1);
 				useWeapon->SetAlive(false);
 
-				// Œx‰úó‘Ô‚ÅUŒ‚‚³‚ê‚Ä‚¢‚È‚¢q‚È‚çA’ÇÕEUŒ‚ˆ—‚Ö
-				if (enemy->IsNotice() && enemy->GetState() == EnemyBase::STATE::STANDBY)
+				std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
+				for (EnemyBase* enemy : enemys)
 				{
-					enemy->ChangeState(EnemyBase::STATE::ATTACK);
+					// Œx‰úó‘Ô‚ÅUŒ‚‚³‚ê‚Ä‚¢‚È‚¢q‚È‚çA’ÇÕEUŒ‚ˆ—‚Ö
+					if (enemy->IsNotice() && enemy->GetState() == EnemyBase::STATE::STANDBY)
+					{
+						enemy->ChangeState(EnemyBase::STATE::ATTACK);
+					}
 				}
 			}
 		}
@@ -420,7 +424,7 @@ void GameScene::CollisionCounter(void)
 	if (Utility::IsHitSphereCapsule(playerPos, playerRadius,
 		counterStartCapsulePos, counterEndCapsulePos, counterRadius))
 	{
-		if (InputController::GetInstance().IsUse())
+		if (InputController::GetInstance().IsUse() || InputManager::GetInstance().IsNew(KEY_INPUT_LEFT))
 		{
 			// “G‚Ìî•ñ‚ğæ“¾
 			std::vector<EnemyBase*> enemies = enemyManager_->GetEnemies();

@@ -387,7 +387,7 @@ void Player::ProcessPickup(void)
 		if (distance <= radius)
 		{
 			// 半径の合計より小さかったら
-			if (ins.IsUse())
+			if (ins.IsUse() || InputManager::GetInstance().IsNew(KEY_INPUT_LEFT))
 			{
 				// アイテム取得処理
 				item_->RemoveItem(i);

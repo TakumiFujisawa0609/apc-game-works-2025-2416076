@@ -70,7 +70,7 @@ void TitleScene::Update(void)
 		idleFrameCount_++;
 	}
 
-	if (idleFrameCount_ > 60 * 30) {
+	if (idleFrameCount_ > 60 * 20) {
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
 		return; // ‚±‚±‚Åˆ—‚ð”²‚¯‚Ä“®‰æê—p‚ÌXV‚É‚·‚é
 	}
@@ -143,7 +143,7 @@ void TitleScene::UpdateStart(void)
 	{
 		SoundManager::GetInstance()->Play(SoundManager::SE::ENTRY);
 		SceneManager::GetInstance().ChangeScene(
-			SceneManager::SCENE_ID::RESULT);
+			SceneManager::SCENE_ID::GAME);
 	}
 }
 
