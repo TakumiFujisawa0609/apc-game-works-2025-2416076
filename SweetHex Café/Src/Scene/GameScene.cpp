@@ -331,8 +331,8 @@ void GameScene::CollisionWeapon(void)
 	if (useWeapon->IsAlive())
 	{
 		// “G‚Ìî•ñ‚ğæ“¾
-		std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
-		for (EnemyBase* enemy : enemys)
+		std::vector<EnemyBase*> enemies = enemyManager_->GetEnemies();
+		for (EnemyBase* enemy : enemies)
 		{
 			if (!enemy->IsCollisionState() || !enemy->IsAlive())
 			{
@@ -346,13 +346,12 @@ void GameScene::CollisionWeapon(void)
 				enemy->Damage(1);
 				useWeapon->SetAlive(false);
 
-				std::vector<EnemyBase*> enemys = enemyManager_->GetEnemies();
-				for (EnemyBase* enemy : enemys)
+				for (EnemyBase* otherEnemy : enemies)
 				{
-					// Œx‰úó‘Ô‚ÅUŒ‚‚³‚ê‚Ä‚¢‚È‚¢q‚È‚çA’ÇÕEUŒ‚ˆ—‚Ö
-					if (enemy->IsNotice() && enemy->GetState() == EnemyBase::STATE::STANDBY)
+					// Œx‰úó‘Ô‚Å‘Ò‹@‚µ‚Ä‚¢‚é“G‚ğA’ÇÕEUŒ‚ˆ—‚Ö
+					if (otherEnemy->IsNotice() && otherEnemy->GetState() == EnemyBase::STATE::STANDBY)
 					{
-						enemy->ChangeState(EnemyBase::STATE::ATTACK);
+						otherEnemy->ChangeState(EnemyBase::STATE::ATTACK);
 					}
 				}
 			}
