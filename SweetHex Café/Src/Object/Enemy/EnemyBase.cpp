@@ -338,33 +338,41 @@ void EnemyBase::Move(void)
 
 void EnemyBase::Search(void)
 {
-#pragma region 視野
 	VECTOR playerPos = player_->GetPos();
 	VECTOR enemyPos = pos_;
 
+	// Y座標を固定して、視野判定を行う
+	// 机の高さは100未満のため遮蔽物にならず、
+	// 壁のような高い障害物が視界を遮る仕様にしている
 	playerPos.y = enemyPos.y = 100.0f;
 
+	// 敵の正面方向
 	VECTOR dirEnemy = VNorm(moveDir_);
 
+	// 敵から見たプレイヤーの方向
 	VECTOR diff = VSub(playerPos, pos_);
-
 	VECTOR dirPlayerForEnemy = VNorm(diff);
 
 	// 内積を使ってベクトルの比較
 	float dot = VDot(dirEnemy, dirPlayerForEnemy);
 	float angle = acosf(dot);
 
-	const float viweRad = Utility::Deg2RadF(VIEW_ANGLE);
+	// 視野角をラジアンに変換
+	const float viewRad = Utility::Deg2RadF(VIEW_ANGLE);
 
-	float colX = pos_.x - playerPos.x;
-	float colZ = pos_.z - playerPos.z;
+	// プレイヤーとの距離を計算
 	float colPos = 0.0f;
-	colPos = colX * colX + colZ * colZ;
+	colPos = diff.x * diff.x + diff.z * diff.z;
 
 	// 視野内にいるか確認
-	if (angle <= viweRad && colPos <= VIEW_RANGE * VIEW_RANGE)
+	if (angle <= viewRad && colPos <= VIEW_RANGE * VIEW_RANGE)
 	{
-		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stage_->GetModelId(), -1, enemyPos, playerPos);
+		// プレイヤーと敵の間に壁があるか確認
+		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(
+									stage_->GetModelId(), 
+									-1,
+									enemyPos,
+									playerPos);
 
 		// 視野内でもプレイヤーと敵の間に壁があるなら
 		if (hit.HitFlag)
@@ -377,13 +385,12 @@ void EnemyBase::Search(void)
 			// 検知する
 			isNotice_ = true;
 		}
-
 	}
 	else
 	{
+		// 視野内にいないため、検知しない
 		isNotice_ = false;
 	}
-#pragma endregion
 }
 
 void EnemyBase::DrawViewRange(void)

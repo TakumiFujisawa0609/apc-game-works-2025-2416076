@@ -42,6 +42,9 @@ public:
 	// •Šíí•Ê‚Ìæ“¾
 	TYPE GetType(void);
 
+	// UŒ‚—Í‚ğæ“¾
+	virtual int GetPower(void) const = 0;
+
 protected:
 	// •Šíí•Ê
 	TYPE type_;

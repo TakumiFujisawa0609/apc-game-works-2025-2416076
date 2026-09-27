@@ -323,7 +323,6 @@ void GameScene::CollisionEnemy(void)
 
 void GameScene::CollisionWeapon(void)
 {
-
 	// 武器の情報
 	WeaponBase* useWeapon = player_->GetUseWeapon();
 
@@ -343,12 +342,15 @@ void GameScene::CollisionWeapon(void)
 			if (Utility::IsHitSpheres(useWeapon->GetPos(), useWeapon->GetCollisionRadius(),
 				enemy->GetPos(), enemy->GetRadius()))
 			{
-				enemy->Damage(1);
+				// 当たっていたら、敵にダメージを加え、
+				// 武器の生存フラグを折る
+				enemy->Damage(useWeapon->GetPower());
 				useWeapon->SetAlive(false);
 
 				for (EnemyBase* otherEnemy : enemies)
 				{
-					// 警戒状態で待機している敵を、追跡・攻撃処理へ
+					// その瞬間プレイヤーを視認できている敵が、
+					// 攻撃に気づいて反撃状態へ移行する
 					if (otherEnemy->IsNotice() && otherEnemy->GetState() == EnemyBase::STATE::STANDBY)
 					{
 						otherEnemy->ChangeState(EnemyBase::STATE::ATTACK);
@@ -357,7 +359,7 @@ void GameScene::CollisionWeapon(void)
 			}
 		}
 
-		// 武器とステージのの当たり判定
+		// 武器とステージの当たり判定
 		MV1_COLL_RESULT_POLY_DIM hits = MV1CollCheck_Sphere
 		(
 			stage_->GetModelId(),
@@ -366,6 +368,7 @@ void GameScene::CollisionWeapon(void)
 			useWeapon->GetCollisionRadius()
 		);
 
+		// 当たっていたら、武器の生存フラグを折る
 		if (hits.HitNum > 0)
 		{
 			useWeapon->SetAlive(false);
