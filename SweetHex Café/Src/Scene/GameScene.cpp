@@ -297,8 +297,7 @@ void GameScene::CollisionEnemy(void)
 
 		VECTOR enemyPos = enemy->GetPos();
 
-	
-			// 敵とプレイヤーの衝突判定条件を満たしたら、
+		// 敵とプレイヤーの衝突判定条件を満たしたら、
 		if (Utility::IsHitSpheres(playerPos, Player::COLLISION_RADIUS,
 			enemyPos, enemy->GetRadius()))
 		{
@@ -349,6 +348,12 @@ void GameScene::CollisionWeapon(void)
 
 				for (EnemyBase* otherEnemy : enemies)
 				{
+					// ダメージを受けた本人ならスキップ
+					if (enemy == otherEnemy)
+					{
+						continue;
+					}
+
 					// その瞬間プレイヤーを視認できている敵が、
 					// 攻撃に気づいて反撃状態へ移行する
 					if (otherEnemy->IsNotice() && otherEnemy->GetState() == EnemyBase::STATE::STANDBY)
